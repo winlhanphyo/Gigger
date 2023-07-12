@@ -9,3 +9,6 @@ Node Version 17.1.0
 4. npm run seed
 5. npm run build
 6. npm run start:dev
+
+# Swagger Documentation URL
+http://127.0.0.1:3000/api/docs/

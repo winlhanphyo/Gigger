@@ -9,7 +9,11 @@ import passport from 'passport';
 import { config } from './config';
 import { router } from './routes';
 import authRouter from './routes/auth/auth.router';
+import interestRouter from "./routes/interest/interest.router";
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
 require('./config/passport');
+const swaggerDocument = YAML.load('./api.yaml');
 
 const fileStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
@@ -54,6 +58,8 @@ export default class Server {
     this.app.use(passport.initialize());
 
     this.app.use('/api', authRouter);
+    this.app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+    this.app.use('/api/interests', interestRouter);
     this.app.use(passport.authenticate('jwt', { session: false }), router);
 
     this.app.set('views', __dirname + '/views');

@@ -1,6 +1,5 @@
 import { Router } from "./custom-router";
-
-import { interestRouter  } from "./v1";
+import { eventRouter  } from "./v1";
 
 const v1ApiRoutes = new Router();
 
@@ -8,7 +7,7 @@ const baseRouter = new Router();
 
 try {
   
-  v1ApiRoutes.use('/interests', interestRouter);
+  v1ApiRoutes.use('/events', eventRouter);
 
   baseRouter.use('/api/v1', v1ApiRoutes);
 
@@ -17,6 +16,3 @@ try {
 }
 
 export const router = baseRouter.toExpressRequestHandler();
-
-
-

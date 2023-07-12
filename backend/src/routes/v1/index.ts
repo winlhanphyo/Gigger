@@ -1,1 +1,1 @@
-export * from './interest';
+export * from './event';
