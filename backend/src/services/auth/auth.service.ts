@@ -1,4 +1,4 @@
-import { IUserModel, UserDbModel } from "../../database";
+import { InterestDbModel, IUserModel, UserDbModel, UserRoleDbModel } from "../../database";
 
 class AuthService {
 
@@ -8,9 +8,26 @@ class AuthService {
  * @returns 
  */
   async signupUser(userObj: Partial<IUserModel>): Promise<UserDbModel> {
-    const createUser = await UserDbModel.create({ ...userObj, createdAt: new Date().toISOString() });
-    console.log(createUser);
-    return createUser;
+    const createUser: any = await UserDbModel.create({ ...userObj, createdAt: new Date().toISOString() });
+    let res = await UserDbModel.findOne({
+      where: {
+        id: createUser.id,
+      },
+      include: [
+        {
+          model: UserRoleDbModel,
+          as: 'user_role'
+        },
+      ],
+    }) as any;
+    
+    const interest = await InterestDbModel.findAll({
+      where: {
+          id: res.dataValues.interest
+      }
+    });
+    res.interest = interest;
+    return res;
   }
 
   /**

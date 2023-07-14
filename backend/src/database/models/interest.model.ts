@@ -1,12 +1,8 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
-
-import { DataBaseTableNames, DataBaseModelNames } from "../constants";
-
-import { DbModelFieldInit } from "../db-structure.model";
-
-import { db } from '../db.provider';
-
 import { associative } from './associate.decorator';
+import { DataBaseTableNames, DataBaseModelNames } from "../constants";
+import { DbModelFieldInit } from "../db-structure.model";
+import { db } from '../db.provider';
 
 export interface IInterestModel {
   id: number;

@@ -1,8 +1,8 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
+import { associative } from './associate.decorator';
 import { DataBaseTableNames, DataBaseModelNames } from "../constants";
 import { DbModelFieldInit } from "../db-structure.model";
 import { db } from '../db.provider';
-import { associative } from './associate.decorator';
 
 export interface IEventModel {
   id: number;
@@ -12,7 +12,26 @@ export interface IEventModel {
   fromTime: string;
   toTime: string;
   description: string;
-  participants: JSON;
+  beforeReminder: string;
+  reminderStatus: string;
+  latitude: string;
+  longitude: string;
+  artists: JSON;
+  color: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+}
+
+export interface EventInputModel {
+  id: number;
+  eventName: string;
+  address: string;
+  date: string;
+  participants: [];
+  fromTime: string;
+  toTime: string;
+  description: string;
   beforeReminder: string;
   reminderStatus: string;
   latitude: string;
@@ -74,9 +93,6 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
     type: DataTypes.STRING,
     allowNull: true
   },
-  participants: {
-    type: DataTypes.JSON
-  },
   beforeReminder: {
     type: DataTypes.STRING(50),
     allowNull: true
@@ -115,6 +131,9 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
 };
 @associative
 export class EventDbModel extends Model {
+  static associate({ UserDbModel }: any) {
+    this.belongsToMany(UserDbModel, {through: 'event_user'});
+  }
 }
 
 EventDbModel.init(modelAttributes as ModelAttributes, {

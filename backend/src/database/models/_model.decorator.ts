@@ -2,7 +2,10 @@ import { Model } from "sequelize";
 
 enum DbModelNameEnum {
   UserDbModel,
-  RoleDbModel
+  RoleDbModel,
+  EventDbModel,
+  EventUserDbModel,
+  ArtistDbModel
 }
 
 interface AllModels {

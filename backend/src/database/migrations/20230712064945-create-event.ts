@@ -1,4 +1,5 @@
 'use strict';
+
 import { DataTypes, ModelAttributes, QueryInterface, QueryOptions } from "sequelize";
 import { DataBaseTableNames } from "../constants";
 import { migrationWrapper } from "../transactions";
@@ -35,10 +36,6 @@ module.exports = {
       description: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      participants: {
-        type: DataTypes.JSON,
-        allowNull: true,
       },
       beforeReminder: {
         type: DataTypes.STRING(50),

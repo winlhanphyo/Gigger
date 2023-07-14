@@ -13,6 +13,8 @@ tags:
     description: Operations about Interests
   - name: Events
     description: Operations about Events
+  - name: Artists
+    description: Operations about Artists
 
 paths:
   # Auth Routes
@@ -21,6 +23,8 @@ paths:
       tags:
         - Authentication
       summary: Logs user into the system
+      security:
+        - {}
       requestBody:
         description: Login User into the system
         content:
@@ -66,6 +70,8 @@ paths:
       tags:
         - Authentication
       summary: Logs out current logged in user session
+      security:
+        - {}
       description: ""
       operationId: logoutUser
       parameters: []
@@ -78,6 +84,8 @@ paths:
       tags:
         - Authentication
       summary: Sign Up
+      security:
+        - {}
       requestBody:
         description: Signup user into the system
         content:
@@ -116,13 +124,15 @@ paths:
         - Interests
       summary: Get all interests
       description: This can be used without login user.
+      security:
+        - {}
       responses:
         "200":
           description: Returns all Interests
         "401":
           $ref: "#/components/responses/UnauthorizedError"
  
-  # User Routes
+  # Event Routes
   /api/v1/events:
     get:
       tags:
@@ -137,7 +147,7 @@ paths:
           description: PageNumber 
           schema:
             type: number
-        - name: upp
+        - name: size
           in: query
           description: Number of users that want to show per Page
           schema:
@@ -293,6 +303,433 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
 
+  /api/v1/events/{id}:
+    get:
+      tags:
+        - Events
+      summary: Get event by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: getEventById
+      parameters:
+        - name: id
+          in: path
+          description: ID of event to return
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Returns all Events
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "Event is not found"
+
+  /api/v1/events/{id}:
+    post:
+      tags:
+        - Events
+      summary: Update a post
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: updateEventById
+      parameters:
+        - name: id
+          in: path
+          description: ID of event to return
+          required: true
+          schema:
+            type: string
+      operationId: updateEvent
+      requestBody:
+        description: Updated event
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventName:
+                  type: string
+                  example: "Pink Floyd Live"
+                fromTime:
+                  type: string
+                  example: "8:00 pm"
+                toTime:
+                  type: string
+                  example: "11:00 pm"
+                address:
+                  type: string
+                  example: "Arena di Verona"
+                date:
+                  type: string
+                  example: "20-07-2023"
+                description:
+                  type: string
+                  example: "Preparazione concerto in piazza di sabato"
+                participants:
+                  type: json
+                  example: [1, 2, 3]
+                beforeReminder:
+                  type: string
+                  example: "00:30"
+                reminderStatus:
+                  type: string
+                  example: "busy"
+                latitude:
+                  type: string
+                  example: "1.354092790531372"
+                longitude:
+                  type: string
+                  example: "103.87865454226616"
+                artists:
+                  type: string
+                  example: [1, 2, 3]
+                color:
+                  type: string
+                  example: "#fff"
+          application/xml:
+            schema:
+              type: object
+              properties:
+                eventName:
+                  type: string
+                  example: "Pink Floyd Live"
+                fromTime:
+                  type: string
+                  example: "8:00 pm"
+                toTime:
+                  type: string
+                  example: "11:00 pm"
+                address:
+                  type: string
+                  example: "Arena di Verona"
+                date:
+                  type: string
+                  example: "20-07-2023"
+                description:
+                  type: string
+                  example: "Preparazione concerto in piazza di sabato"
+                participants:
+                  type: json
+                  example: [1, 2, 3]
+                beforeReminder:
+                  type: string
+                  example: "00:30"
+                reminderStatus:
+                  type: string
+                  example: "busy"
+                latitude:
+                  type: string
+                  example: "1.354092790531372"
+                longitude:
+                  type: string
+                  example: "103.87865454226616"
+                artists:
+                  type: string
+                  example: [1, 2, 3]
+                color:
+                  type: string
+                  example: "#fff"
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                eventName:
+                  type: string
+                  example: "Pink Floyd Live"
+                fromTime:
+                  type: string
+                  example: "8:00 pm"
+                toTime:
+                  type: string
+                  example: "11:00 pm"
+                address:
+                  type: string
+                  example: "Arena di Verona"
+                date:
+                  type: string
+                  example: "20-07-2023"
+                description:
+                  type: string
+                  example: "Preparazione concerto in piazza di sabato"
+                participants:
+                  type: json
+                  example: [1, 2, 3]
+                beforeReminder:
+                  type: string
+                  example: "00:30"
+                reminderStatus:
+                  type: string
+                  example: "busy"
+                latitude:
+                  type: string
+                  example: "1.354092790531372"
+                longitude:
+                  type: string
+                  example: "103.87865454226616"
+                artists:
+                  type: string
+                  example: [1, 2, 3]
+                color:
+                  type: string
+                  example: "#fff"
+      responses:
+        "200":
+          description: Event is updated successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Event is not found.
+
+
+  # Artist Routes
+  /api/v1/artists:
+    get:
+      tags:
+        - Artists
+      summary: Get all Artists
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: PageNumber 
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Number of users that want to show per Page
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Returns all Artists
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+      tags:
+        - Artists
+      summary: Create Artist
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: createArtist
+      requestBody:
+        description: Created artist
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  example: "assets/img/1.jpg"
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                liveURL:
+                  type: string
+                  example: "https://www.youtube.com/watch?v=JZjAg6fK-BQ"
+          application/xml:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  example: "assets/img/1.jpg"
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                liveURL:
+                  type: string
+                  example: "https://www.youtube.com/watch?v=JZjAg6fK-BQ"
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  example: "assets/img/1.jpg"
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                liveURL:
+                  type: string
+                  example: "https://www.youtube.com/watch?v=JZjAg6fK-BQ"
+      responses:
+        "200":
+          description: Artist is created successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Artist is created successfully.
+
+  /api/v1/artists/{id}:
+    get:
+      tags:
+        - Artists
+      summary: Get artist by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: getArtistById
+      parameters:
+        - name: id
+          in: path
+          description: ID of artist to return
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Returns Artist By Id
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "Artist is not found"
+
+  /api/v1/artists/{id}:
+    post:
+      tags:
+        - Artists
+      summary: Update a artist
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: updateArtistById
+      parameters:
+        - name: id
+          in: path
+          description: ID of artist to return
+          required: true
+          schema:
+            type: string
+      operationId: updateArtist
+      requestBody:
+        description: Updated artist
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  example: "assets/img/1.jpg"
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                liveURL:
+                  type: string
+                  example: "https://www.youtube.com/watch?v=JZjAg6fK-BQ"
+          application/xml:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  example: "assets/img/1.jpg"
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                liveURL:
+                  type: string
+                  example: "https://www.youtube.com/watch?v=JZjAg6fK-BQ"
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  example: "assets/img/1.jpg"
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                liveURL:
+                  type: string
+                  example: "https://www.youtube.com/watch?v=JZjAg6fK-BQ"
+      responses:
+        "200":
+          description: Artist is updated successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Artist is not found.
 components:
   # Schema Usage in component
   # schemas:

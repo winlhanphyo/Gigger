@@ -13,7 +13,7 @@
     "tsc": "rimraf dist && npm run lint && tsc --watch",
     "lint": "eslint src --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
-    "migrate:up": "rimraf dist && tsc && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
+    "migrate:up": "rimraf dist && tsc && npx sequelize-cli db:migrate",
     "migrate:down": "rimraf dist && tsc && npx sequelize-cli db:migrate:undo",
     "seed": "npm run build && npx sequelize-cli db:seed:all",
     "unseed": "npm run build && npx sequelize-cli db:seed:undo",

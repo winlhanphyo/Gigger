@@ -1,13 +1,8 @@
 import { DataTypes, Model, ModelAttributes } from "sequelize";
-
-import { DataBaseTableNames, DataBaseModelNames } from "../constants";
-
-import { DbModelFieldInit } from "../db-structure.model";
-
-import { db } from '../db.provider';
-
 import { associative } from './associate.decorator';
-
+import { DataBaseTableNames, DataBaseModelNames } from "../constants";
+import { DbModelFieldInit } from "../db-structure.model";
+import { db } from '../db.provider';
 export interface IUserModel {
   id: number;
   username: string;
@@ -55,6 +50,10 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
 };
 @associative
 export class UserDbModel extends Model {
+  static associate({ EventDbModel, UserRoleDbModel }: any) {
+    this.belongsToMany(EventDbModel, {through: 'event_user'});
+    this.belongsTo(UserRoleDbModel, { foreignKey: 'role', as: 'user_role', targetKey: 'id' });
+  }
 }
 
 UserDbModel.init(modelAttributes as ModelAttributes, {

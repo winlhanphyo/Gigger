@@ -1,9 +1,7 @@
 'use strict';
 
 import { DataTypes, ModelAttributes, QueryInterface, QueryOptions } from "sequelize";
-
 import { DataBaseTableNames } from "../constants";
-
 import { migrationWrapper } from "../transactions";
 
 /** @type {import('sequelize-cli').Migration} */
