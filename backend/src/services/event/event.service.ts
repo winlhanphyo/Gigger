@@ -1,18 +1,18 @@
 import { FindOptions } from "sequelize";
-import { IEventModel, EventDbModel, EventInputModel, UserDbModel } from "../../database";
+import { IEventModel, EventDbModel, EventInputModel, UserDbModel, ArtistDbModel } from "../../database";
 import { EventUserDbModel } from "../../database/models/eventUser.model";
 
 class EventService {
   /**
    * get events list.
-   * @param interestAttributes 
+   * @param eventAttributes 
    * @param otherFindOptions 
    * @returns 
    */
   async getEventList(eventAttributes?: Array<any>, otherFindOptions?: FindOptions, offset?: number, limit?: number): Promise<any> {
-    try{
+    try {
       limit = limit && limit > 0 ? limit : undefined;
-      return EventDbModel.findAll({
+      let eventList = await EventDbModel.findAll({
         ...otherFindOptions,
         attributes: eventAttributes,
         limit,
@@ -22,17 +22,27 @@ class EventService {
             model: UserDbModel,
             through: { attributes: [] },
             as: "users",
-            attributes: [["id", "userId"]]
+            attributes: []
           }
         ]
       });
-    } catch(e: any) {
+      for (let i = 0; i < eventList.length; i++) {
+        let artists = eventList[i].dataValues?.artists;
+        if (artists) {
+          const artistList = await ArtistDbModel.findAll({
+            where: {
+              id: artists
+            }
+          });
+          eventList[i].dataValues.artists = artistList;
+        }
+      }
+      return eventList;
+    } catch (e: any) {
       console.log('------get event list API error----', e);
       return e.toString();
     }
   }
-
-
 
   /**
    * create event data.
@@ -45,8 +55,8 @@ class EventService {
       delete eventObj.participants;
       const createEvent = await EventDbModel.create({ ...eventObj, createdAt: new Date().toISOString() });
       const eventUserData: { eventId: any; userId: any; status: string; createdAt: any }[] = [];
-  
-      if (participants && participants.length > 0 && createEvent.dataValues.id) {
+
+      if (participants && participants.length > 0 && createEvent?.dataValues?.id) {
         await participants.map((userId: any) => {
           eventUserData.push({
             eventId: createEvent.dataValues.id,
@@ -100,6 +110,16 @@ class EventService {
       }) as any;
       eventData.dataValues.participants = eventData.dataValues.users;
       delete eventData.dataValues.users;
+
+      let artists = eventData.dataValues?.artists;
+      if (artists) {
+        const artistList = await ArtistDbModel.findAll({
+          where: {
+            id: artists
+          }
+        });
+        eventData.dataValues.artists = artistList;
+      }
       return eventData;
     } catch (e: any) {
       console.log("--Get Event By Id API Error---", e);

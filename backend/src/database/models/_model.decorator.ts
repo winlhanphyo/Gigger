@@ -5,7 +5,10 @@ enum DbModelNameEnum {
   RoleDbModel,
   EventDbModel,
   EventUserDbModel,
-  ArtistDbModel
+  ArtistDbModel,
+  ScheduleDbModel,
+  ArtistVideoDbModel,
+  VideoDbModel,
 }
 
 interface AllModels {

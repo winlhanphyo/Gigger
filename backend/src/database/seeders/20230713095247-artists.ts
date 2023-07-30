@@ -15,7 +15,7 @@ module.exports = {
           address: "Arena di Verona",
           description: "One Man Show",
           status: "available",
-          // liveURL: "",
+          genre: JSON.stringify([1, 2]),
           createdAt: '2023-07-12',
           updatedAt: '2023-07-12'
         },
@@ -24,9 +24,9 @@ module.exports = {
           profile: "assets/img/2.jpg",
           highlight: "Guitar@Band",
           address: "Rock Rooms Inc",
-          description: "",
+          description: "Guitar Skill",
           status: "available",
-          // liveURL: "",
+          genre: JSON.stringify([1, 2]),
           createdAt: '2023-07-12',
           updatedAt: '2023-07-12'
         },
@@ -37,7 +37,7 @@ module.exports = {
           address: "Wembley Stadium",
           description: "Rehearsal with Alessio",
           status: "available",
-          // liveURL: "",
+          genre: JSON.stringify([1, 2]),
           createdAt: '2023-07-12',
           updatedAt: '2023-07-12'
         },

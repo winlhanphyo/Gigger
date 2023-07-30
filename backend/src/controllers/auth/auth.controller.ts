@@ -2,8 +2,10 @@ import autobind from "autobind-decorator";
 import { Response } from "express";
 import bcrypt, { compareSync } from "bcrypt";
 import jwt from 'jsonwebtoken';
+import passport from 'passport';
 import { authService } from "../../services/auth/auth.service";
 import { IUserModel } from "../../database";
+require('../../config/passport');
 
 @autobind
 
@@ -68,6 +70,27 @@ class AuthController {
   }
 
   /**
+   * login with google
+   * @param req 
+   * @param res 
+   */
+  loginWithGoogle(req: any, res: Response) {
+    console.log('login With Google');
+    passport.authenticate('google', { scope : ['profile', 'email'] })
+  }
+
+  /**
+   * google call back function.
+   * @param req
+   * @param res 
+   */
+  googleCallBack(req: any, res: Response) {
+    console.log('---------google callback function');
+    passport.authenticate('google', { failureRedirect: 'api/google/error' }),
+    res.send("google signin success");
+  }
+
+  /**
    * user logout
    * @param req 
    * @param res 
@@ -77,6 +100,18 @@ class AuthController {
     req.session = null;
     return res.json({ "message": "Logout Successfully" });
   };
+
+  /**
+   * login with google error.
+   * @param req 
+   * @param res 
+   */
+  loginWithGoogleError(req: any, res: Response): any {
+    res.status(401).json({
+      error: true,
+      message: "Log in failure",
+    });
+  }
 }
 
 export const authController = new AuthController();

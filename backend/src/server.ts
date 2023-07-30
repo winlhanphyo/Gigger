@@ -9,7 +9,8 @@ import passport from 'passport';
 import { config } from './config';
 import { router } from './routes';
 import authRouter from './routes/auth/auth.router';
-import interestRouter from "./routes/interest/interest.router";
+import genreRouter from "./routes/genre/genre.router";
+import videoStreamRouter from './routes/videoStream/videoStream.router';
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
 require('./config/passport');
@@ -17,11 +18,12 @@ const swaggerDocument = YAML.load('./api.yaml');
 
 const fileStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    console.log(_file?.fieldname);
-    if (_file?.fieldname == "image") {
-      cb(null, "apiuploads/images");
+    console.log('--------video-----------');
+    console.log(_file);
+    if (_file?.fieldname == "video") {
+      cb(null, "upload/artist/video");
     } else {
-      cb(null, "apiuploads/profiles");
+      cb(null, "upload/user/profile");
     }
   },
   filename: (_req, file, cb) => {
@@ -33,7 +35,10 @@ const fileFilter = (_req: Request, file: any, cb: FileFilterCallback) => {
   if (
     file.mimetype === "image/png" ||
     file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "video/mp4" ||
+    file.mimetype === "video/mpeg" ||
+    file.mimetype === "video/quicktime"
   ) {
     cb(null, true);
   } else {
@@ -48,18 +53,20 @@ export default class Server {
     this.app = express();
 
     this.app.use(cors());
-    this.app.use(helmet());
+    // this.app.use(helmet());
+    this.app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
-    this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'image', maxCount: 1 }]));
+    this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
     this.app.use("/apiuploads", express.static("apiuploads"));
 
     this.app.use(passport.initialize());
 
     this.app.use('/api', authRouter);
     this.app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-    this.app.use('/api/interests', interestRouter);
+    this.app.use('/api/interests', genreRouter);
+    this.app.use('/api/video', videoStreamRouter);
     this.app.use(passport.authenticate('jwt', { session: false }), router);
 
     this.app.set('views', __dirname + '/views');
@@ -69,8 +76,17 @@ export default class Server {
       res.send('Welcome to My Website')
     });
 
-    this.httpServer = http.createServer(this.app);
-  }
+    // this.app.get('/api/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+  
+    // this.app.get('/api/auth/google/callback', 
+    //   passport.authenticate('google', { failureRedirect: '/error' }),
+    //   function(req: any, res: any) {
+    //     // res.redirect('/success');
+    //     res.send("google signin success");
+    //   });
+
+        this.httpServer = http.createServer(this.app);
+      }
 
   start(cb?: () => void) {
     this.httpServer.listen(config.PORT, () => {

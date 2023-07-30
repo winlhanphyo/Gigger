@@ -1,7 +1,8 @@
 import { Response, Request } from 'express';
 import autobind from 'autobind-decorator';
+import { deleteFile } from '../../utils/utils';
 import { artistService } from '../../services/artist';
-import { IArtistModel } from '../../database';
+import { IArtistModel, IVideoModel } from '../../database';
 import { PAGINATION_LIMIT } from '../../utils/constant';
 
 @autobind
@@ -27,15 +28,20 @@ class ArtistController {
    * @param req 
    * @param res 
    */
-  async createArtist(req: Request, res: Response) {
+  async createArtist(req: any, res: Response) {
+    let profile: string = req.body.profile;
+    const id = +req.params.id;
+    if (req.files?.profile?.length > 0) {
+      profile = req.files.profile[0].path.replaceAll("\\", "/");
+    }
+
     const artistData: IArtistModel = {
       artistName: req.body.artistName,
-      profile: req.body.profile,
+      profile,
       highlight: req.body.highlight,
       address: req.body.address,
       description: req.body.description,
-      status: req.body.status,
-      liveURL: req.body.liveURL
+      status: req.body.status
     } as any;
     const result = await artistService.createArtist(artistData);
     res.json({
@@ -50,7 +56,7 @@ class ArtistController {
    * @param res 
    * @returns 
    */
-   async updateArtist(req: Request, res: Response) {
+   async updateArtist(req: any, res: Response) {
     const id = +req.params.id
     const checkArtist = await artistService.getArtistById(id);
 
@@ -60,13 +66,22 @@ class ArtistController {
 
     const artistData: IArtistModel = {
       artistName: req.body.artistName,
-      profile: req.body.profile,
       highlight: req.body.highlight,
       address: req.body.address,
       description: req.body.description,
-      status: req.body.status,
-      liveURL: req.body.liveURL
+      status: req.body.status
     } as any;
+
+    let profile: any = req.body.profile;
+      if (req.files?.profile?.length > 0) {
+        profile = req.files.profile[0].path.replace("\\", "/");
+        if (checkArtist.profile && checkArtist.profile != profile) {
+          deleteFile(checkArtist.profile);
+        }
+        if (checkArtist) {
+          artistData.profile = profile;
+        }
+      } 
 
     artistData.id = +req.params.id;
     const updateArtistData = await artistService.updateArtist(artistData);
@@ -88,6 +103,37 @@ class ArtistController {
     res.json({
       data: artistData
     })
+  }
+
+  /**
+   * create Artist Video.
+   * @param req 
+   * @param res 
+   */
+  async createArtistVideo(req: any, res: Response) {
+    try {
+      let video: string = "";
+      const id = +req.params.id;
+      console.log('--------video------------', req.body.files);
+      if (req.files?.video?.length > 0) {
+        video = req.files.video[0].path.replaceAll("\\", "/");
+      }
+  
+      const artistData: IVideoModel = {
+        name: req.body.name,
+        description: req.body.description,
+        url: req.body.video
+      } as any;
+  
+      const result = await artistService.createArtistVideo(id, artistData);
+      res.json({
+        message: 'Artist video is created successfully',
+        data: result
+      });
+    } catch (err) {
+      console.log('-------Create Artist Video Error---------');
+      console.log(err);
+    }
   }
 }
 

@@ -3,7 +3,7 @@ import { associative } from './associate.decorator';
 import { DataBaseTableNames, DataBaseModelNames } from "../constants";
 import { DbModelFieldInit } from "../db-structure.model";
 import { db } from '../db.provider';
-
+import { ArtistVideoDbModel } from ".";
 export interface IArtistModel {
   id: number;
   artistName: string;
@@ -12,7 +12,7 @@ export interface IArtistModel {
   address: string;
   description: string;
   status: string;
-  liveURL: string;
+  genre: JSON;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -68,13 +68,16 @@ const modelAttributes: DbModelFieldInit<Partial<IArtistModel>> = {
     type: DataTypes.STRING,
     allowNull: true
   },
-  liveURL: {
-    type: DataTypes.STRING(50),
+  genre: {
+    type: DataTypes.JSON,
     allowNull: true
   }
 };
 @associative
 export class ArtistDbModel extends Model {
+  static associate({ VideoDbModel, ArtistVideoDbModel }: any) {
+    this.belongsToMany(VideoDbModel, {through: 'artist_video'});
+  }
 }
 
 ArtistDbModel.init(modelAttributes as ModelAttributes, {
@@ -85,3 +88,4 @@ ArtistDbModel.init(modelAttributes as ModelAttributes, {
   updatedAt: 'updatedAt',
   timestamps: true
 });
+

@@ -1,4 +1,4 @@
-import { InterestDbModel, IUserModel, UserDbModel, UserRoleDbModel } from "../../database";
+import { GenreDbModel, IUserModel, UserDbModel, UserRoleDbModel } from "../../database";
 
 class AuthService {
 
@@ -11,7 +11,7 @@ class AuthService {
     const createUser: any = await UserDbModel.create({ ...userObj, createdAt: new Date().toISOString() });
     let res = await UserDbModel.findOne({
       where: {
-        id: createUser.id,
+        id: createUser.dataValues.id,
       },
       include: [
         {
@@ -21,12 +21,13 @@ class AuthService {
       ],
     }) as any;
     
-    const interest = await InterestDbModel.findAll({
+    const genre = await GenreDbModel.findAll({
       where: {
           id: res.dataValues.interest
       }
     });
-    res.interest = interest;
+    delete res.dataValues.interest;
+    res.dataValues.genre = genre;
     return res;
   }
 

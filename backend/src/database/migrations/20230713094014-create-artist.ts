@@ -38,9 +38,9 @@ module.exports = {
         type: DataTypes.STRING(50),
         allowNull: false,
       },
-      liveURL: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      genre: {
+        type: DataTypes.JSON,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
