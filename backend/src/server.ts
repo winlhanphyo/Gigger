@@ -12,7 +12,6 @@ import authRouter from './routes/auth/auth.router';
 import genreRouter from "./routes/genre/genre.router";
 import videoStreamRouter from './routes/videoStream/videoStream.router';
 import { USER_PROFILE_PATH, USER_VIDEO_PATH } from './utils/constant';
-// const session = require('express-session');
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
 require('./config/passport');

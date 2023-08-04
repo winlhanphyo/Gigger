@@ -2,6 +2,8 @@ import { USER_VIDEO_PATH } from "../../utils/constant";
 
 const path = require('path');
 const fs = require('fs');
+const http = require('http');
+// const nodeFetch = require('node-fetch');
 
 class VideoStreamService {
 
@@ -69,7 +71,21 @@ class VideoStreamService {
    * @param callback 
    */
   getFile(filename: any, callback: any) {
-    fs.readFile(path.resolve(USER_VIDEO_PATH, filename), callback);
+    fs.readFile(path.resolve(USER_VIDEO_PATH + "/", filename), callback);
+  }
+
+  /**
+   * download video.
+   * @param req 
+   * @param res 
+   */
+  async downloadVideoData(req: any, res: any) {
+    try {
+      const path = USER_VIDEO_PATH + "/" + req.params.filename;
+      res.download(path);
+    } catch(err: any) {
+      console.log('download video file error', err);
+    }
   }
 }
 

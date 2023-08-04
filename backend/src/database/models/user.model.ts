@@ -11,6 +11,13 @@ export interface IUserModel {
   role: number;
   dob: string;
   interest: JSON;
+  profile: string;
+  highlight: string;
+  address: string;
+  description: string;
+  status: string;
+  genre: JSON;
+  instruments: JSON;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -46,7 +53,35 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
   },
   interest: {
     type: DataTypes.JSON,
-  }
+  },
+  profile: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  highlight: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  status: {
+    type: DataTypes.STRING(50),
+    allowNull: true,
+  },
+  genre: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  instruments: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
 };
 @associative
 export class UserDbModel extends Model {

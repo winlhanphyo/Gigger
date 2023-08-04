@@ -7,6 +7,49 @@ import { IVideoModel, VideoDbModel } from '../../database';
 class UserController {
 
   /**
+   * get all user data.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async getAllUser(req: Request, res: Response) {
+    const user = await userService.getUserList(req, res);
+    return user;
+  }
+
+  /**
+   * create user.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async createUser(req: Request, res: Response) {
+    const result = await userService.createUser(req, res);
+    return result;
+  }
+
+  /**
+   * update User.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async updateUser(req: any, res: Response) {
+    const updateUserData = await userService.updateUser(req, res);
+    return updateUserData;
+  }
+
+  /**
+   * user Detail
+   * @param req 
+   * @param res 
+   */
+  async detailUser(req: Request, res: Response) {
+    const userData = await userService.getUserById(req, res);
+    return userData;
+  }
+
+  /**
    * get all events data.
    * @param req 
    * @param res 
@@ -72,7 +115,7 @@ class UserController {
    * @param res 
    */
   userTopVideoList(req: any, res: Response) {
-    const video = userService.videoList(req, res);
+    const video = userService.topVideoList(req, res);
     return video;
   }
 

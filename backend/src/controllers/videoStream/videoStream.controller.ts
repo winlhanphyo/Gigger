@@ -15,6 +15,17 @@ class VideoStreamController {
     return videoStreamService.streamVideo(req, res);
   }
 
+  /**
+   * download video.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async downloadVideo(req: any, res: any) {
+    const video = await videoStreamService.downloadVideoData(req, res);
+    return video;
+  }
+
 }
 
 export const videoStreamController = new VideoStreamController();

@@ -39,6 +39,34 @@ export default {
             type: DataTypes.JSON,
             allowNull: true,
           },
+          profile: {
+            type: DataTypes.STRING,
+            allowNull: true,
+          },
+          highlight: {
+            type: DataTypes.STRING,
+            allowNull: true,
+          },
+          address: {
+            type: DataTypes.STRING,
+            allowNull: true
+          },
+          description: {
+            type: DataTypes.STRING,
+            allowNull: true,
+          },
+          status: {
+            type: DataTypes.STRING(50),
+            allowNull: true,
+          },
+          genre: {
+            type: DataTypes.JSON,
+            allowNull: true
+          },
+          instruments: {
+            type: DataTypes.JSON,
+            allowNull: true
+          },
           createdAt: {
             type: DataTypes.DATE
           },

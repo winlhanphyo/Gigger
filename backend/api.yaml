@@ -15,6 +15,10 @@ tags:
     description: Operations about Events
   - name: Artists
     description: Operations about Artists
+  - name: Users
+    description: Operations about Users
+  - name: Videos
+    description: Operations about Videos
 
 paths:
   # Auth Routes
@@ -883,6 +887,489 @@ paths:
           description: Artist is not found.
 
   #userRoute
+  /api/v1/users:
+    get:
+      tags:
+        - Users
+      summary: Get all Users
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: PageNumber 
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Number of users that want to show per Page
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Returns all Users
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+      tags:
+        - Users
+      summary: Create User
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: header
+          description: ID of login User.
+          required: true
+          type: number
+      operationId: createUser
+      requestBody:
+        description: Created user
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+      responses:
+        "200":
+          description: User is created successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: User is created successfully.
+
+  /api/v1/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Returns User By Id
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "User is not found"
+
+  /api/v1/users/{id}:
+    post:
+      tags:
+        - Users
+      summary: Update a user
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: updateUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: string
+      operationId: updateUser
+      requestBody:
+        description: Updated user
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1]
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+      responses:
+        "200":
+          description: User is updated successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: User is not found.
+
+  /api/v1/users/update/{id}:
+    post:
+      tags:
+        - Users
+      summary: Update a user
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: updateUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: string
+      operationId: updateUser
+      requestBody:
+        description: Updated user
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+      responses:
+        "200":
+          description: User is updated successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: User is not found.
+
   /api/v1/users/top/video/list:
     get:
       tags:
@@ -1095,6 +1582,44 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           description: Video is not found.
+
+  #videoRoute
+  /api/video/{filename}/stream:
+    get:
+      tags:
+        - Videos
+      summary: Video Stream API
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: filename
+          in: path
+          description: video file name 
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Video Stream
+
+  /api/video/{filename}/download:
+    get:
+      tags:
+        - Videos
+      summary: Video Downalod API
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: filename
+          in: path
+          description: video file name 
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Video Download 
+  
 components:
   # Schema Usage in component
   # schemas:
