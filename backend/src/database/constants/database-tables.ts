@@ -6,7 +6,8 @@ export enum DataBaseTableNames {
   EVENT='event',
   EVENT_USER='event_user',
   ARTIST='artist',
-  ARTIST_VIDEO='artist_video',
+  USER_VIDEO='user_video',
+  USER_LIKE_VIEW_VIDEO='user_like_view_video',
   VIDEO='video'
 }
 
@@ -18,6 +19,7 @@ export enum DataBaseModelNames {
   EVENT = 'event',
   EVENT_USER='event_user',
   ARTIST='artist',
-  ARTIST_VIDEO='artist_video',
+  USER_VIDEO='user_video',
+  USER_LIKE_VIEW_VIDEO='user_like_view_video',
   VIDEO='video'
 }

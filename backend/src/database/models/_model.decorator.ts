@@ -7,7 +7,7 @@ enum DbModelNameEnum {
   EventUserDbModel,
   ArtistDbModel,
   ScheduleDbModel,
-  ArtistVideoDbModel,
+  UserVideoDbModel,
   VideoDbModel,
 }
 

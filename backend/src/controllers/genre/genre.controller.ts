@@ -11,11 +11,8 @@ class GenreController {
  * @returns 
  */
   async getAllGenre(req: Request, res: Response) {
-    const genre = await genreService.getGenreList();
-    return res.json({
-      count: genre.length,
-      data: genre
-    });
+    const genre = await genreService.getGenreList(undefined, undefined, res);
+    return genre;
   }
 }
 

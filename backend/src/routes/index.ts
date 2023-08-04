@@ -1,6 +1,7 @@
 import { Router } from "./custom-router";
 import { eventRouter  } from "./v1";
 import { artistRouter } from "./v1/artist";
+import { userRouter } from "./v1/user";
 
 const v1ApiRoutes = new Router();
 
@@ -10,6 +11,7 @@ try {
   
   v1ApiRoutes.use('/events', eventRouter);
   v1ApiRoutes.use('/artists', artistRouter);
+  v1ApiRoutes.use('/users', userRouter);
 
   baseRouter.use('/api/v1', v1ApiRoutes);
 

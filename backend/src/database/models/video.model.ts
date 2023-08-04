@@ -8,9 +8,7 @@ export interface IVideoModel {
   id: number;
   name: string;
   description: string;
-  url: string;
-  viewCount: number;
-  likeCount: number;
+  video: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -30,20 +28,14 @@ const modelAttributes: DbModelFieldInit<Partial<IVideoModel>> = {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  url: {
+  video: {
     type: DataTypes.STRING,
-  },
-  viewCount: {
-    type: DataTypes.NUMBER,
-  },
-  likeCount: {
-    type: DataTypes.NUMBER,
   }
 };
 @associative
 export class VideoDbModel extends Model {
-  static associate({ ArtistDbModel }: any) {
-    this.belongsToMany(ArtistDbModel, {through: 'artist_video'});
+  static associate({ UserDbModel }: any) {
+    this.belongsToMany(UserDbModel, {through: 'user_video'});
   }
 }
 

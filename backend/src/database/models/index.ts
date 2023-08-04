@@ -6,6 +6,6 @@ export * from './userRole.model';
 export * from './event.model';
 export * from './artist.model';
 export * from './video.model';
-export * from './artistVideo.model';
+export * from './userVideo.model';
 
 processAssociations();

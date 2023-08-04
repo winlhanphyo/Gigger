@@ -10,7 +10,7 @@ module.exports = {
       [
         {
           artistName: "Mario Mix",
-          profile: "assets/img/1.jpg",
+          profile: "upload/user/profile/1.jpg",
           highlight: "Professional Sound Engeering",
           address: "Arena di Verona",
           description: "One Man Show",
@@ -21,7 +21,7 @@ module.exports = {
         },
         {
           artistName: "Planet Riff",
-          profile: "assets/img/2.jpg",
+          profile: "upload/user/profile/1.jpg",
           highlight: "Guitar@Band",
           address: "Rock Rooms Inc",
           description: "Guitar Skill",
@@ -32,7 +32,7 @@ module.exports = {
         },
         {
           artistName: "Band",
-          profile: "assets/img/3.jpg",
+          profile: "upload/user/profile/1.jpg",
           highlight: "Music Band",
           address: "Wembley Stadium",
           description: "Rehearsal with Alessio",

@@ -11,19 +11,20 @@ import { router } from './routes';
 import authRouter from './routes/auth/auth.router';
 import genreRouter from "./routes/genre/genre.router";
 import videoStreamRouter from './routes/videoStream/videoStream.router';
+import { USER_PROFILE_PATH, USER_VIDEO_PATH } from './utils/constant';
+// const session = require('express-session');
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
 require('./config/passport');
 const swaggerDocument = YAML.load('./api.yaml');
 
+
 const fileStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    console.log('--------video-----------');
-    console.log(_file);
     if (_file?.fieldname == "video") {
-      cb(null, "upload/artist/video");
+      cb(null, USER_VIDEO_PATH);
     } else {
-      cb(null, "upload/user/profile");
+      cb(null, USER_PROFILE_PATH);
     }
   },
   filename: (_req, file, cb) => {
@@ -59,15 +60,22 @@ export default class Server {
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
     this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
-    this.app.use("/apiuploads", express.static("apiuploads"));
+    this.app.use("/api", express.static("apiuploads"));
 
     this.app.use(passport.initialize());
+    this.app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+    // this.app.use(session({
+    //   secret: 'secrect', // Replace this with a secure secret key
+    //   resave: false,
+    //   saveUninitialized: false
+    // }));
+    this.app.use(passport.session());
 
     this.app.use('/api', authRouter);
     this.app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
     this.app.use('/api/interests', genreRouter);
     this.app.use('/api/video', videoStreamRouter);
-    this.app.use(passport.authenticate('jwt', { session: false }), router);
+    this.app.use(passport.authenticate('jwt', { session: true }), router);
 
     this.app.set('views', __dirname + '/views');
     this.app.set('view engine', 'pug');
@@ -100,3 +108,4 @@ export default class Server {
     this.httpServer.close();
   }
 }
+

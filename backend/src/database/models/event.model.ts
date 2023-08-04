@@ -18,6 +18,7 @@ export interface IEventModel {
   longitude: string;
   artists: JSON;
   color: string;
+  createdUser: number;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -127,12 +128,21 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
       notNull: true,
       notEmpty: true
     }
+  },
+  createdUser: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'user',
+      key: 'id'
+    }
   }
 };
 @associative
 export class EventDbModel extends Model {
   static associate({ UserDbModel }: any) {
     this.belongsToMany(UserDbModel, {through: 'event_user'});
+    this.belongsTo(UserDbModel, { foreignKey: 'createdUser', as: 'user', targetKey: 'id' });
   }
 }
 

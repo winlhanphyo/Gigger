@@ -11,7 +11,7 @@ export default {
           username: 'jamessmith',
           email: 'jamessmith@gmail.com',
           password: await bcrypt.hash("12345678", 12),
-          role: 3,
+          role: 1,
           dob: '1993-01-12',
           // interest: [1, 2, 3],
           createdAt: '2023-07-11',

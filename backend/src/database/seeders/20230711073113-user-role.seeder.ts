@@ -10,17 +10,12 @@ module.exports = {
      return queryInterface.bulkInsert(DataBaseTableNames.USER_ROLE,
       [
         {
-          name: 'User',
-          createdAt: '2023-07-11',
-          updatedAt: '2023-07-11'
-        },
-        {
           name: 'Free Account',
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },
         {
-          name: 'Bussiness',
+          name: 'Pro Account',
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },

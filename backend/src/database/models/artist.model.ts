@@ -3,7 +3,7 @@ import { associative } from './associate.decorator';
 import { DataBaseTableNames, DataBaseModelNames } from "../constants";
 import { DbModelFieldInit } from "../db-structure.model";
 import { db } from '../db.provider';
-import { ArtistVideoDbModel } from ".";
+
 export interface IArtistModel {
   id: number;
   artistName: string;
@@ -75,9 +75,6 @@ const modelAttributes: DbModelFieldInit<Partial<IArtistModel>> = {
 };
 @associative
 export class ArtistDbModel extends Model {
-  static associate({ VideoDbModel, ArtistVideoDbModel }: any) {
-    this.belongsToMany(VideoDbModel, {through: 'artist_video'});
-  }
 }
 
 ArtistDbModel.init(modelAttributes as ModelAttributes, {

@@ -1,3 +1,5 @@
+import { USER_VIDEO_PATH } from "../../utils/constant";
+
 const path = require('path');
 const fs = require('fs');
 
@@ -9,20 +11,27 @@ class VideoStreamService {
    * @returns 
    */
   streamVideo(req: any, res: any) {
-    const filename = req.params.filename;
-    const self = this;
-    function handleFile(error: any, file_data: any) {
-      if (error) {
-        if (error.code === 'ENOENT') {
-          return res.status(404).json({
-            error: 'No such file found'
-          });
+    try {
+      const filename = req.params.filename;
+      const self = this;
+      function handleFile(error: any, file_data: any) {
+        if (error) {
+          if (error.code === 'ENOENT') {
+            return res.status(404).json({
+              error: 'No such file found'
+            });
+          }
+          return res.json(error);
         }
-        return res.json(error);
+        self.streamVideoFile(req, res, file_data);
       }
-      self.streamVideoFile(req, res, file_data);
+      this.getFile(filename, handleFile);
+    } catch (e: any) {
+      console.log('stream API Error', e.toString());
+      return res.status(400).json({
+        msg: e.toString()
+      });
     }
-    this.getFile(filename, handleFile);
   }
 
   /**
@@ -32,7 +41,7 @@ class VideoStreamService {
    * @param video_file 
    */
   streamVideoFile(req: any, res: any, video_file: any) {
-    const path = "upload/artist/video" + req.params.filename;
+    const path = USER_VIDEO_PATH + req.params.filename;
     const total = video_file.length;
     var range = req.headers.range;
     if (range) {
@@ -60,7 +69,7 @@ class VideoStreamService {
    * @param callback 
    */
   getFile(filename: any, callback: any) {
-    fs.readFile(path.resolve("upload/artist/video", filename), callback);
+    fs.readFile(path.resolve(USER_VIDEO_PATH, filename), callback);
   }
 }
 

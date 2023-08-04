@@ -1,7 +1,9 @@
 import path from "path";
 import fs from "fs";
+import { USER_VIDEO_PATH } from "./constant";
 
-export const rootDir = path.join(__dirname, "..");
+
+export const rootDir = path.join(__dirname, "../../" + USER_VIDEO_PATH);
 
 export const deleteFile = (fileName: string) => {
   fs.unlink(path.join(rootDir, fileName), (err) => {

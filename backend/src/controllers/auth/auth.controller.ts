@@ -1,37 +1,20 @@
 import autobind from "autobind-decorator";
 import { Response } from "express";
-import bcrypt, { compareSync } from "bcrypt";
-import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import { authService } from "../../services/auth/auth.service";
-import { IUserModel } from "../../database";
 require('../../config/passport');
 
 @autobind
 
 class AuthController {
-/**
- * user signup
- * @param req 
- * @param res 
- */
+  /**
+   * user signup
+   * @param req 
+   * @param res 
+   */
   async signup(req: any, res: Response) {
-
-    const userData: IUserModel = {
-      username: req.body.username,
-      email: req.body.email,
-      password: await bcrypt.hash(req.body.password, 12),
-      role: req.body.role,
-      dob: req.body.dob,
-      interest: req.body.interest
-    } as any;
-
-    const result = await authService.signupUser(userData);
-
-    res.json({
-      message: 'User sign up successfully',
-      data: result
-    });
+    const result = await authService.signupUser(req, res);
+    return result;
   }
 
   /**
@@ -41,32 +24,8 @@ class AuthController {
    * @returns 
    */
   async login(req: any, res: Response): Promise<any> {
-    const username = req.body.username as any;
-    const userData = await authService.loginUser(username);
-
-    if (!userData) {
-      return res.status(404).send("User is not found");
-    }
-    console.log('userData.password', userData.password, 'password', req.body.password);
-    if (!compareSync(req.body.password, userData.password)) {
-      return res.status(400).send({
-        success: false,
-        message: 'Incorrect Password'
-      })
-    }
-
-    const payload = {
-      username: userData.username,
-      id: userData.id
-    }
-    const token = jwt.sign(payload, 'secrect', { expiresIn: '1d' });
-
-    return res.status(200).send({
-      success: true,
-      message: 'Login Successfully!',
-      users: userData,
-      token: token
-    });
+    const userData = await authService.loginUser(req, res);
+    return userData;
   }
 
   /**
@@ -76,7 +35,7 @@ class AuthController {
    */
   loginWithGoogle(req: any, res: Response) {
     console.log('login With Google');
-    passport.authenticate('google', { scope : ['profile', 'email'] })
+    passport.authenticate('google', { scope: ['profile', 'email'] })
   }
 
   /**
@@ -87,7 +46,7 @@ class AuthController {
   googleCallBack(req: any, res: Response) {
     console.log('---------google callback function');
     passport.authenticate('google', { failureRedirect: 'api/google/error' }),
-    res.send("google signin success");
+      res.send("google signin success");
   }
 
   /**
@@ -96,9 +55,34 @@ class AuthController {
    * @param res 
    * @returns 
    */
-  async logout(req: any, res: Response): Promise<any> {
-    req.session = null;
-    return res.json({ "message": "Logout Successfully" });
+  async logout(req: any, res: Response, next: any): Promise<any> {
+    try {
+      const userId = req.headers["userid"];
+      const user = await authService.logoutUser(userId);
+      if (!user) {
+        return res.status(400).json({
+          msg: "Logout User Id is not found"
+        });
+      }
+      const token = req.headers.authorization.slipt('')[1];
+      console.log('token', token);
+      req.logout(function (err: any) {
+        if (err) { return next(err); }
+        return res.json({ "message": "Logout Successfully" });
+      });
+      // req.session.destroy();
+      // req.logout(function(err: any) {
+      //   if (err) { return next(err); }
+      //   res.redirect('/');
+      // });
+      // return res.json({ "message": "Logout Successfully" });
+      // });
+    } catch (err: any) {
+      console.log('------update event error----', err);
+      return res.status(400).json({
+        msg: err.toString()
+      });
+    }
   };
 
   /**

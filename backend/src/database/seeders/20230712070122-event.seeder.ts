@@ -20,6 +20,7 @@ module.exports = {
          reminderStatus: 'busy',
          latitude: '1.3530442682774015',
          longitude: '103.8489492129429',
+         createdUser: 1,
          createdAt: '2023-07-12',
          updatedAt: '2023-07-12'
        }

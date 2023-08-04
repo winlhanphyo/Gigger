@@ -1,6 +1,7 @@
-import { FindOptions } from "sequelize";
-import { IArtistModel, ArtistDbModel, ArtistVideoDbModel, GenreDbModel } from "../../database";
+import { IArtistModel, ArtistDbModel, UserVideoDbModel, GenreDbModel } from "../../database";
 import { VideoDbModel } from "../../database/models/video.model";
+import { PAGINATION_LIMIT } from "../../utils/constant";
+import { deleteFile } from '../../utils/utils';
 
 class ArtistService {
   /**
@@ -9,23 +10,21 @@ class ArtistService {
    * @param otherFindOptions 
    * @returns 
    */
-  async getArtistList(artistAttributes?: Array<keyof IArtistModel>, otherFindOptions?: FindOptions, offset?: number, limit?: number): Promise<any> {
+  async getArtistList(req: any, res: any): Promise<any> {
     try {
-      limit = limit && limit > 0 ? limit : undefined;
+      const offset = Number(req.query.page) || 0;
+      const limit = Number(req.query.size) || PAGINATION_LIMIT;
       const artistList = await ArtistDbModel.findAll({
-        ...otherFindOptions,
-        attributes: artistAttributes,
         limit,
         offset,
-        include: [
-          {
-            model: VideoDbModel,
-            through: { attributes: [] }
-          }
-        ]
+        // include: [
+        //   {
+        //     model: VideoDbModel,
+        //     through: { attributes: [] }
+        //   }
+        // ]
       }) as any;
       for (let i = 0; i < artistList.length; i++) {
-        console.log('artist', artistList[i].dataValues.genre);
         let genre = artistList[i].dataValues?.genre;
         if (genre) {
           const genreList = await GenreDbModel.findAll({
@@ -36,89 +35,126 @@ class ArtistService {
           artistList[i].dataValues.genre = genreList;
         }
       }
-      return artistList;
+      return res.json({
+        count: artistList.length,
+        data: artistList
+      });
     } catch (e: any) {
       console.log('------get Artist API Error----', e);
-      return e.toString();
+      return res.status(400).json({
+        msg: e.toString()
+      });
     }
   }
 
   /**
    * create artist data.
-   * @param artistObj 
+   * @param req
+   * @param res
    * @returns 
    */
-  async createArtist(artistObj: Partial<IArtistModel>): Promise<ArtistDbModel> {
+  async createArtist(req: any, res: any): Promise<ArtistDbModel> {
     try {
-      const createArtist = await ArtistDbModel.create({ ...artistObj, createdAt: new Date().toISOString() });
-      console.log("--------create Artist--------", createArtist);
-      return createArtist;
+      let profile: string = req.body.profile;
+      const id = +req.params.id;
+      if (req.files?.profile?.length > 0) {
+        profile = req.files.profile[0].path.replaceAll("\\", "/");
+      }
+
+      const artistData: IArtistModel = {
+        artistName: req.body.artistName,
+        profile,
+        highlight: req.body.highlight,
+        address: req.body.address,
+        description: req.body.description,
+        status: req.body.status
+      } as any;
+      const createArtist = await ArtistDbModel.create({ ...artistData, createdAt: new Date().toISOString() });
+      return res.json({
+        message: 'Artist is created successfully',
+        data: createArtist
+      });
     } catch (e: any) {
       console.log("Create Artist API Error", e);
-      return e.toString();
+      return res.status(400).json({
+        msg: e.toString()
+      });
     }
   }
 
   /**
    * update Artist data.
-   * @param artistObj
+   * @param req
+   * @param res
    */
-  async updateArtist(artistObj: Partial<IArtistModel>): Promise<any> {
+  async updateArtist(req: any, res: any): Promise<any> {
     try {
-      const updateArtist = await ArtistDbModel.update(artistObj, {
-        where: { id: artistObj.id as number }
+      const id = +req.params.id
+      const checkArtist = await this.getArtistById(req, res);
+      if (!checkArtist) {
+        return res.status(404).json({
+          msg: "Artist is not found"
+        });
+      }
+
+      const artistData: IArtistModel = {
+        artistName: req.body.artistName,
+        highlight: req.body.highlight,
+        address: req.body.address,
+        description: req.body.description,
+        status: req.body.status
+      } as any;
+
+      let profile: any = req.body.profile;
+      if (req.files?.profile?.length > 0) {
+        profile = req.files.profile[0].path.replace("\\", "/");
+        if (checkArtist.profile && checkArtist.profile != profile) {
+          deleteFile(checkArtist.profile);
+        }
+        if (checkArtist) {
+          artistData.profile = profile;
+        }
+      }
+
+      artistData.id = +req.params.id;
+      const updateArtist = await ArtistDbModel.update(artistData, {
+        where: { id: artistData.id as number }
       });
       return updateArtist;
     } catch (e: any) {
-      console.log('------update artist error----', e);
-      return e.toString();
-    }
-  }
-
-  /**
-   * create artist video to upload.
-   * @param artistId
-   * @param artistVideoObj 
-   * @returns 
-   */
-  async createArtistVideo(artistId: number, artistVideoObj: Partial<any>): Promise<ArtistDbModel> {
-    try {
-      const createVideo = await VideoDbModel.create({ ...artistVideoObj, createdAt: new Date().toISOString() });
-
-      if (createVideo?.dataValues?.id) {
-        const createArtistVideoData = await ArtistVideoDbModel.create({
-          artistId,
-          videoId: createVideo?.dataValues?.id
-        });
-        console.log("--------create Artist--------", createArtistVideoData);
-      }
-      return createVideo;
-    } catch (e: any) {
       console.log("Create Artist API Error", e);
-      return e.toString();
+      return res.status(400).json({
+        msg: e.toString()
+      });
     }
   }
-
-
 
   /**
    * get Artist by Id.
-   * @param artist_id 
+   * @param req
+   * @param res
    * @returns 
    */
-  async getArtistById(artist_id: number): Promise<any> {
+  async getArtistById(req: any, res: any): Promise<any> {
     try {
+      const id = +req.params.id;
       const artistData = await ArtistDbModel.findOne({
         where: {
-          id: artist_id
+          id
         },
-        include: [
-          {
-            model: VideoDbModel,
-            through: { attributes: [] }
-          }
-        ]
+        // include: [
+        //   {
+        //     model: VideoDbModel,
+        //     through: { attributes: [] }
+        //   }
+        // ]
       }) as any;
+      console.log('artist data', artistData);
+      if (!artistData) {
+        return res.status(404).json({
+          msg: "Artist data is not found by this id"
+        });
+      }
       let genre = artistData.dataValues?.genre;
       if (genre) {
         const genreList = await GenreDbModel.findAll({
@@ -128,10 +164,14 @@ class ArtistService {
         });
         artistData.dataValues.genre = genreList;
       }
-      return artistData;
+      return res.json({
+        data: artistData
+      });
     } catch (e: any) {
       console.log("--Get Artist By Id API Error---", e);
-      return e.toString();
+      return res.status(400).json({
+        msg: e.toString(),
+      });
     }
   }
 }

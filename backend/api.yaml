@@ -66,7 +66,7 @@ paths:
           description: Login Successfully.
 
   /api/logout:
-    post:
+    get:
       tags:
         - Authentication
       summary: Logs out current logged in user session
@@ -74,7 +74,13 @@ paths:
         - {}
       description: ""
       operationId: logoutUser
-      parameters: []
+      parameters:
+        - name: userId
+          in: header
+          description: ID of login UserId
+          required: true
+          schema:
+            type: string
       responses:
         default:
           description: Logout Successfully.
@@ -211,6 +217,9 @@ paths:
                 color:
                   type: string
                   example: "#fff"
+                createdUser:
+                  type: number
+                  example: 1
           application/xml:
             schema:
               type: object
@@ -254,6 +263,9 @@ paths:
                 color:
                   type: string
                   example: "#fff"
+                createdUser:
+                  type: number
+                  example: 1
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -297,6 +309,9 @@ paths:
                 color:
                   type: string
                   example: "#fff"
+                createdUser:
+                  type: number
+                  example: 1
       responses:
         "200":
           description: Created event Successfully.
@@ -327,7 +342,7 @@ paths:
           "404":
             description: "Event is not found"
 
-  /api/v1/events/{id}:
+  /api/v1/events/update/{id}:
     post:
       tags:
         - Events
@@ -390,6 +405,9 @@ paths:
                 color:
                   type: string
                   example: "#fff"
+                createdUser:
+                  type: number
+                  example: 1
           application/xml:
             schema:
               type: object
@@ -433,6 +451,9 @@ paths:
                 color:
                   type: string
                   example: "#fff"
+                createdUser:
+                  type: number
+                  example: 1
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -476,6 +497,9 @@ paths:
                 color:
                   type: string
                   example: "#fff"
+                createdUser:
+                  type: number
+                  example: 1
       responses:
         "200":
           description: Event is updated successfully.
@@ -483,6 +507,30 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           description: Event is not found.
+
+  /api/v1/events/upcoming:
+    get:
+      tags:
+        - Events
+      summary: Get upcoming event by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: upcomingEvent
+      parameters:
+        - name: userId
+          in: header
+          description: ID of login UserId
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Returns all Events
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "Event is not found"    
 
 
   # Artist Routes
@@ -517,11 +565,17 @@ paths:
       description: This can only be done by the logged in user.
       security:
         - bearerAuth: []
+      parameters:
+        - name: userId
+          in: header
+          description: ID of login User.
+          required: true
+          type: number
       operationId: createArtist
       requestBody:
         description: Created artist
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -530,7 +584,7 @@ paths:
                   example: "Mario Mix"
                 profile:
                   type: string
-                  example: "assets/img/1.jpg"
+                  format: binary
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -543,7 +597,10 @@ paths:
                 status:
                   type: string
                   example: "available"
-          application/xml:
+                genre:
+                  type: string
+                  example: [1, 2]
+          application/octet-stream:
             schema:
               type: object
               properties:
@@ -552,7 +609,7 @@ paths:
                   example: "Mario Mix"
                 profile:
                   type: string
-                  example: "assets/img/1.jpg"
+                  format: binary
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -565,7 +622,10 @@ paths:
                 status:
                   type: string
                   example: "available"
-          application/x-www-form-urlencoded:
+                genre:
+                  type: string
+                  example: [1, 2]
+          application/octet-stream:
             schema:
               type: object
               properties:
@@ -574,7 +634,7 @@ paths:
                   example: "Mario Mix"
                 profile:
                   type: string
-                  example: "assets/img/1.jpg"
+                  format: binary
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -639,7 +699,7 @@ paths:
       requestBody:
         description: Updated artist
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -648,7 +708,7 @@ paths:
                   example: "Mario Mix"
                 profile:
                   type: string
-                  example: "assets/img/1.jpg"
+                  format: binary
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -661,7 +721,10 @@ paths:
                 status:
                   type: string
                   example: "available"
-          application/xml:
+                genre:
+                  type: string
+                  example: [1]
+          application/octet-stream:
             schema:
               type: object
               properties:
@@ -670,7 +733,7 @@ paths:
                   example: "Mario Mix"
                 profile:
                   type: string
-                  example: "assets/img/1.jpg"
+                  format: binary
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -683,7 +746,7 @@ paths:
                 status:
                   type: string
                   example: "available"
-          application/x-www-form-urlencoded:
+          application/octet-stream:
             schema:
               type: object
               properties:
@@ -692,7 +755,7 @@ paths:
                   example: "Mario Mix"
                 profile:
                   type: string
-                  example: "assets/img/1.jpg"
+                  format: binary
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -705,6 +768,9 @@ paths:
                 status:
                   type: string
                   example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
       responses:
         "200":
           description: Artist is updated successfully.
@@ -712,6 +778,323 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           description: Artist is not found.
+
+  /api/v1/artists/update/{id}:
+    post:
+      tags:
+        - Artists
+      summary: Update a artist
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: updatArtistById
+      parameters:
+        - name: id
+          in: path
+          description: ID of artist to return
+          required: true
+          schema:
+            type: string
+      operationId: updateArtist
+      requestBody:
+        description: Updated artist
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                artistName:
+                  type: string
+                  example: "Mario Mix"
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                description:
+                  type: string
+                  example: "Lorem ispum dolar sit amet"
+                status:
+                  type: string
+                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+      responses:
+        "200":
+          description: Artist is updated successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Artist is not found.
+
+  #userRoute
+  /api/v1/users/top/video/list:
+    get:
+      tags:
+        - Users
+      summary: Get all Videos
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: header
+          description: login UserId 
+          schema:
+            type: number
+        - name: page
+          in: query
+          description: PageNumber 
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Number of users that want to show per Page
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Returns all Videos
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/v1/users/video/list:
+    get:
+      tags:
+        - Users
+      summary: Get all Videos
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: PageNumber 
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Number of users that want to show per Page
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Returns all Videos
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/v1/users/upload/video:
+    post:
+      tags:
+        - Users
+      summary: Upload User Video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: uploadUserVideo
+      parameters:
+        - name: userId
+          in: header
+          description: uploaded userId
+          required: true
+          schema:
+            type: string
+      operationId: uploadUserVideo
+      requestBody:
+        description: Upload User Video
+        content:
+          multipart/form-data::
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Dancer in my Video!"
+                description:
+                  type: string
+                  example: "Become a dancer in my crew for the new album"
+                video:
+                  type: string
+                  format: binary
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Dancer in my Video!"
+                description:
+                  type: string
+                  example: "Become a dancer in my crew for the new album"
+                video:
+                  type: string
+                  format: binary
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Dancer in my Video!"
+                description:
+                  type: string
+                  example: "Become a dancer in my crew for the new album"
+                video:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: User Video is uploaded successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: API is not found.
+
+
+  /api/v1/users/video/{id}/like:
+    get:
+      tags:
+        - Users
+      summary: User like video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userLikeVideo
+      parameters:
+        - name: id
+          in: path
+          description: videoId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User like video status is successfully added.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Video is not found.
+
+  /api/v1/users/video/{id}/view:
+    get:
+      tags:
+        - Users
+      summary: User view video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userViewVideo
+      parameters:
+        - name: id
+          in: path
+          description: videoId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User view video status is successfully added.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Video is not found.
+
+  /api/v1/users/video/{id}/unlike:
+    get:
+      tags:
+        - Users
+      summary: User unlike video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userUnlikeVideo
+      parameters:
+        - name: videoId
+          in: path
+          description: videoId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User unlike video status successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Video is not found.
 components:
   # Schema Usage in component
   # schemas:

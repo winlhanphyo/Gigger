@@ -28,7 +28,7 @@ export class UserRoleDbModel extends Model {
   static associate({
     UserDbModel
   }: any) {
-    this.hasMany(UserDbModel, { foreignKey: 'role', as: 'user' });
+    this.hasMany(UserDbModel, { foreignKey: 'role', as: 'user_role' });
     // this.hasMany(UserDbModel, { foreignKey: 'role', as: 'user' });
     // this.belongsTo(UserDbModel, { foreignKey: 'role', as: 'user_role', targetKey: 'id' });
   }

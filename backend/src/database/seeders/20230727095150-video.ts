@@ -11,18 +11,14 @@ module.exports = {
         {
           name: "MY FIRST SOLO ALBUM",
           description: "Lorem ispum dolor",
-          url: "/upload/video/1.mp4",
-          viewCount: 100,
-          likeCount: 100,
+          video: "1.mp4",
           createdAt: '2023-07-12',
           updatedAt: '2023-07-12'
         },
         {
           name: "Dancer in my video",
           description: "Lorem ispum dolor",
-          url: "/upload/video/2.mp4",
-          viewCount: 100,
-          likeCount: 100,
+          video: "2.mp4",
           createdAt: '2023-07-12',
           updatedAt: '2023-07-12'
         }

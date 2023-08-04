@@ -50,9 +50,11 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
 };
 @associative
 export class UserDbModel extends Model {
-  static associate({ EventDbModel, UserRoleDbModel }: any) {
-    this.belongsToMany(EventDbModel, {through: 'event_user'});
+  static associate({ EventDbModel, UserRoleDbModel, VideoDbModel }: any) {
+    this.belongsToMany(EventDbModel, { through: 'event_user' });
     this.belongsTo(UserRoleDbModel, { foreignKey: 'role', as: 'user_role', targetKey: 'id' });
+    this.hasMany(EventDbModel, { foreignKey: 'createdUser', as: 'user' });
+    this.belongsToMany(VideoDbModel, {through: 'user_video'});
   }
 }
 

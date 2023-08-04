@@ -20,14 +20,8 @@ module.exports = {
       description: {
         type: DataTypes.STRING
       },
-      url: {
+      video: {
         type: DataTypes.STRING
-      },
-      viewCount: {
-        type: DataTypes.BIGINT
-      },
-      likeCount: {
-        type: DataTypes.BIGINT
       },
       createdAt: {
         allowNull: false,

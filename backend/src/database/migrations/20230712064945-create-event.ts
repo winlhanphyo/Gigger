@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false,
       },
       date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: false,
       },
       fromTime: {
@@ -36,6 +36,10 @@ module.exports = {
       description: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      participants: {
+        type: DataTypes.JSON,
+        allowNull: true,
       },
       beforeReminder: {
         type: DataTypes.STRING(50),
@@ -60,6 +64,10 @@ module.exports = {
       color: {
         type: DataTypes.STRING(50),
         allowNull: true
+      },
+      createdUser: {
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
