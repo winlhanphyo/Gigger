@@ -142,7 +142,7 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
 export class EventDbModel extends Model {
   static associate({ UserDbModel }: any) {
     this.belongsToMany(UserDbModel, {through: 'event_user'});
-    this.belongsTo(UserDbModel, { foreignKey: 'createdUser', as: 'user', targetKey: 'id' });
+    // this.belongsTo(UserDbModel, { foreignKey: 'createdUser', as: 'user', targetKey: 'id' });
   }
 }
 

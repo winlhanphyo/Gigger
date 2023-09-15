@@ -5,6 +5,7 @@ import { authController } from "../../controllers/auth/auth.controller";
 const router =express.Router();
 
 router.post('/signup', authController.signup);
+router.post('/pro/signup', authController.signup);
 
 router.post('/login', authController.login);
 router.get('/auth/google', authController.loginWithGoogle);

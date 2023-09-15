@@ -17,7 +17,7 @@ export interface IUserModel {
   description: string;
   status: string;
   genre: JSON;
-  instruments: JSON;
+  instrument: JSON;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -78,17 +78,20 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
     type: DataTypes.JSON,
     allowNull: true
   },
-  instruments: {
+  instrument: {
     type: DataTypes.JSON,
     allowNull: true
   },
 };
 @associative
 export class UserDbModel extends Model {
-  static associate({ EventDbModel, UserRoleDbModel, VideoDbModel }: any) {
+  static associate({ EventDbModel, UserRoleDbModel, VideoDbModel, PostDbModel, UserLikeViewPostDbModel }: any) {
     this.belongsToMany(EventDbModel, { through: 'event_user' });
     this.belongsTo(UserRoleDbModel, { foreignKey: 'role', as: 'user_role', targetKey: 'id' });
-    this.hasMany(EventDbModel, { foreignKey: 'createdUser', as: 'user' });
+    // this.hasMany(EventDbModel, { foreignKey: 'createdUser', as: 'user' });
+    this.hasMany(PostDbModel, { foreignKey: 'createdUser', as: 'createdByUser' });
+    this.hasMany(PostDbModel, { foreignKey: 'updatedUser', as: 'updatedByUser' });
+    // this.hasMany(UserLikeViewPostDbModel, { foreignKey: 'userId', as: 'userLikeList' });
     this.belongsToMany(VideoDbModel, {through: 'user_video'});
   }
 }

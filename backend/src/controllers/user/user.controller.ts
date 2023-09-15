@@ -18,6 +18,88 @@ class UserController {
   }
 
   /**
+   * get User profile
+   * @param req 
+   * @param res 
+   */
+  async getUserProfile(req: Request, res: Response) {
+    const user = await userService.getUserProfile(req, res);
+    return user;
+  }
+
+  /**
+   * like User profile
+   * @param req 
+   * @param res 
+   */
+  async likeProfile(req: Request, res: Response) {
+    const userVideoData = {
+      userId: req.headers['userid'],
+      artistId: req.params.id,
+      status: "like"
+    };
+    const response = await userService.addStatusUserProfile(userVideoData, res);
+    return response;
+  }
+
+  /**
+    * view User profile
+    * @param req 
+    * @param res 
+    */
+  async viewProfile(req: Request, res: Response) {
+    const userVideoData = {
+      userId: req.headers['userid'],
+      artistId: req.params.id,
+      status: "view"
+    };
+    const response = await userService.addStatusUserProfile(userVideoData, res);
+    return response;
+  }
+
+  /**
+   * follow User profile
+   * @param req 
+   * @param res 
+   */
+  async followProfile(req: Request, res: Response) {
+    const userVideoData = {
+      userId: req.headers['userid'],
+      artistId: req.params.id,
+      status: "follow"
+    };
+    const response = await userService.addStatusUserProfile(userVideoData, res);
+    return response;
+  }
+
+  /**
+   * unlike User Profile.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async unLikeProfile(req: Request, res: Response) {
+    const artistId = req.params.id;
+    const userId = req.headers['userid'];
+    const response = await userService.removeStatusUserProfile(userId, artistId, "like", res);
+    return response;
+  }
+
+  /**
+   * unFollow User Profile.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async unFollowProfile(req: Request, res: Response) {
+    const artistId = req.params.id;
+    const userId = req.headers['userid'];
+    const response = await userService.removeStatusVideo(userId, artistId, "follow", res);
+    return response;
+  }
+
+
+  /**
    * create user.
    * @param req 
    * @param res 

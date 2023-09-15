@@ -63,7 +63,7 @@ export default {
             type: DataTypes.JSON,
             allowNull: true
           },
-          instruments: {
+          instrument: {
             type: DataTypes.JSON,
             allowNull: true
           },

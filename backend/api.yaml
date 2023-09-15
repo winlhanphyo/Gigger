@@ -13,6 +13,8 @@ tags:
     description: Operations about Interests
   - name: Events
     description: Operations about Events
+  - name: Posts
+    description: Operations about Posts
   - name: Artists
     description: Operations about Artists
   - name: Users
@@ -1077,6 +1079,30 @@ paths:
           "404":
             description: "User is not found"
 
+  /api/v1/users/profile/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user profile by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: getUserProfileById
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Returns User By Id
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "User is not found"
+
   /api/v1/users/{id}:
     post:
       tags:
@@ -1582,6 +1608,561 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
         "404":
           description: Video is not found.
+
+  # Post Routes
+  /api/v1/posts:
+    get:
+      tags:
+        - Posts
+      summary: Get all Posts
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: PageNumber 
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Number of users that want to show per Page
+          schema:
+            type: number
+        - name: userId
+          in: header
+          description: ID of login UserId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns all Posts
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+      parameters:
+        - name: userId
+          in: header
+          description: ID of login UserId
+          required: true
+          schema:
+            type: string
+      tags:
+        - Posts
+      summary: Create Post
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: createPost
+      requestBody:
+        description: Created post
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                  example: "Pink Floyd Live"
+                music:
+                  type: json
+                  example: [1, 2]
+                address:
+                  type: string
+                  example: "No(35) Green Street"
+                advertisementFormat:
+                  type: string
+                  example: "1"
+                searchResult:
+                  type: string
+                  example: "Artists"
+                giglistClassifieds:
+                  type: string
+                  example: "Musicians"
+                targetAudience:
+                  type: string
+                  example: "Auto"
+                privateContent:
+                  type: boolean
+                  example: true
+                memberShipContent:
+                  type: boolean
+                  example: true
+                forMyFollowersOnly:
+                  type: boolean
+                  example: true
+                video:
+                  type: string
+                  format: binary
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                  example: "Pink Floyd Live"
+                music:
+                  type: json
+                  example: [1, 2]
+                address:
+                  type: string
+                  example: "No(35) Green Street"
+                advertisementFormat:
+                  type: string
+                  example: "1"
+                searchResult:
+                  type: string
+                  example: "Artists"
+                giglistClassifieds:
+                  type: string
+                  example: "Musicians"
+                targetAudience:
+                  type: string
+                  example: "Auto"
+                privateContent:
+                  type: boolean
+                  example: true
+                memberShipContent:
+                  type: boolean
+                  example: true
+                forMyFollowersOnly:
+                  type: boolean
+                  example: true
+                video:
+                  type: string
+                  example: "1.mp4"
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                  example: "Pink Floyd Live"
+                music:
+                  type: json
+                  example: [1, 2]
+                address:
+                  type: string
+                  example: "No(35) Green Street"
+                advertisementFormat:
+                  type: string
+                  example: "1"
+                searchResult:
+                  type: string
+                  example: "Artists"
+                giglistClassifieds:
+                  type: string
+                  example: "Musicians"
+                targetAudience:
+                  type: string
+                  example: "Auto"
+                privateContent:
+                  type: boolean
+                  example: true
+                memberShipContent:
+                  type: boolean
+                  example: true
+                forMyFollowersOnly:
+                  type: boolean
+                  example: true
+                video:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Created event Successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/v1/posts/{id}:
+    get:
+      tags:
+        - Posts
+      summary: Get post by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: getPostById
+      parameters:
+        - name: id
+          in: path
+          description: ID of post to return
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: ID of login UserId
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Returns all Posts
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "Post is not found"
+
+  /api/v1/posts/update/{id}:
+    post:
+      tags:
+        - Posts
+      summary: Update a post
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: updatePostById
+      parameters:
+        - name: id
+          in: path
+          description: ID of post to return
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: ID of login UserId
+          required: true
+          schema:
+            type: string
+      operationId: updatePost
+      requestBody:
+        description: Updated post
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                  example: "Pink Floyd Live"
+                music:
+                  type: json
+                  example: [1, 2]
+                address:
+                  type: string
+                  example: "No(35) Green Street"
+                advertisementFormat:
+                  type: string
+                  example: "1"
+                searchResult:
+                  type: string
+                  example: "Artists"
+                giglistClassifieds:
+                  type: string
+                  example: "Musicians"
+                targetAudience:
+                  type: string
+                  example: "Auto"
+                privateContent:
+                  type: boolean
+                  example: true
+                memberShipContent:
+                  type: boolean
+                  example: true
+                forMyFollowersOnly:
+                  type: boolean
+                  example: true
+                video:
+                  type: string
+                  format: binary
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                  example: "Pink Floyd Live"
+                music:
+                  type: json
+                  example: [1, 2]
+                address:
+                  type: string
+                  example: "No(35) Green Street"
+                advertisementFormat:
+                  type: string
+                  example: "1"
+                searchResult:
+                  type: string
+                  example: "Artists"
+                giglistClassifieds:
+                  type: string
+                  example: "Musicians"
+                targetAudience:
+                  type: string
+                  example: "Auto"
+                privateContent:
+                  type: boolean
+                  example: true
+                memberShipContent:
+                  type: boolean
+                  example: true
+                forMyFollowersOnly:
+                  type: boolean
+                  example: true
+                video:
+                  type: string
+                  format: binary
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                caption:
+                  type: string
+                  example: "Pink Floyd Live"
+                music:
+                  type: json
+                  example: [1, 2]
+                address:
+                  type: string
+                  example: "No(35) Green Street"
+                advertisementFormat:
+                  type: string
+                  example: "1"
+                searchResult:
+                  type: string
+                  example: "Artists"
+                giglistClassifieds:
+                  type: string
+                  example: "Musicians"
+                targetAudience:
+                  type: string
+                  example: "Auto"
+                privateContent:
+                  type: boolean
+                  example: true
+                memberShipContent:
+                  type: boolean
+                  example: true
+                forMyFollowersOnly:
+                  type: boolean
+                  example: true
+                video:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Post is updated successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Post is not found.
+
+  /api/v1/posts/top/video/list:
+    get:
+      tags:
+        - Posts
+      summary: Get all Videos
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: header
+          description: login UserId 
+          schema:
+            type: number
+        - name: page
+          in: query
+          description: PageNumber 
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Number of users that want to show per Page
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Returns all Videos
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/v1/posts/video/list:
+    get:
+      tags:
+        - Posts
+      summary: Get all Videos
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: PageNumber 
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Number of users that want to show per Page
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Returns all Videos
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/v1/posts/upload/video:
+    post:
+      tags:
+        - Posts
+      summary: Upload Post Video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: uploadUserVideo
+      parameters:
+        - name: userId
+          in: header
+          description: uploaded userId
+          required: true
+          schema:
+            type: string
+      operationId: uploadUserVideo
+      requestBody:
+        description: Upload User Video
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Dancer in my Video!"
+                description:
+                  type: string
+                  example: "Become a dancer in my crew for the new album"
+                video:
+                  type: string
+                  format: binary
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Dancer in my Video!"
+                description:
+                  type: string
+                  example: "Become a dancer in my crew for the new album"
+                video:
+                  type: string
+                  format: binary
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Dancer in my Video!"
+                description:
+                  type: string
+                  example: "Become a dancer in my crew for the new album"
+                video:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: User Video is uploaded successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: API is not found.
+
+
+  /api/v1/posts/video/{id}/like:
+    get:
+      tags:
+        - Posts
+      summary: User like video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userLikeVideo
+      parameters:
+        - name: id
+          in: path
+          description: postId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post like video status is successfully added.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Video is not found.
+
+  /api/v1/posts/video/{id}/view:
+    get:
+      tags:
+        - Posts
+      summary: User view video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userViewVideo
+      parameters:
+        - name: id
+          in: path
+          description: postId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Post view video status is successfully added.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Video is not found.
+
+  /api/v1/posts/video/{id}/unlike:
+    get:
+      tags:
+        - Posts
+      summary: User unlike video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userUnlikeVideo
+      parameters:
+        - name: postId
+          in: path
+          description: postId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User unlike video status successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Video is not found.   
+
 
   #videoRoute
   /api/video/{filename}/stream:

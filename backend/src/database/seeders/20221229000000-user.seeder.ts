@@ -19,6 +19,7 @@ export default {
           description: "One Man Show",
           status: "available",
           genre: JSON.stringify([1, 2]),
+          instrument: JSON.stringify([1, 2]),
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },
@@ -35,6 +36,7 @@ export default {
           description: "Guitar Skill",
           status: "available",
           genre: JSON.stringify([1, 2]),
+          instrument: JSON.stringify([1, 2]),
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },
@@ -51,6 +53,7 @@ export default {
           description: "Rehearsal with Alessio",
           status: "available",
           genre: JSON.stringify([1, 2]),
+          instrument: JSON.stringify([1, 2]),
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },
@@ -67,6 +70,7 @@ export default {
           description: "Rehearsal with Alessio",
           status: "available",
           genre: JSON.stringify([1, 2]),
+          instrument: JSON.stringify([1, 2]),
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },
@@ -83,6 +87,7 @@ export default {
           description: "Rehearsal with Alessio",
           status: "available",
           genre: JSON.stringify([1, 2]),
+          instrument: JSON.stringify([1, 2]),
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },
@@ -99,6 +104,7 @@ export default {
           description: "Rehearsal with Alessio",
           status: "available",
           genre: JSON.stringify([1, 2]),
+          instrument: JSON.stringify([1, 2]),
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },
@@ -115,6 +121,7 @@ export default {
           description: "Rehearsal with Alessio",
           status: "available",
           genre: JSON.stringify([1, 2]),
+          instrument: JSON.stringify([1, 2]),
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
         },

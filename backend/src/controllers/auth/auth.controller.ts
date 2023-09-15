@@ -28,6 +28,11 @@ class AuthController {
     return userData;
   }
 
+  async signUpProUser(req: any, res: Response): Promise<any> {
+    const userData = await authService.signUpProUser(req, res);
+    return userData;
+  }
+
   /**
    * login with google
    * @param req 

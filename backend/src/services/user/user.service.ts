@@ -2,6 +2,7 @@
 import bcrypt from "bcrypt";
 import { GenreDbModel, UserDbModel, UserRoleDbModel, UserVideoDbModel, VideoDbModel } from "../../database";
 import { UserLikeViewVideoDbModel } from "../../database/models/userLikeViewVideo.model";
+import { UserLikeViewProfileDbModel } from "../../database/models/userLikeViewProfile.model";
 import { PAGINATION_LIMIT } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
 
@@ -87,7 +88,8 @@ class UserService {
         highlight: req.body.highlight,
         address: req.body.address,
         description: req.body.description,
-        status: req.body.status
+        status: req.body.status,
+        instrument: req.body.instrument
       } as any;
       const createUser = await UserDbModel.create({ ...userData, createdAt: new Date().toISOString() });
       return res.json({
@@ -128,7 +130,8 @@ class UserService {
         highlight: req.body.highlight,
         address: req.body.address,
         description: req.body.description,
-        status: req.body.status
+        status: req.body.status,
+        instrument: req.body.instrument
       } as any;
 
       let profile: any = req.body.profile;
@@ -164,16 +167,153 @@ class UserService {
   async getUserById(req: any, res: any): Promise<any> {
     try {
       const id = +req.params.id;
+      const userData = await this.getUserDataWithId(id, res);
+      return res.json({
+        data: userData
+      });
+    } catch (e: any) {
+      console.log("--Get User By Id API Error---", e);
+      return res.status(400).json({
+        msg: e.toString(),
+      });
+    }
+  }
+
+  /**
+   * get user profile.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async getUserProfile(req: any, res: any): Promise<any> {
+    try {
+      const id = +req.params.id;
+      const userData = await this.getUserDataWithId(id, res);
+
+      const getCountData = async (id: any, status: any) => {
+        const count = await UserLikeViewProfileDbModel.count({
+          where: {
+            artistId: id,
+            status
+          }
+        });
+        return count;
+      }
+
+      // like and view follow count for profile.
+      if (userData) {
+        const likeCount = await getCountData(userData.dataValues.id, "like");
+        userData.dataValues.likeCount = this.formatNumber(likeCount);
+
+        const viewCount = await getCountData(userData.dataValues.id, "view");
+        userData.dataValues.viewCount = this.formatNumber(viewCount);
+
+        const followCount = await getCountData(userData.dataValues.id, "follow");
+        userData.dataValues.followCount = this.formatNumber(followCount);
+      }
+
+      return res.json({
+        data: userData
+      });
+    } catch (e: any) {
+      console.log("--Get User By Id API Error---", e);
+      return res.status(400).json({
+        msg: e.toString(),
+      });
+    }
+  }
+
+  /**
+   * add status profile (for user's profile like and view)
+   * @param userLikeViewProfileData 
+   * @param res
+   * @returns 
+   */
+  async addStatusUserProfile(userLikeViewProfileData: any, res: any): Promise<any> {
+    try {
+      const profile = await this.getUserDataWithId(userLikeViewProfileData.artistId, res);
+      if (!profile) {
+        res.status(400).json({
+          msg: "User Profile is not found by this id"
+        });
+      }
+
+      const count = await UserLikeViewProfileDbModel.count({
+        where: {
+          artistId: userLikeViewProfileData.artistId,
+          userId: parseInt(userLikeViewProfileData.userId),
+          status: userLikeViewProfileData.status
+        }
+      });
+
+      if (count > 0) {
+        return res.json({
+          message: `User already ${userLikeViewProfileData.status} this profile`,
+        });
+      }
+
+      const createLikeViewProfile = await UserLikeViewProfileDbModel.create({ ...userLikeViewProfileData, createdAt: new Date().toISOString() });
+      return res.json({
+        message: `Add Profile ${userLikeViewProfileData.status} Status is successful.`,
+        data: createLikeViewProfile
+      });
+    } catch (e: any) {
+      console.log(`------Add Profile Status Error----`, e);
+      return res.status(400).json({
+        msg: e.toString()
+      });
+    }
+  }
+
+  /**
+   * remove profile status.
+   * @param userId 
+   * @param artistId 
+   * @param status 
+   * @param res 
+   * @returns 
+   */
+  async removeStatusUserProfile(userId: any, artistId: any, status: any, res: any): Promise<any> {
+    try {
+      const profile = this.getUserDataWithId(artistId, res);
+      if (!profile) {
+        res.status(400).json({
+          msg: "Profile is not found by this id"
+        });
+      }
+      const removeLikeViewProfile = await UserLikeViewProfileDbModel.destroy(
+        {
+          where: {
+            userId,
+            artistId,
+            status
+          },
+        }
+      );
+      return res.json({
+        message: `Remove User Profile ${status} Status is successful.`,
+        data: removeLikeViewProfile
+      });
+    } catch (e: any) {
+      console.log('------Remove User Profile Status Error----', e);
+      return res.status(400).json({
+        msg: e.toString()
+      });
+    }
+  }
+
+  /**
+   * get user data with id.
+   * @param id 
+   * @param res 
+   * @returns 
+   */
+  async getUserDataWithId(id: any, res: any) {
+    try {
       const userData = await UserDbModel.findOne({
         where: {
           id
-        },
-        // include: [
-        //   {
-        //     model: VideoDbModel,
-        //     through: { attributes: [] }
-        //   }
-        // ]
+        }
       }) as any;
       console.log('user data', userData);
       if (!userData) {
@@ -200,9 +340,7 @@ class UserService {
         });
         userData.dataValues.interest = interestList;
       }
-      return res.json({
-        data: userData
-      });
+      return userData;
     } catch (e: any) {
       console.log("--Get User By Id API Error---", e);
       return res.status(400).json({
@@ -220,7 +358,6 @@ class UserService {
   async addStatusVideo(userLikeViewVideoData: any, res: any): Promise<any> {
     try {
       const video = await this.getVideoById(userLikeViewVideoData.videoId);
-      console.log("video-------", video);
       if (!video) {
         res.status(400).json({
           msg: "Video is not found by this id"
@@ -230,7 +367,7 @@ class UserService {
       const count = await UserLikeViewVideoDbModel.count({
         where: {
           videoId: userLikeViewVideoData.videoId,
-          userId: userLikeViewVideoData.userId,
+          artistId: userLikeViewVideoData.artistId,
           status: userLikeViewVideoData.status
         }
       });
@@ -243,7 +380,7 @@ class UserService {
 
       const createLikeViewVideo = await UserLikeViewVideoDbModel.create({ ...userLikeViewVideoData, createdAt: new Date().toISOString() });
       return res.json({
-        message: `Add Vido ${userLikeViewVideoData.status} Status is successful.`,
+        message: `Add User Profile ${userLikeViewVideoData.status} Status is successful.`,
         data: createLikeViewVideo
       });
     } catch (e: any) {
@@ -418,7 +555,7 @@ class UserService {
    * @param res 
    * @returns 
    */
-   async topVideoList(req: any, res: any) {
+  async topVideoList(req: any, res: any) {
     try {
       const userId = req.headers['userid'];
       const userData = await UserDbModel.findOne({
@@ -450,10 +587,10 @@ class UserService {
       let videoList = await this.getVideoForTop(limit, offset, condition);
       if (allVideoCount < count) {
         limit = limit - videoList.length;
-        offset = (count - allVideoCount)/limit;
+        offset = (count - allVideoCount) / limit;
         const preVideoId = videoList?.dataValues?.map((data: any) => data.id);
         condition = {
-          id: { $ne : preVideoId }
+          id: { $ne: preVideoId }
         };
         let nextVideoList = await this.getVideoForTop(limit, offset, condition);
         videoList = [...videoList, ...nextVideoList];
@@ -499,7 +636,7 @@ class UserService {
    * @param condition 
    * @returns 
    */
-  async getVideoForTop(limit: any, offset: any, condition:any) {
+  async getVideoForTop(limit: any, offset: any, condition: any) {
     try {
       const videoList = await VideoDbModel.findAll({
         limit,

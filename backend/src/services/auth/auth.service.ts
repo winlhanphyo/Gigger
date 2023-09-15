@@ -97,6 +97,58 @@ class AuthService {
     }
   }
 
+  async signUpProUser(req: any, res: any): Promise<any> {
+    try {
+      const param = req.body;
+      let productList = [
+        {
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: param.planName,
+            },
+            unit_amount: param.price,
+          },
+          quantity: 1,
+        }
+      ];
+      const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+      const domainUrl = param.domainUrl;
+      delete param?.domainUrl;
+      
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: productList,
+        mode: "payment",
+        payment_intent_data:  {
+          metadata: {
+            orderId: param.loginId,
+          },
+        },
+        // shipping_address_collection: {
+        //   allowed_countries: ['US', 'SG', "IT"],
+        // },
+        // custom_text: {
+        //   shipping_address: {
+        //     message: 'Please note that we can\'t guarantee 2-day delivery for PO boxes at this time.',
+        //   },
+        //   submit: {
+        //     message: 'We\'ll email you instructions on how to get started.',
+        //   },
+        // },
+        // success_url: domainUrl + "/payment/success",
+        // cancel_url: domainUrl + "/payment/cancel",
+      });
+      // return res.json({ id: session.id });
+
+      res.json(session);
+  
+    } catch (err: any) {
+      console.log('Stripe API Error', err);
+      throw err.toString();
+    }
+  }
+
   /**
    * user logout
    * @param id 
