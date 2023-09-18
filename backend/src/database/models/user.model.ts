@@ -18,6 +18,18 @@ export interface IUserModel {
   status: string;
   genre: JSON;
   instrument: JSON;
+  phone: string;
+  services: string;
+  experiences: string;
+  studies: string;
+  achievements: string;
+  customTitle: string;
+  instagram: string;
+  youtube: string;
+  facebook: string;
+  twitter: string;
+  tittok: string;
+  website: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -80,6 +92,54 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
   },
   instrument: {
     type: DataTypes.JSON,
+    allowNull: true
+  },
+  phone: {
+    type: DataTypes.STRING(50),
+    allowNull: true
+  },
+  services: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  experiences: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  studies: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  achievements: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  customTitle: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  instagram: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  youtube: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  facebook: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  twitter: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  tittok: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  website: {
+    type: DataTypes.STRING,
     allowNull: true
   },
 };

@@ -109,6 +109,54 @@ class EventService {
   }
 
   /**
+   * delete campaign.
+   * @param req
+   * @param res 
+   * @returns 
+   */
+  async deleteEvent(req: any, res: any): Promise<EventDbModel> {
+    try {
+      const id = req.params.id;
+
+      const detailEvent = await EventDbModel.findOne({
+        where: {
+          id
+        },
+        include: [
+          {
+            model: UserDbModel,
+            through: { attributes: [] }
+          }
+        ]
+      }) as any;
+
+      if (!detailEvent) {
+        return res.status(400).json({
+          msg: "Event is not found by this id"
+        });
+      }
+
+      const removeEventData = await EventDbModel.destroy(
+        {
+          where: {
+            id
+          },
+        }
+      );
+
+      return res.json({
+        message: `Delete Event is successful.`,
+        data: removeEventData
+      });
+    } catch (e: any) {
+      console.log("Delete Event API Error", e);
+      return res.status(400).json({
+        msg: e.toString()
+      });
+    }
+  }
+
+  /**
    * get Event by Id.
    * @param event_id 
    * @returns 
@@ -166,7 +214,7 @@ class EventService {
       const date = new Date();
       const startOfDateRange = new Date();
       const endOfDateRange = new Date(date.setDate(date.getDate() + 2));
-      
+
       const eventData = await EventDbModel.findAll({
         where: {
           [Op.and]: [
@@ -189,7 +237,7 @@ class EventService {
           },
         ],
       }) as any;
-      
+
       if (!eventData) {
         return res.status(200).json({
           data: [],

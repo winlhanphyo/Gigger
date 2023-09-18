@@ -39,7 +39,7 @@ class EventController {
       longitude: req.body.longitude,
       artists: req.body.artists,
       color: req.body.color,
-      createdUserId: req.headers['userId']
+      createdUserId: req.headers['userid']
     } as any;
 
     const result = await eventService.createEvent(eventData, res);
@@ -75,12 +75,22 @@ class EventController {
       longitude: req.body.longitude,
       artists: req.body.artists,
       color: req.body.color,
-      createdUserId: req.headers['userId']
+      updatedUserId: req.headers['userId']
     } as any;
 
     eventData.id = +req.params.id;
     const updateEventData = await eventService.updateEvent(eventData, res);
     return updateEventData;
+  }
+
+  /**
+    * delete event.
+    * @param req 
+    * @param res 
+    */
+  deleteEvent(req: any, res: any) {
+    const data = eventService.deleteEvent(req, res);
+    return data;
   }
 
   /**

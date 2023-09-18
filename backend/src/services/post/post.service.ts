@@ -74,7 +74,8 @@ class PostService {
       const postObj: IPostModel = {
         caption: req.body.caption,
         music: req.body.music,
-        address: req.body.address,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
         advertisementFormat: req.body.advertisementFormat,
         searchResult: req.body.searchResult,
         giglistClassifieds: req.body.giglistClassifieds,
@@ -126,7 +127,9 @@ class PostService {
       const postObj: IPostModel = {
         caption: req.body.caption,
         music: req.body.music,
-        address: req.body.address,
+        // address: req.body.address,
+        latitude: req.body.latitude,
+        longitude: req.body.longitude,
         advertisementFormat: req.body.advertisementFormat,
         searchResult: req.body.searchResult,
         giglistClassifieds: req.body.giglistClassifieds,
@@ -135,7 +138,8 @@ class PostService {
         memberShipContent: req.body.memberShipContent,
         forMyFollowersOnly: req.body.forMyFollowersOnly,
         postId: req.body.postId,
-        updatedUser: req.headers['userid']
+        updatedUser: req.headers['userid'],
+        updatedAt: new Date().toISOString()
       } as any;
 
       postObj.id = +req.params.id;
@@ -145,7 +149,6 @@ class PostService {
         if (detailPost?.dataValues?.video) {
           deleteFile(detailPost.dataValues.video);
         }
-
 
         video = req.files.video[0].path.replaceAll("\\", "/");
         const splitFileName = video.split("/");

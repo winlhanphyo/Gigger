@@ -15,8 +15,6 @@ tags:
     description: Operations about Events
   - name: Posts
     description: Operations about Posts
-  - name: Artists
-    description: Operations about Artists
   - name: Users
     description: Operations about Users
   - name: Videos
@@ -538,356 +536,6 @@ paths:
           "404":
             description: "Event is not found"    
 
-
-  # Artist Routes
-  /api/v1/artists:
-    get:
-      tags:
-        - Artists
-      summary: Get all Artists
-      description: This can only be done by the logged in user.
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: page
-          in: query
-          description: PageNumber 
-          schema:
-            type: number
-        - name: size
-          in: query
-          description: Number of users that want to show per Page
-          schema:
-            type: number
-      responses:
-        "200":
-          description: Returns all Artists
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-    post:
-      tags:
-        - Artists
-      summary: Create Artist
-      description: This can only be done by the logged in user.
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: userId
-          in: header
-          description: ID of login User.
-          required: true
-          type: number
-      operationId: createArtist
-      requestBody:
-        description: Created artist
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-                genre:
-                  type: string
-                  example: [1, 2]
-          application/octet-stream:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-                genre:
-                  type: string
-                  example: [1, 2]
-          application/octet-stream:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-      responses:
-        "200":
-          description: Artist is created successfully.
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "404":
-          description: Artist is created successfully.
-
-  /api/v1/artists/{id}:
-    get:
-      tags:
-        - Artists
-      summary: Get artist by ID
-      description: This can only be done by the logged in user.
-      security:
-        - bearerAuth: []
-      operationId: getArtistById
-      parameters:
-        - name: id
-          in: path
-          description: ID of artist to return
-          required: true
-          schema:
-            type: string
-      responses:
-          "200":
-            description: Returns Artist By Id
-          "401":
-            $ref: "#/components/responses/UnauthorizedError"
-          "404":
-            description: "Artist is not found"
-
-  /api/v1/artists/{id}:
-    post:
-      tags:
-        - Artists
-      summary: Update a artist
-      description: This can only be done by the logged in user.
-      security:
-        - bearerAuth: []
-      operationId: updateArtistById
-      parameters:
-        - name: id
-          in: path
-          description: ID of artist to return
-          required: true
-          schema:
-            type: string
-      operationId: updateArtist
-      requestBody:
-        description: Updated artist
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-                genre:
-                  type: string
-                  example: [1]
-          application/octet-stream:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-          application/octet-stream:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-                genre:
-                  type: string
-                  example: [1, 2]
-      responses:
-        "200":
-          description: Artist is updated successfully.
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "404":
-          description: Artist is not found.
-
-  /api/v1/artists/update/{id}:
-    post:
-      tags:
-        - Artists
-      summary: Update a artist
-      description: This can only be done by the logged in user.
-      security:
-        - bearerAuth: []
-      operationId: updatArtistById
-      parameters:
-        - name: id
-          in: path
-          description: ID of artist to return
-          required: true
-          schema:
-            type: string
-      operationId: updateArtist
-      requestBody:
-        description: Updated artist
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-                genre:
-                  type: string
-                  example: [1, 2]
-          application/octet-stream:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-                genre:
-                  type: string
-                  example: [1, 2]
-          application/octet-stream:
-            schema:
-              type: object
-              properties:
-                artistName:
-                  type: string
-                  example: "Mario Mix"
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
-                  type: string
-                  example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
-                  type: string
-                  example: "available"
-                genre:
-                  type: string
-                  example: [1, 2]
-      responses:
-        "200":
-          description: Artist is updated successfully.
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "404":
-          description: Artist is not found.
-
   #userRoute
   /api/v1/users:
     get:
@@ -961,15 +609,46 @@ paths:
                 address:
                   type: string
                   example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
                 status:
                   type: string
-                  example: "available"
                 genre:
                   type: string
                   example: [1, 2]
+                description:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
+                  type: string
+                  example: "+3912312312"
+                services:
+                  type: string
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
+                  type: string
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
+                  type: string
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
+                  type: string
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
+                  type: string
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
+                  type: string
+                  example: "Via Giolitti"
+                youtube:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                facebook:
+                  type: string
+                twitter:
+                  type: string
+                tittok:
+                  type: string
+                website:
+                  type: string
           application/octet-stream:
             schema:
               type: object
@@ -1001,15 +680,46 @@ paths:
                 address:
                   type: string
                   example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
                 status:
                   type: string
-                  example: "available"
                 genre:
                   type: string
                   example: [1, 2]
+                description:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
+                  type: string
+                  example: "+3912312312"
+                services:
+                  type: string
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
+                  type: string
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
+                  type: string
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
+                  type: string
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
+                  type: string
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
+                  type: string
+                  example: "Via Giolitti"
+                youtube:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                facebook:
+                  type: string
+                twitter:
+                  type: string
+                tittok:
+                  type: string
+                website:
+                  type: string
           application/octet-stream:
             schema:
               type: object
@@ -1041,12 +751,46 @@ paths:
                 address:
                   type: string
                   example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
                 status:
                   type: string
-                  example: "available"
+                genre:
+                  type: string
+                  example: [1, 2]
+                description:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
+                  type: string
+                  example: "+3912312312"
+                services:
+                  type: string
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
+                  type: string
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
+                  type: string
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
+                  type: string
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
+                  type: string
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
+                  type: string
+                  example: "Via Giolitti"
+                youtube:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                facebook:
+                  type: string
+                twitter:
+                  type: string
+                tittok:
+                  type: string
+                website:
+                  type: string
       responses:
         "200":
           description: User is created successfully.
@@ -1154,15 +898,117 @@ paths:
                 address:
                   type: string
                   example: "Via Giolitti"
-                description:
-                  type: string
-                  example: "Lorem ispum dolar sit amet"
                 status:
                   type: string
-                  example: "available"
                 genre:
                   type: string
-                  example: [1]
+                  example: [1, 2]
+                description:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
+                  type: string
+                  example: "+3912312312"
+                services:
+                  type: string
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
+                  type: string
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
+                  type: string
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
+                  type: string
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
+                  type: string
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
+                  type: string
+                  example: "Via Giolitti"
+                youtube:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                facebook:
+                  type: string
+                twitter:
+                  type: string
+                tittok:
+                  type: string
+                website:
+                  type: string
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Mario Mix"
+                email:
+                  type: string
+                  example: "mariomix@gmail.com"
+                password:
+                  type: string
+                  example: "12345"
+                role:
+                  type: number
+                  example: 1
+                dob:
+                  type: string
+                  example: 16-12-1996
+                interest:
+                  type: string
+                  example: [1, 2]
+                profile:
+                  type: string
+                  format: binary
+                highlight:
+                  type: string
+                  example: "Professional Sound Engeering"
+                address:
+                  type: string
+                  example: "Via Giolitti"
+                status:
+                  type: string
+                genre:
+                  type: string
+                  example: [1, 2]
+                description:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
+                  type: string
+                  example: "+3912312312"
+                services:
+                  type: string
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
+                  type: string
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
+                  type: string
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
+                  type: string
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
+                  type: string
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
+                  type: string
+                  example: "Via Giolitti"
+                youtube:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                facebook:
+                  type: string
+                twitter:
+                  type: string
+                tittok:
+                  type: string
+                website:
+                  type: string
           application/octet-stream:
             schema:
               type: object
@@ -1196,50 +1042,39 @@ paths:
                   example: "Via Giolitti"
                 description:
                   type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
                   type: string
-                  example: "available"
-          application/octet-stream:
-            schema:
-              type: object
-              properties:
-                username:
+                  example: "+3912312312"
+                services:
                   type: string
-                  example: "Mario Mix"
-                email:
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
                   type: string
-                  example: "mariomix@gmail.com"
-                password:
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
                   type: string
-                  example: "12345"
-                role:
-                  type: number
-                  example: 1
-                dob:
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
                   type: string
-                  example: 16-12-1996
-                interest:
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
                   type: string
-                  example: [1, 2]
-                profile:
-                  type: string
-                  format: binary
-                highlight:
-                  type: string
-                  example: "Professional Sound Engeering"
-                address:
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
                   type: string
                   example: "Via Giolitti"
-                description:
+                youtube:
                   type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                facebook:
                   type: string
-                  example: "available"
-                genre:
+                twitter:
                   type: string
-                  example: [1, 2]
+                tittok:
+                  type: string
+                website:
+                  type: string
       responses:
         "200":
           description: User is updated successfully.
@@ -1301,13 +1136,39 @@ paths:
                   example: "Via Giolitti"
                 description:
                   type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
                   type: string
-                  example: "available"
-                genre:
+                  example: "+3912312312"
+                services:
                   type: string
-                  example: [1, 2]
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
+                  type: string
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
+                  type: string
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
+                  type: string
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
+                  type: string
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
+                  type: string
+                  example: "Via Giolitti"
+                youtube:
+                  type: string
+                  example: "https://www.youtube.com/@planetgt495"
+                facebook:
+                  type: string
+                twitter:
+                  type: string
+                tittok:
+                  type: string
+                website:
+                  type: string
           application/octet-stream:
             schema:
               type: object
@@ -1341,13 +1202,39 @@ paths:
                   example: "Via Giolitti"
                 description:
                   type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
                   type: string
-                  example: "available"
-                genre:
+                  example: "+3912312312"
+                services:
                   type: string
-                  example: [1, 2]
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
+                  type: string
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
+                  type: string
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
+                  type: string
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
+                  type: string
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
+                  type: string
+                  example: "Via Giolitti"
+                youtube:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                facebook:
+                  type: string
+                twitter:
+                  type: string
+                tittok:
+                  type: string
+                website:
+                  type: string
           application/octet-stream:
             schema:
               type: object
@@ -1381,13 +1268,39 @@ paths:
                   example: "Via Giolitti"
                 description:
                   type: string
-                  example: "Lorem ispum dolar sit amet"
-                status:
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                phone:
                   type: string
-                  example: "available"
-                genre:
+                  example: "+3912312312"
+                services:
                   type: string
-                  example: [1, 2]
+                  example: "Distribution on every channel, Promotion on radio and Socail Media, Recording Mixing and Mastering"
+                experiences:
+                  type: string
+                  example: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla"
+                studies:
+                  type: string
+                  example: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla"
+                achievements:
+                  type: string
+                  example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
+                customTitle:
+                  type: string
+                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                instagram:
+                  type: string
+                  example: "Via Giolitti"
+                youtube:
+                  type: string
+                  example: "Hey there I’m Ingviel! Loren ipsum dolor sit amen, conshctetuer adlpiscing elit, sed dial nonummy nigh euismod incident ut laoreet dolore magna aliquot erat volutpat. Ut wis!"
+                facebook:
+                  type: string
+                twitter:
+                  type: string
+                tittok:
+                  type: string
+                website:
+                  type: string
       responses:
         "200":
           description: User is updated successfully.
@@ -1668,9 +1581,12 @@ paths:
                 music:
                   type: json
                   example: [1, 2]
-                address:
+                latitude:
                   type: string
-                  example: "No(35) Green Street"
+                  example: "1.3505696580073028"
+                longitude:
+                  type: string
+                  example: "103.86638379305228"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1742,9 +1658,12 @@ paths:
                 music:
                   type: json
                   example: [1, 2]
-                address:
+                latitude:
                   type: string
-                  example: "No(35) Green Street"
+                  example: "1.3505696580073028"
+                longitude:
+                  type: string
+                  example: "103.86638379305228"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1841,9 +1760,12 @@ paths:
                 music:
                   type: json
                   example: [1, 2]
-                address:
+                latitude:
                   type: string
-                  example: "No(35) Green Street"
+                  example: "1.3505696580073028"
+                longitude:
+                  type: string
+                  example: "103.86638379305228"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1878,9 +1800,12 @@ paths:
                 music:
                   type: json
                   example: [1, 2]
-                address:
+                latitude:
                   type: string
-                  example: "No(35) Green Street"
+                  example: "1.3505696580073028"
+                longitude:
+                  type: string
+                  example: "103.86638379305228"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1915,9 +1840,12 @@ paths:
                 music:
                   type: json
                   example: [1, 2]
-                address:
+                latitude:
                   type: string
-                  example: "No(35) Green Street"
+                  example: "1.3505696580073028"
+                longitude:
+                  type: string
+                  example: "103.86638379305228"
                 advertisementFormat:
                   type: string
                   example: "1"

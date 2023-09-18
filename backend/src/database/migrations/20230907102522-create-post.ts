@@ -23,7 +23,11 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      address: {
+      latitude: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      longitude: {
         type: DataTypes.STRING,
         allowNull: false,
       },

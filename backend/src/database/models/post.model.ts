@@ -8,7 +8,8 @@ export interface IPostModel {
   id: number;
   caption: string;
   music: string;
-  address: string;
+  latitude: string;
+  longitude: string;
   advertisementFormat: string;
   searchResult: string;
   giglistClassifieds: string;
@@ -53,7 +54,11 @@ const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  address: {
+  latitude: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  longitude: {
     type: DataTypes.STRING,
     allowNull: false,
   },

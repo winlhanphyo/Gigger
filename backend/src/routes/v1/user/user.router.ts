@@ -23,6 +23,7 @@ router.get('/video/:id/view', userController.viewVideo);
 router.get('/video/:id/unlike', userController.unLikeVideo);
 
 router.post('/update/:id', userController.updateUser);
+router.delete('/:id', userController.deleteUser);
 router.post('/', userController.createUser);
 router.post('/upload/video', userController.createUserVideo);
 

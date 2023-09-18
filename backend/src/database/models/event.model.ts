@@ -19,6 +19,7 @@ export interface IEventModel {
   artists: JSON;
   color: string;
   createdUser: number;
+  updatedUser: number;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -130,6 +131,14 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
     }
   },
   createdUser: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: 'user',
+      key: 'id'
+    }
+  },
+  updatedUser: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {

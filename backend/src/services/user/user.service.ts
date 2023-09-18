@@ -1,11 +1,11 @@
 
 import bcrypt from "bcrypt";
+import moment from "moment";
 import { GenreDbModel, UserDbModel, UserRoleDbModel, UserVideoDbModel, VideoDbModel } from "../../database";
 import { UserLikeViewVideoDbModel } from "../../database/models/userLikeViewVideo.model";
 import { UserLikeViewProfileDbModel } from "../../database/models/userLikeViewProfile.model";
 import { PAGINATION_LIMIT } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
-
 
 class UserService {
 
@@ -82,15 +82,26 @@ class UserService {
         email: req.body.email,
         password: await bcrypt.hash(req.body.password, 12),
         role: req.body.role,
-        dob: req?.body?.dob ? req.body.dob : null,
-        interest: req.body?.interest ? req.body.interest : null,
         profile,
         highlight: req.body.highlight,
         address: req.body.address,
         description: req.body.description,
         status: req.body.status,
-        instrument: req.body.instrument
+        instrument: req.body.instrument,
       } as any;
+
+      const addUserData = (dist: any, propName: any, data: any) => {
+        if (data?.hasOwnProperty(propName) && req.body[propName]) {
+          dist[propName] = data[propName];
+        }
+      }
+
+      const paramList = ["dob", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
+        "youtube", "facebook", "twitter", "tiktok", "website"];
+
+      for (let i = 0; i <= paramList.length; i++) {
+        addUserData(userData, paramList[i], req.body);
+      }
       const createUser = await UserDbModel.create({ ...userData, createdAt: new Date().toISOString() });
       return res.json({
         message: 'User is created successfully',
@@ -124,15 +135,40 @@ class UserService {
         email: req.body.email,
         password: await bcrypt.hash(req.body.password, 12),
         role: req.body.role,
-        dob: req?.body?.dob ? req.body.dob : null,
-        interest: req.body?.interest ? req.body.interest : null,
         name: req.body.name,
         highlight: req.body.highlight,
         address: req.body.address,
         description: req.body.description,
         status: req.body.status,
-        instrument: req.body.instrument
+        instrument: req.body.instrument,
+        updatedAt: new Date().toISOString()
       } as any;
+
+      const addUserData = (dist: any, propName: any, data: any) => {
+        console.log('data', typeof data);
+        let obj = JSON.parse(JSON.stringify(data));
+        if (typeof obj === 'object' && obj !== null) {
+          if (obj?.hasOwnProperty(propName) && req.body[propName]) {
+            dist[propName] = obj[propName];
+            if (propName === 'dob') {
+              // Parse the date string using Moment.js
+              const date = moment(obj[propName], "YYYY-MM-DD");
+              dist[propName] = date;
+            }
+          }
+        }
+      }
+
+      const paramList = ["dob", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
+        "youtube", "facebook", "twitter", "tiktok", "website"];
+
+      for (let i = 0; i <= paramList.length; i++) {
+        addUserData(userData, paramList[i], req.body);
+      }
+
+      console.log('userData', userData);
+
+
 
       let profile: any = req.body.profile;
       if (req.files?.profile?.length > 0) {
@@ -152,6 +188,48 @@ class UserService {
       return updateUser;
     } catch (e: any) {
       console.log("Create User API Error", e);
+      return res.status(400).json({
+        msg: e.toString()
+      });
+    }
+  }
+
+  /**
+   * delete user.
+   * @param req
+   * @param res 
+   * @returns 
+   */
+  async deleteUser(req: any, res: any): Promise<UserDbModel> {
+    try {
+      const id = req.params.id;
+
+      const detailUser = await UserDbModel.findOne({
+        where: {
+          id
+        }
+      }) as any;
+
+      if (!detailUser) {
+        return res.status(400).json({
+          msg: "User is not found by this id"
+        });
+      }
+
+      const removeUserData = await UserDbModel.destroy(
+        {
+          where: {
+            id
+          },
+        }
+      );
+
+      return res.json({
+        message: `Delete User is successful.`,
+        data: removeUserData
+      });
+    } catch (e: any) {
+      console.log("Delete User API Error", e);
       return res.status(400).json({
         msg: e.toString()
       });

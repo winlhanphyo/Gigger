@@ -122,6 +122,16 @@ class UserController {
   }
 
   /**
+  * delete event.
+  * @param req 
+  * @param res 
+  */
+  deleteUser(req: any, res: any) {
+    const data = userService.deleteUser(req, res);
+    return data;
+  }
+
+  /**
    * user Detail
    * @param req 
    * @param res 

@@ -69,6 +69,10 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: false
       },
+      updatedUser: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

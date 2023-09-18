@@ -11,7 +11,9 @@ module.exports = {
         {
           caption: "Post1",
           music: JSON.stringify([1, 2]),
-          address: "Singapore",
+          // address: "Singapore",
+          latitude: "1.3505696580073028",
+          longitude: "103.86638379305228",
           advertisementFormat: 1,
           searchResult: "Artists",
           giglistClassifieds: "Musicians",
@@ -27,7 +29,9 @@ module.exports = {
         {
           caption: "Post2",
           music: JSON.stringify([2]),
-          address: "Singapore",
+          // address: "Singapore",
+          latitude: "1.3423268491121407",
+          longitude: "103.86747078019175",
           advertisementFormat: 1,
           searchResult: "Home/All",
           giglistClassifieds: "Services",
@@ -43,7 +47,9 @@ module.exports = {
         {
           caption: "Post3",
           music: JSON.stringify([3, 4]),
-          address: "Singapore",
+          // address: "Singapore",
+          latitude: "1.3796342587179522",
+          longitude: "103.88796098243297",
           advertisementFormat: 1,
           searchResult: "Events",
           giglistClassifieds: "Gear",
