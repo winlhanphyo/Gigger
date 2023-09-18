@@ -1,6 +1,6 @@
 import sequelize from "sequelize";
 import { FindOptions, Op, fn } from "sequelize";
-import { IEventModel, EventDbModel, EventInputModel, UserDbModel, ArtistDbModel } from "../../database";
+import { IEventModel, EventDbModel, EventInputModel, UserDbModel } from "../../database";
 import { EventUserDbModel } from "../../database/models/eventUser.model";
 
 class EventService {
@@ -30,7 +30,7 @@ class EventService {
       for (let i = 0; i < eventList.length; i++) {
         let artists = eventList[i].dataValues?.artists;
         if (artists) {
-          const artistList = await ArtistDbModel.findAll({
+          const artistList = await UserDbModel.findAll({
             where: {
               id: artists
             }
@@ -185,7 +185,7 @@ class EventService {
 
       let artists = eventData.dataValues?.artists;
       if (artists) {
-        const artistList = await ArtistDbModel.findAll({
+        const artistList = await UserDbModel.findAll({
           where: {
             id: artists
           }
@@ -249,7 +249,7 @@ class EventService {
 
       let artists = eventData.dataValues?.artists;
       if (artists) {
-        const artistList = await ArtistDbModel.findAll({
+        const artistList = await UserDbModel.findAll({
           where: {
             id: artists
           }

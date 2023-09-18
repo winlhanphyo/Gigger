@@ -13,8 +13,8 @@ router.post('/:id/support', postController.support);
 
 router.get('/top/video/list', postController.userTopVideoList);
 router.get('/video/list', postController.userVideoList);
-router.get('/video/:id/like', postController.likeVideo);
-router.get('/video/:id/view', postController.viewVideo);
-router.get('/video/:id/unlike', postController.unLikeVideo);
+router.get('/:id/video/like', postController.likeVideo);
+router.get('/:id/video/view', postController.viewVideo);
+router.get('/:id/video/unlike', postController.unLikeVideo);
 
 export const postRouter = router;

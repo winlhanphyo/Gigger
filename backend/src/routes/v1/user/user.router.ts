@@ -16,18 +16,18 @@ router.get('/profile/:id/unfollow', userController.unFollowProfile);
 router.get('/:id/video', postController.getVideoWithUserId);
 router.get('/:id', userController.detailUser);
 
-router.get('/top/video/list', userController.userTopVideoList);
-router.get('/video/list', userController.userVideoList);
-router.get('/video/:id/like', userController.likeVideo);
-router.get('/video/:id/view', userController.viewVideo);
-router.get('/video/:id/unlike', userController.unLikeVideo);
+// router.get('/top/video/list', userController.userTopVideoList);
+// router.get('/video/list', userController.userVideoList);
+// router.get('/video/:id/like', userController.likeVideo);
+// router.get('/video/:id/view', userController.viewVideo);
+// router.get('/video/:id/unlike', userController.unLikeVideo);
 
 router.post('/update/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUser);
 router.post('/', userController.createUser);
-router.post('/upload/video', userController.createUserVideo);
+// router.post('/upload/video', userController.createUserVideo);
 
 
-router.delete('/delete/video/:id', userController.deleteUserVideo);
+// router.delete('/delete/video/:id', userController.deleteUserVideo);
 
 export const userRouter = router;
