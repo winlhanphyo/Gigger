@@ -31,11 +31,13 @@ class UserService {
       for (let i = 0; i < userList.length; i++) {
         let genre = userList[i].dataValues?.genre;
         if (genre) {
+          console.log('genre', genre);
           const genreList = await GenreDbModel.findAll({
             where: {
               id: genre
             }
           });
+          console.log('genreList', genreList);
           userList[i].dataValues.genre = genreList;
         }
 
@@ -132,7 +134,7 @@ class UserService {
   async updateUser(req: any, res: any): Promise<any> {
     try {
       const id = +req.params.id
-      const checkUser = await this.getUserById(req, res);
+      const checkUser = await this.getUserDataWithId(id, res);
       if (!checkUser) {
         return res.status(404).json({
           msg: "User is not found"
@@ -453,6 +455,36 @@ class UserService {
         return num.toString();
       }
     }
+
+  /**
+   * account verify after user signup.
+   * @param req 
+   * @param res 
+   */
+  async verifyAccount(req: any, res: any): Promise<any> {
+    try {
+      const id = +req.params.id
+      const checkUser = await this.getUserDataWithId(id, res);
+      if (!checkUser) {
+        return res.status(404).json({
+          msg: "User is not found"
+        });
+      }
+
+      const param = {
+        verifyAccount: true
+      };
+      console.log('checkUser', checkUser);
+      const response = await UserDbModel.update(param, { where: { id }, });
+      console.log('response', id, response);
+      return res.json({ "message": "Account Verification Successfully" });
+    } catch (e: any) {
+      console.log("Verify Account API Error", e);
+      return res.status(400).json({
+        msg: e.toString()
+      });
+    }
+  }
 }
 
 export const userService = new UserService();

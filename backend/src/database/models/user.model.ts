@@ -30,6 +30,7 @@ export interface IUserModel {
   twitter: string;
   tittok: string;
   website: string;
+  verifyAccount: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -140,6 +141,10 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
   },
   website: {
     type: DataTypes.STRING,
+    allowNull: true
+  },
+  verifyAccount: {
+    type: DataTypes.BOOLEAN,
     allowNull: true
   },
 };

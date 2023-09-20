@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt, { compareSync } from "bcrypt";
+import crypto from "crypto";
+import { sendEmail } from "../../utils/utils";
 import { GenreDbModel, IUserModel, UserDbModel, UserRoleDbModel } from "../../database";
 
 class AuthService {
@@ -40,8 +42,15 @@ class AuthService {
       });
       delete result.dataValues.interest;
       result.dataValues.genre = genre;
+
+      const token = crypto.randomBytes(16).toString("hex");
+      const domainUrl = "https://gigger-api.orionmmtecheng.com";
+      const link = `${domainUrl}/verify-email/${createUser.dataValues.id}/${token}`;
+      const msg = `Verify your email address \n ${link}`;
+      const mail = await sendEmail(createUser.dataValues.email, "User Signup Verification mail", msg);
+
       res.json({
-        message: 'User sign up successfully',
+        message: 'User sign up successfully and Verification email is sent to your account.',
         data: result
       });
     } catch (e: any) {
@@ -75,6 +84,13 @@ class AuthService {
           success: false,
           message: 'Incorrect Password'
         })
+      }
+
+      if (!userData.verifyAccount) {
+        return res.status(400).send({
+          success: false,
+          message: 'Your account is not verified.'
+        });
       }
 
       const payload = {

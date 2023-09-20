@@ -12,6 +12,7 @@ import authRouter from './routes/auth/auth.router';
 import genreRouter from "./routes/genre/genre.router";
 import videoStreamRouter from './routes/videoStream/videoStream.router';
 import { USER_PROFILE_PATH, USER_VIDEO_PATH } from './utils/constant';
+import { userService } from './services/user';
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
 require('./config/passport');
@@ -69,6 +70,10 @@ export default class Server {
     //   saveUninitialized: false
     // }));
     this.app.use(passport.session());
+
+    this.app.get('/verify-email/:id/:token', (req, res) => {
+      return userService.verifyAccount(req, res);
+    });
 
     this.app.use('/api', authRouter);
     this.app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));

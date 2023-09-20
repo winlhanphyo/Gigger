@@ -7,7 +7,7 @@ import { db } from '../db.provider';
 export interface IPostModel {
   id: number;
   caption: string;
-  music: string;
+  music: JSON;
   latitude: string;
   longitude: string;
   advertisementFormat: string;
@@ -51,7 +51,7 @@ const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
     allowNull: false,
   },
   music: {
-    type: DataTypes.STRING,
+    type: DataTypes.JSON,
     allowNull: false,
   },
   latitude: {

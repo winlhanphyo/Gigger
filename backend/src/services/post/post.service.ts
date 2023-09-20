@@ -1,5 +1,5 @@
 import { FindOptions } from "sequelize";
-import { IPostModel, PostDbModel, PostInputModel, UserDbModel, UserRoleDbModel } from "../../database";
+import { GenreDbModel, IPostModel, PostDbModel, PostInputModel, UserDbModel, UserRoleDbModel } from "../../database";
 import { UserLikeViewPostDbModel } from "../../database/models/userLikeViewPost.model";
 import { PAGINATION_LIMIT } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
@@ -30,6 +30,20 @@ class PostService {
           }
         ]
       });
+
+      for (let i = 0; i < postList.length; i++) {
+        let music = JSON.parse(postList[i].dataValues?.music);
+        if (music) {
+          console.log('music', music);
+          const interestList = await GenreDbModel.findAll({
+            where: {
+              id: music
+            }
+          });
+          console.log('interestList', interestList);
+          postList[i].dataValues.music = interestList;
+        }
+      }
 
       return res.json({
         count: postList.length,
@@ -73,7 +87,7 @@ class PostService {
 
       const postObj: IPostModel = {
         caption: req.body.caption,
-        music: req.body.music,
+        music: JSON.parse(req.body.music),
         latitude: req.body.latitude,
         longitude: req.body.longitude,
         advertisementFormat: req.body.advertisementFormat,
@@ -126,7 +140,7 @@ class PostService {
 
       const postObj: IPostModel = {
         caption: req.body.caption,
-        music: req.body.music,
+        music: JSON.parse(req.body.music),
         // address: req.body.address,
         latitude: req.body.latitude,
         longitude: req.body.longitude,
@@ -195,11 +209,24 @@ class PostService {
         ]
       }) as any;
       console.log('Post Data', postData);
+
+      let music = JSON.parse(postData.dataValues?.music);
+      if (music) {
+        const interestList = await GenreDbModel.findAll({
+          where: {
+            id: music
+          }
+        });
+        postData.dataValues.music = interestList;
+      }
+
       if (!postData) {
         return res.status(404).json({
           msg: "Post data is not found by this id"
         });
       }
+
+
 
       if (res) {
         return res.json({

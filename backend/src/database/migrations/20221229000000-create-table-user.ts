@@ -115,6 +115,10 @@ export default {
             type: DataTypes.STRING,
             allowNull: true
           },
+          verifyAccount: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+          },
           createdAt: {
             type: DataTypes.DATE
           },

@@ -348,6 +348,29 @@ paths:
           "404":
             description: "Event is not found"
 
+    delete:
+      tags:
+        - Events
+      summary: Delete event by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: deleteEventById
+      parameters:
+        - name: id
+          in: path
+          description: Delete Event By Id
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Delete Event By Id
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "Event is not found"
+
   /api/v1/events/update/{id}:
     post:
       tags:
@@ -820,6 +843,28 @@ paths:
       responses:
           "200":
             description: Returns User By Id
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "User is not found"
+    delete:
+      tags:
+        - Users
+      summary: Delete user by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: deleteUserById
+      parameters:
+        - name: id
+          in: path
+          description: Delete User By Id
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: User is deleted successfully.
           "401":
             $ref: "#/components/responses/UnauthorizedError"
           "404":
@@ -1726,6 +1771,29 @@ paths:
           "404":
             description: "Post is not found"
 
+    delete:
+      tags:
+        - Posts
+      summary: Delete post by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: deletePostById
+      parameters:
+        - name: id
+          in: path
+          description: ID of post to return
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Delete Post By Id
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "Post is not found"
+
   /api/v1/posts/update/{id}:
     post:
       tags:
@@ -2352,6 +2420,29 @@ paths:
       responses:
           "200":
             description: Returns all Campaigns
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "Campaign is not found"
+
+    delete:
+      tags:
+        - Campaigns
+      summary: Delete campaign by ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: deleteCampaignById
+      parameters:
+        - name: id
+          in: path
+          description: ID of campaign to return
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Delete Campaign By Id
           "401":
             $ref: "#/components/responses/UnauthorizedError"
           "404":
