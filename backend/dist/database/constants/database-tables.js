@@ -1,0 +1,38 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DataBaseModelNames = exports.DataBaseTableNames = void 0;
+var DataBaseTableNames;
+(function (DataBaseTableNames) {
+    DataBaseTableNames["USER"] = "user";
+    DataBaseTableNames["USER_ROLE"] = "user_role";
+    DataBaseTableNames["GENRE"] = "genre";
+    DataBaseTableNames["SCHEDULE"] = "schedule";
+    DataBaseTableNames["EVENT"] = "event";
+    DataBaseTableNames["EVENT_USER"] = "event_user";
+    DataBaseTableNames["ARTIST"] = "artist";
+    DataBaseTableNames["USER_VIDEO"] = "user_video";
+    DataBaseTableNames["USER_LIKE_VIEW_VIDEO"] = "user_like_view_video";
+    DataBaseTableNames["USER_LIKE_VIEW_POST"] = "user_like_view_post";
+    DataBaseTableNames["USER_LIKE_VIEW_PROFILE"] = "user_like_view_profile";
+    DataBaseTableNames["VIDEO"] = "video";
+    DataBaseTableNames["INSTRUMENT"] = "instrument";
+    DataBaseTableNames["POST"] = "post";
+    DataBaseTableNames["CAMPAIGN"] = "campaign";
+})(DataBaseTableNames = exports.DataBaseTableNames || (exports.DataBaseTableNames = {}));
+var DataBaseModelNames;
+(function (DataBaseModelNames) {
+    DataBaseModelNames["USER"] = "user";
+    DataBaseModelNames["USER_ROLE"] = "user_role";
+    DataBaseModelNames["GENRE"] = "genre";
+    DataBaseModelNames["SCHEDULE"] = "schedule";
+    DataBaseModelNames["EVENT"] = "event";
+    DataBaseModelNames["EVENT_USER"] = "event_user";
+    DataBaseModelNames["ARTIST"] = "artist";
+    DataBaseModelNames["USER_VIDEO"] = "user_video";
+    DataBaseModelNames["USER_LIKE_VIEW_VIDEO"] = "user_like_view_video";
+    DataBaseModelNames["USER_LIKE_VIEW_POST"] = "user_like_view_post";
+    DataBaseModelNames["USER_LIKE_VIEW_PROFILE"] = "user_like_view_profile";
+    DataBaseModelNames["VIDEO"] = "video";
+    DataBaseModelNames["POST"] = "post";
+    DataBaseModelNames["CAMPAIGN"] = "campaign";
+})(DataBaseModelNames = exports.DataBaseModelNames || (exports.DataBaseModelNames = {}));

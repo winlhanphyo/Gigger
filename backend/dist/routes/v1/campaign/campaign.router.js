@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.campaignRouter = void 0;
+const custom_router_1 = require("../../custom-router");
+const campaign_1 = require("../../../controllers/campaign");
+const router = new custom_router_1.Router();
+router.get('/', campaign_1.campaignController.getAllCampaign);
+router.post('/', campaign_1.campaignController.createCampaign);
+router.get('/:id', campaign_1.campaignController.detailCampaign);
+router.post('/update/:id', campaign_1.campaignController.updateCampaign);
+router.delete('/:id', campaign_1.campaignController.deleteCampaign);
+exports.campaignRouter = router;

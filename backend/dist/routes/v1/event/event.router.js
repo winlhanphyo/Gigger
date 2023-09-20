@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.eventRouter = void 0;
+const custom_router_1 = require("../../custom-router");
+const event_1 = require("../../../controllers/event");
+const router = new custom_router_1.Router();
+router.get('/', event_1.eventController.getAllEvent);
+router.get('/upcoming', event_1.eventController.upComingEvent);
+router.post('/', event_1.eventController.createEvent);
+router.get('/:id', event_1.eventController.detailEvent);
+router.post('/update/:id', event_1.eventController.updateEvent);
+router.delete('/:id', event_1.eventController.deleteEvent);
+exports.eventRouter = router;
