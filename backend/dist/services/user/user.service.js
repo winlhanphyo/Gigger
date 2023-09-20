@@ -201,6 +201,7 @@ class UserService {
                 const updateUser = yield database_1.UserDbModel.update(userData, {
                     where: { id: userData.id }
                 });
+                console.log('updateUser', updateUser);
                 return updateUser;
             }
             catch (e) {

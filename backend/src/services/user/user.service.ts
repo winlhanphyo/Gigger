@@ -195,6 +195,7 @@ class UserService {
       const updateUser = await UserDbModel.update(userData, {
         where: { id: userData.id as number }
       });
+      console.log('updateUser', updateUser);
       return updateUser;
     } catch (e: any) {
       console.log("Create User API Error", e);

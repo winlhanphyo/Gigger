@@ -9,7 +9,7 @@ export const config = {
 
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200',
 
-  PORT: parseInt((process.env.PORT as string) || '6000', 10),
+  PORT: parseInt((process.env.PORT as string) || '3000', 10),
   HOST: '0.0.0.0',
 
   DB_HOST: process.env.DB_HOST || 'localhost',

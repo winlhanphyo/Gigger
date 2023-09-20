@@ -101,7 +101,8 @@ class PostService {
       } as any;
 
       if (req.files?.video?.length > 0) {
-        video = req.files.video[0].path.replaceAll("\\", "/");
+        console.log('video', req.files.video[0]?.path);
+        video = req.files.video[0]?.path?.split("\\").join("/");
         const splitFileName = video.split("/");
         console.log('split file name', splitFileName);
         filename = splitFileName[splitFileName.length - 1];
@@ -163,8 +164,8 @@ class PostService {
         if (detailPost?.dataValues?.video) {
           deleteFile(detailPost.dataValues.video);
         }
-
-        video = req.files.video[0].path.replaceAll("\\", "/");
+        console.log('video', req.files.video[0]?.path);
+        video = req.files.video[0].path?.split("\\").join("/");
         const splitFileName = video.split("/");
         console.log('split file name', splitFileName);
         filename = splitFileName[splitFileName.length - 1];

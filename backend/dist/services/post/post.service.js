@@ -69,7 +69,7 @@ class PostService {
      * @returns
      */
     createPost(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let video = "";
@@ -106,7 +106,8 @@ class PostService {
                     createdUser: req.headers['userid']
                 };
                 if (((_u = (_t = req.files) === null || _t === void 0 ? void 0 : _t.video) === null || _u === void 0 ? void 0 : _u.length) > 0) {
-                    video = req.files.video[0].path.replaceAll("\\", "/");
+                    console.log('video', (_v = req.files.video[0]) === null || _v === void 0 ? void 0 : _v.path);
+                    video = (_x = (_w = req.files.video[0]) === null || _w === void 0 ? void 0 : _w.path) === null || _x === void 0 ? void 0 : _x.split("\\").join("/");
                     const splitFileName = video.split("/");
                     console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];
@@ -133,7 +134,7 @@ class PostService {
      * @param res
      */
     updatePost(req, res) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -166,7 +167,8 @@ class PostService {
                     if ((_d = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _d === void 0 ? void 0 : _d.video) {
                         (0, utils_1.deleteFile)(detailPost.dataValues.video);
                     }
-                    video = req.files.video[0].path.replaceAll("\\", "/");
+                    console.log('video', (_e = req.files.video[0]) === null || _e === void 0 ? void 0 : _e.path);
+                    video = (_f = req.files.video[0].path) === null || _f === void 0 ? void 0 : _f.split("\\").join("/");
                     const splitFileName = video.split("/");
                     console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];

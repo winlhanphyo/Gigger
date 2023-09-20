@@ -10,7 +10,7 @@ exports.config = {
     ENV: process.env.NODE_ENV || 'local',
     VERSION: process.env.VERSION || '0.0.0',
     FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200',
-    PORT: parseInt(process.env.PORT || '6000', 10),
+    PORT: parseInt(process.env.PORT || '3000', 10),
     HOST: '0.0.0.0',
     DB_HOST: process.env.DB_HOST || 'localhost',
     DB_PORT: process.env.DB_PORT || '3306',
