@@ -1,6 +1,7 @@
 
 import bcrypt from "bcrypt";
 import moment from "moment";
+import path from "path";
 import { GenreDbModel, UserDbModel} from "../../database";
 import { UserLikeViewProfileDbModel } from "../../database/models/userLikeViewProfile.model";
 import { PAGINATION_LIMIT } from "../../utils/constant";
@@ -75,7 +76,7 @@ class UserService {
       let profile: string = req.body.profile;
       const id = +req.params.id;
       if (req.files?.profile?.length > 0) {
-        profile = req.files.profile[0].path.replaceAll("\\", "/");
+        profile = req.files.profile[0].path?.split("\\").join("/");
       }
 
       const userData = {
@@ -114,6 +115,26 @@ class UserService {
         addUserData(userData, paramList[i], req.body);
       }
       const createUser = await UserDbModel.create({ ...userData, createdAt: new Date().toISOString() });
+
+      console.log('createUser', createUser);
+      if (createUser?.dataValues?.interest) {
+        const interest = await GenreDbModel.findAll({
+          where: {
+            id: createUser.dataValues.interest
+          }
+        });
+        createUser.dataValues.interest = interest;
+      }
+
+      if (createUser?.dataValues?.genre) {
+        const genre = await GenreDbModel.findAll({
+          where: {
+            id: createUser.dataValues.genre
+          }
+        });
+        createUser.dataValues.genre = genre;
+      }
+
       return res.json({
         message: 'User is created successfully',
         data: createUser
@@ -176,13 +197,9 @@ class UserService {
         addUserData(userData, paramList[i], req.body);
       }
 
-      console.log('userData', userData);
-
-
-
       let profile: any = req.body.profile;
       if (req.files?.profile?.length > 0) {
-        profile = req.files.profile[0].path.replace("\\", "/");
+        profile = req.files.profile[0].path?.split("\\").join("/");
         if (checkUser.profile && checkUser.profile != profile) {
           deleteFile(checkUser.profile);
         }
@@ -195,7 +212,11 @@ class UserService {
       const updateUser = await UserDbModel.update(userData, {
         where: { id: userData.id as number }
       });
-      console.log('updateUser', updateUser);
+
+      return res.json({
+        message: 'User is updated successfully',
+        data: updateUser
+      });
       return updateUser;
     } catch (e: any) {
       console.log("Create User API Error", e);
@@ -476,9 +497,9 @@ class UserService {
         verifyAccount: true
       };
       console.log('checkUser', checkUser);
+      const rootDir = path.join(__dirname, "../../../");
       const response = await UserDbModel.update(param, { where: { id }, });
-      console.log('response', id, response);
-      return res.json({ "message": "Account Verification Successfully" });
+      return res.sendFile(path.join(rootDir, 'success.html'));
     } catch (e: any) {
       console.log("Verify Account API Error", e);
       return res.status(400).json({

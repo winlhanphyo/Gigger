@@ -13,36 +13,40 @@ export const deleteFile = (fileName: string) => {
   });
 };
 
-export const sendEmail = async (email: any, subject: any, text: any) => {
+export const sendEmail = async (email: any, subject: any, html: any = false, text: any) => {
   try {
     console.log(process.env.USER, process.env.PASS);
     const transporter = nodemailer.createTransport({
-      // host: 'smtp.gmail.com',
-      // port: 465,
-      // secure: true, // use SSL
+      host: "gigger-api.orionmmtecheng.com",
+      port: 465,
+      secure: true, // use SSL
       // service: "gmail",
-      // host: "oscar-admin.orionmmtecheng.com",
-      // port: 465,
-      // secure: true,
-      // auth: {
-      //   user: "support@oscar-admin.orionmmtecheng.com",
-      //   pass: "M4tZjdsKYeTNKaWV"
-      // },
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
       auth: {
-        user: "spprt.oscar@gmail.com",
-        pass: "cdbxlblhmnpobpyl"
-      }
+        user: "support@gigger-api.orionmmtecheng.com",
+        pass: "a0CPCk6n}ho3"
+      },
+      // host: 'smtp.gmail.com',
+      // port: 587,
+      // secure: false,
+      // auth: {
+      //   user: "spprt.oscar@gmail.com",
+      //   pass: "cdbxlblhmnpobpyl"
+      // }
     });
 
-    await transporter.sendMail({
+    const mailObj: any = {
       from: "spprt.oscar@gmail.com",
       to: email,
-      subject: subject,
-      text: text,
-    });
+      subject: subject
+    };
+
+    if (html) {
+      mailObj.html = text;
+    } else {
+      mailObj.text = text;
+    }
+
+    await transporter.sendMail(mailObj);
   } catch (error) {
     console.log(error);
     throw error;

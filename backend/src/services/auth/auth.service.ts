@@ -35,19 +35,50 @@ class AuthService {
         ],
       }) as any;
 
-      const genre = await GenreDbModel.findAll({
+      const interest = await GenreDbModel.findAll({
         where: {
           id: result.dataValues.interest
         }
       });
-      delete result.dataValues.interest;
-      result.dataValues.genre = genre;
+      result.dataValues.interest = interest;
 
       const token = crypto.randomBytes(16).toString("hex");
       const domainUrl = "https://gigger-api.orionmmtecheng.com";
       const link = `${domainUrl}/verify-email/${createUser.dataValues.id}/${token}`;
-      const msg = `Verify your email address \n ${link}`;
-      const mail = await sendEmail(createUser.dataValues.email, "User Signup Verification mail", msg);
+      const html = `<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body style="background-color: #EF562B; color: #FEF6F3;">
+  <div class="container" style="margin: 10px;">
+    <h3>Gigger</h3>
+    <div style="text-align: center; color: #FEF6F3;">
+      <div style="font-size: 12px; margin-bottom: 30px;">
+        Hello Username01
+      </div>
+      <div style="font-size: 20px; margin-bottom: 10px;">
+        JUST ONE MORE STEP TO THE TOP
+      </div>
+      <div style="font-size: 12px; margin-bottom: 30px;">
+        (if you wanna Rock'n Roll)
+      </div>
+      <div style="font-size: 18px; margin-bottom: 10px;">
+        VERIFY YOUR EMAIL ADDRESS
+      </div>
+      <div style="font-size: 12px; margin-bottom: 30px;">
+        Please click on the button to activate your account
+      </div>
+      <div style="padding-bottom: 15px;">
+        <a href=${link} style="background-color: #EF552B; color: white; padding: 14px 70px; text-align: center; text-decoration: none; display: inline-block; border: 2px solid rgba(0,0,0,0.19); border-radius: 45px;">
+          Verify my account
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+      const mail = await sendEmail(createUser.dataValues.email, "User Signup Verification mail", true, html);
 
       res.json({
         message: 'User sign up successfully and Verification email is sent to your account.',
@@ -99,6 +130,20 @@ class AuthService {
       }
       const token = jwt.sign(payload, 'secrect', { expiresIn: '1d' });
 
+      const interest = await GenreDbModel.findAll({
+        where: {
+          id: userData.dataValues.interest
+        }
+      });
+      userData.dataValues.interest = interest;
+
+      const genre = await GenreDbModel.findAll({
+        where: {
+          id: userData.dataValues.genre
+        }
+      });
+      userData.dataValues.genre = genre;
+
       return res.status(200).send({
         success: true,
         message: 'Login Successfully!',
@@ -131,12 +176,12 @@ class AuthService {
       const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
       const domainUrl = param.domainUrl;
       delete param?.domainUrl;
-      
+
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         line_items: productList,
         mode: "payment",
-        payment_intent_data:  {
+        payment_intent_data: {
           metadata: {
             orderId: param.loginId,
           },
@@ -158,7 +203,7 @@ class AuthService {
       // return res.json({ id: session.id });
 
       res.json(session);
-  
+
     } catch (err: any) {
       console.log('Stripe API Error', err);
       throw err.toString();

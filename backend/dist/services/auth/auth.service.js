@@ -71,18 +71,48 @@ class AuthService {
                         },
                     ],
                 });
-                const genre = yield database_1.GenreDbModel.findAll({
+                const interest = yield database_1.GenreDbModel.findAll({
                     where: {
                         id: result.dataValues.interest
                     }
                 });
-                delete result.dataValues.interest;
-                result.dataValues.genre = genre;
+                result.dataValues.interest = interest;
                 const token = crypto_1.default.randomBytes(16).toString("hex");
                 const domainUrl = "https://gigger-api.orionmmtecheng.com";
                 const link = `${domainUrl}/verify-email/${createUser.dataValues.id}/${token}`;
-                const msg = `Verify your email address \n ${link}`;
-                const mail = yield (0, utils_1.sendEmail)(createUser.dataValues.email, "User Signup Verification mail", msg);
+                const html = `<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body style="background-color: #EF562B; color: #FEF6F3;">
+  <div class="container" style="margin: 10px;">
+    <h3>Gigger</h3>
+    <div style="text-align: center; color: #FEF6F3;">
+      <div style="font-size: 12px; margin-bottom: 30px;">
+        Hello Username01
+      </div>
+      <div style="font-size: 20px; margin-bottom: 10px;">
+        JUST ONE MORE STEP TO THE TOP
+      </div>
+      <div style="font-size: 12px; margin-bottom: 30px;">
+        (if you wanna Rock'n Roll)
+      </div>
+      <div style="font-size: 18px; margin-bottom: 10px;">
+        VERIFY YOUR EMAIL ADDRESS
+      </div>
+      <div style="font-size: 12px; margin-bottom: 30px;">
+        Please click on the button to activate your account
+      </div>
+      <div style="padding-bottom: 15px;">
+        <a href=${link} style="background-color: #EF552B; color: white; padding: 14px 70px; text-align: center; text-decoration: none; display: inline-block; border: 2px solid rgba(0,0,0,0.19); border-radius: 45px;">
+          Verify my account
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+                const mail = yield (0, utils_1.sendEmail)(createUser.dataValues.email, "User Signup Verification mail", true, html);
                 res.json({
                     message: 'User sign up successfully and Verification email is sent to your account.',
                     data: result
@@ -131,6 +161,18 @@ class AuthService {
                     id: userData.id
                 };
                 const token = jsonwebtoken_1.default.sign(payload, 'secrect', { expiresIn: '1d' });
+                const interest = yield database_1.GenreDbModel.findAll({
+                    where: {
+                        id: userData.dataValues.interest
+                    }
+                });
+                userData.dataValues.interest = interest;
+                const genre = yield database_1.GenreDbModel.findAll({
+                    where: {
+                        id: userData.dataValues.genre
+                    }
+                });
+                userData.dataValues.genre = genre;
                 return res.status(200).send({
                     success: true,
                     message: 'Login Successfully!',

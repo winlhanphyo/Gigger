@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const moment_1 = __importDefault(require("moment"));
+const path_1 = __importDefault(require("path"));
 const database_1 = require("../../database");
 const userLikeViewProfile_model_1 = require("../../database/models/userLikeViewProfile.model");
 const constant_1 = require("../../utils/constant");
@@ -84,13 +85,13 @@ class UserService {
      * @returns
      */
     createUser(req, res) {
-        var _a, _b;
+        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let profile = req.body.profile;
                 const id = +req.params.id;
                 if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.profile) === null || _b === void 0 ? void 0 : _b.length) > 0) {
-                    profile = req.files.profile[0].path.replaceAll("\\", "/");
+                    profile = (_c = req.files.profile[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
                 }
                 const userData = {
                     username: req.body.username,
@@ -126,6 +127,23 @@ class UserService {
                     addUserData(userData, paramList[i], req.body);
                 }
                 const createUser = yield database_1.UserDbModel.create(Object.assign(Object.assign({}, userData), { createdAt: new Date().toISOString() }));
+                console.log('createUser', createUser);
+                if ((_d = createUser === null || createUser === void 0 ? void 0 : createUser.dataValues) === null || _d === void 0 ? void 0 : _d.interest) {
+                    const interest = yield database_1.GenreDbModel.findAll({
+                        where: {
+                            id: createUser.dataValues.interest
+                        }
+                    });
+                    createUser.dataValues.interest = interest;
+                }
+                if ((_e = createUser === null || createUser === void 0 ? void 0 : createUser.dataValues) === null || _e === void 0 ? void 0 : _e.genre) {
+                    const genre = yield database_1.GenreDbModel.findAll({
+                        where: {
+                            id: createUser.dataValues.genre
+                        }
+                    });
+                    createUser.dataValues.genre = genre;
+                }
                 return res.json({
                     message: 'User is created successfully',
                     data: createUser
@@ -145,7 +163,7 @@ class UserService {
      * @param res
      */
     updateUser(req, res) {
-        var _a, _b;
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -186,10 +204,9 @@ class UserService {
                 for (let i = 0; i <= paramList.length; i++) {
                     addUserData(userData, paramList[i], req.body);
                 }
-                console.log('userData', userData);
                 let profile = req.body.profile;
                 if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.profile) === null || _b === void 0 ? void 0 : _b.length) > 0) {
-                    profile = req.files.profile[0].path.replace("\\", "/");
+                    profile = (_c = req.files.profile[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
                     if (checkUser.profile && checkUser.profile != profile) {
                         (0, utils_1.deleteFile)(checkUser.profile);
                     }
@@ -201,7 +218,10 @@ class UserService {
                 const updateUser = yield database_1.UserDbModel.update(userData, {
                     where: { id: userData.id }
                 });
-                console.log('updateUser', updateUser);
+                return res.json({
+                    message: 'User is updated successfully',
+                    data: updateUser
+                });
                 return updateUser;
             }
             catch (e) {
@@ -479,9 +499,9 @@ class UserService {
                     verifyAccount: true
                 };
                 console.log('checkUser', checkUser);
+                const rootDir = path_1.default.join(__dirname, "../../../");
                 const response = yield database_1.UserDbModel.update(param, { where: { id }, });
-                console.log('response', id, response);
-                return res.json({ "message": "Account Verification Successfully" });
+                return res.sendFile(path_1.default.join(rootDir, 'success.html'));
             }
             catch (e) {
                 console.log("Verify Account API Error", e);
