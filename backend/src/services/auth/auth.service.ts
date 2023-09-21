@@ -20,7 +20,8 @@ class AuthService {
         password: await bcrypt.hash(req.body.password, 12),
         role: req.body.role,
         dob: req.body.dob,
-        interest: req.body.interest
+        interest: req.body.interest,
+        verifyAccount: true
       } as any;
       const createUser: any = await UserDbModel.create({ ...userData, createdAt: new Date().toISOString() });
       let result = await UserDbModel.findOne({
@@ -78,7 +79,7 @@ class AuthService {
 </body>
 </html>`;
 
-      const mail = await sendEmail(createUser.dataValues.email, "User Signup Verification mail", true, html);
+      // const mail = await sendEmail(createUser.dataValues.email, "User Signup Verification mail", true, html);
 
       res.json({
         message: 'User sign up successfully and Verification email is sent to your account.',
