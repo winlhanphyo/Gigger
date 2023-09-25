@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,6 +28,7 @@ const videoStream_router_1 = __importDefault(require("./routes/videoStream/video
 const constant_1 = require("./utils/constant");
 const user_1 = require("./services/user");
 const swaggerUI = require('swagger-ui-express');
+const { getVideoDurationInSeconds } = require('get-video-duration');
 const YAML = require('yamljs');
 require('./config/passport');
 const swaggerDocument = YAML.load('./api.yaml');
@@ -35,19 +45,45 @@ const fileStorage = multer_1.default.diskStorage({
         cb(null, `${(0, uuid_1.v4)()}_${file.originalname}`);
     }
 });
-const fileFilter = (_req, file, cb) => {
-    if (file.mimetype === "image/png" ||
-        file.mimetype === "image/jpg" ||
-        file.mimetype === "image/jpeg" ||
-        file.mimetype === "video/mp4" ||
-        file.mimetype === "video/mpeg" ||
-        file.mimetype === "video/quicktime") {
-        cb(null, true);
+/**
+ * check file filter.
+ * @param _req
+ * @param file
+ * @param cb
+ */
+const fileFilter = (_req, file, cb) => __awaiter(void 0, void 0, void 0, function* () {
+    const files = _req.files;
+    if (files === null || files === void 0 ? void 0 : files.video) {
+        if (file.mimetype === "video/mp4" ||
+            file.mimetype === "video/mpeg" ||
+            file.mimetype === "video/quicktime") {
+            const fileData = _req.files;
+            // Define the maximum allowed video length in bytes (adjust as needed)
+            // const maxVideoLength = 60 * 1000 * 1000; // 60 seconds in milliseconds (adjust as needed)
+            // var duration = await getVideoDurationInSeconds(fileData.video[0]);
+            // console.log('duration', duration);
+            // if (fileData.size > maxVideoLength) {
+            //   // File size exceeds the allowed limit
+            //   return cb(new Error('Video length exceeds the allowed limit.'), false);
+            // } else {
+            cb(null, true); // Video is valid in terms of type and length
+            // }
+        }
+        else {
+            return cb(new Error('Invalid file type. Only video files are allowed.'), false);
+        }
     }
-    else {
-        cb(null, false);
+    else if (files === null || files === void 0 ? void 0 : files.profile) {
+        if (file.mimetype === "image/png" ||
+            file.mimetype === "image/jpg" ||
+            file.mimetype === "image/jpeg") {
+            cb(null, true);
+        }
+        else {
+            return cb(new Error('Invalid file type. Only image files are allowed.'), false);
+        }
     }
-};
+});
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -56,7 +92,24 @@ class Server {
         this.app.use(helmet_1.default.crossOriginResourcePolicy({ policy: "cross-origin" }));
         this.app.use(body_parser_1.default.json());
         this.app.use(body_parser_1.default.urlencoded({ extended: true }));
-        this.app.use((0, multer_1.default)({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
+        // this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
+        this.app.use((req, res, next) => {
+            try {
+                const maxVideoLength = 5 * 1024 * 1024;
+                (0, multer_1.default)({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }])(req, res, (err) => {
+                    if (err) {
+                        res.status(400).json({ error: err.message });
+                    }
+                    else {
+                        next();
+                    }
+                });
+            }
+            catch (error) {
+                // Handle any synchronous errors here
+                res.status(500).json({ error: 'Internal server error.' });
+            }
+        });
         this.app.use("/api", express_1.default.static("apiuploads"));
         this.app.use(passport_1.default.initialize());
         this.app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));

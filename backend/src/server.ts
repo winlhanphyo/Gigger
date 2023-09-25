@@ -14,6 +14,7 @@ import videoStreamRouter from './routes/videoStream/videoStream.router';
 import { USER_PROFILE_PATH, USER_VIDEO_PATH } from './utils/constant';
 import { userService } from './services/user';
 const swaggerUI = require('swagger-ui-express');
+const { getVideoDurationInSeconds } = require('get-video-duration');
 const YAML = require('yamljs');
 require('./config/passport');
 const swaggerDocument = YAML.load('./api.yaml');
@@ -32,18 +33,44 @@ const fileStorage = multer.diskStorage({
   }
 });
 
-const fileFilter = (_req: Request, file: any, cb: FileFilterCallback) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg" ||
-    file.mimetype === "video/mp4" ||
-    file.mimetype === "video/mpeg" ||
-    file.mimetype === "video/quicktime"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
+/**
+ * check file filter.
+ * @param _req 
+ * @param file 
+ * @param cb 
+ */
+const fileFilter = async (_req: any, file: any, cb: any) => {
+  const files: any = _req.files;
+  if (files?.video) {
+    if (
+      file.mimetype === "video/mp4" ||
+      file.mimetype === "video/mpeg" ||
+      file.mimetype === "video/quicktime"
+    ) {
+      const fileData: any = _req.files;
+      // Define the maximum allowed video length in bytes (adjust as needed)
+      // const maxVideoLength = 60 * 1000 * 1000; // 60 seconds in milliseconds (adjust as needed)
+      // var duration = await getVideoDurationInSeconds(fileData.video[0]);
+      // console.log('duration', duration);
+      // if (fileData.size > maxVideoLength) {
+      //   // File size exceeds the allowed limit
+      //   return cb(new Error('Video length exceeds the allowed limit.'), false);
+      // } else {
+        cb(null, true); // Video is valid in terms of type and length
+      // }
+    } else {
+      return cb(new Error('Invalid file type. Only video files are allowed.'), false);
+    }
+  } else if (files?.profile) {
+    if (
+      file.mimetype === "image/png" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      return cb(new Error('Invalid file type. Only image files are allowed.'), false);
+    }
   }
 }
 export default class Server {
@@ -59,7 +86,24 @@ export default class Server {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
-    this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
+    // this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
+
+    this.app.use((req, res, next) => {
+      try {
+        const maxVideoLength = 5 * 1024 * 1024;
+        multer({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }])(req, res, (err) => {
+          if (err) {
+            res.status(400).json({ error: err.message });
+          } else {
+            next();
+          }
+        });
+      } catch (error) {
+        // Handle any synchronous errors here
+        res.status(500).json({ error: 'Internal server error.' });
+      }
+    });
+
     this.app.use("/api", express.static("apiuploads"));
 
     this.app.use(passport.initialize());
@@ -89,7 +133,7 @@ export default class Server {
     });
 
     // this.app.get('/api/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
-  
+
     // this.app.get('/api/auth/google/callback', 
     //   passport.authenticate('google', { failureRedirect: '/error' }),
     //   function(req: any, res: any) {
@@ -97,8 +141,8 @@ export default class Server {
     //     res.send("google signin success");
     //   });
 
-        this.httpServer = http.createServer(this.app);
-      }
+    this.httpServer = http.createServer(this.app);
+  }
 
   start(cb?: () => void) {
     this.httpServer.listen(config.PORT, () => {

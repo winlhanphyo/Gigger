@@ -1,6 +1,6 @@
 openapi: 3.0.2
 servers:
-  - url: https://gigger-api.orionmmtecheng.com
+  - url: http://127.0.0.1:3000
 info:
   description: This is API Doc for Angular+ NodeJS Bulletinboard
   title: Swagger API Doc for Gigger

@@ -79,7 +79,7 @@ class AuthService {
 </body>
 </html>`;
 
-      // const mail = await sendEmail(createUser.dataValues.email, "User Signup Verification mail", true, html);
+      const mail = await sendEmail(createUser.dataValues.email, "User Signup Verification mail", true, html);
 
       res.json({
         message: 'User sign up successfully and Verification email is sent to your account.',

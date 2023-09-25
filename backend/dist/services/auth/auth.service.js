@@ -57,7 +57,8 @@ class AuthService {
                     password: yield bcrypt_1.default.hash(req.body.password, 12),
                     role: req.body.role,
                     dob: req.body.dob,
-                    interest: req.body.interest
+                    interest: req.body.interest,
+                    verifyAccount: true
                 };
                 const createUser = yield database_1.UserDbModel.create(Object.assign(Object.assign({}, userData), { createdAt: new Date().toISOString() }));
                 let result = yield database_1.UserDbModel.findOne({
