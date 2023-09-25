@@ -79,11 +79,18 @@ class AuthService {
 </body>
 </html>`;
 
-      const mail = await sendEmail(createUser.dataValues.email, "User Signup Verification mail", true, html);
+      const mail = await sendEmail(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
+
+      const payload = {
+        username: result.username,
+        id: result.id
+      }
+      const loginToken = jwt.sign(payload, 'secrect', { expiresIn: '1d' });
 
       res.json({
         message: 'User sign up successfully and Verification email is sent to your account.',
-        data: result
+        users: result,
+        token: loginToken
       });
     } catch (e: any) {
       console.log('------get event list API error----', e);
