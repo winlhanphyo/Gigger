@@ -89,7 +89,6 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let profile = req.body.profile;
-                const id = +req.params.id;
                 if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.profile) === null || _b === void 0 ? void 0 : _b.length) > 0) {
                     profile = (_c = req.files.profile[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
                 }
@@ -207,7 +206,7 @@ class UserService {
                 let profile = req.body.profile;
                 if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.profile) === null || _b === void 0 ? void 0 : _b.length) > 0) {
                     profile = (_c = req.files.profile[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
-                    if (checkUser.profile && checkUser.profile != profile) {
+                    if (checkUser.profile) {
                         (0, utils_1.deleteFile)(checkUser.profile);
                     }
                     if (checkUser) {

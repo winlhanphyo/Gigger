@@ -1,6 +1,7 @@
 import { FindOptions } from "sequelize";
 import { ICampaignModel, CampaignDbModel, UserDbModel } from "../../database";
 import { PAGINATION_LIMIT } from "../../utils/constant";
+import { deleteFile } from "../../utils/utils";
 
 class CampaignService {
   /**
@@ -49,6 +50,11 @@ class CampaignService {
    */
   async createCampaign(req: any, res: any): Promise<CampaignDbModel> {
     try {
+      let image: string = req.body.image;
+      if (req.files?.image?.length > 0) {
+        image = req.files.image[0].path?.split("\\").join("/");
+      }
+
       const campaignObj: ICampaignModel = {
         title: req.body.title,
         description: req.body.description,
@@ -57,6 +63,7 @@ class CampaignService {
         location: req.body.location,
         memberShipContent: req.body.memberShipContent,
         followerOnly: req.body.followerOnly,
+        image,
         createdUser: req.headers['userid']
       } as any;
 
@@ -98,6 +105,18 @@ class CampaignService {
         updatedUser: req.headers['userid'],
         updatedAt: new Date().toISOString()
       } as any;
+
+
+      let image: any = req.body.image;
+      if (req.files?.image?.length > 0) {
+        image = req.files.image[0].path?.split("\\").join("/");
+        if (detailCampaign.image) {
+          deleteFile(detailCampaign.image);
+        }
+        if (detailCampaign) {
+          campaignObj.image = image;
+        }
+      }
 
       const updateCampaignData = await CampaignDbModel.update(campaignObj, {
         where: { id: id as number }

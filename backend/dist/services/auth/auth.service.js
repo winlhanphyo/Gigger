@@ -39,7 +39,6 @@ exports.authService = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importStar(require("bcrypt"));
 const crypto_1 = __importDefault(require("crypto"));
-const utils_1 = require("../../utils/utils");
 const database_1 = require("../../database");
 class AuthService {
     /**
@@ -113,7 +112,7 @@ class AuthService {
   </div>
 </body>
 </html>`;
-                const mail = yield (0, utils_1.sendEmail)(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
+                // const mail = await sendEmail(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
                 const payload = {
                     username: result.username,
                     id: result.id

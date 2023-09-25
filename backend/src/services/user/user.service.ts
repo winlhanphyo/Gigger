@@ -74,7 +74,6 @@ class UserService {
   async createUser(req: any, res: any) {
     try {
       let profile: string = req.body.profile;
-      const id = +req.params.id;
       if (req.files?.profile?.length > 0) {
         profile = req.files.profile[0].path?.split("\\").join("/");
       }
@@ -200,7 +199,7 @@ class UserService {
       let profile: any = req.body.profile;
       if (req.files?.profile?.length > 0) {
         profile = req.files.profile[0].path?.split("\\").join("/");
-        if (checkUser.profile && checkUser.profile != profile) {
+        if (checkUser.profile) {
           deleteFile(checkUser.profile);
         }
         if (checkUser) {

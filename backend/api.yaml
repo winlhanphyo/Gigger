@@ -2314,7 +2314,7 @@ paths:
       requestBody:
         description: Created campaign
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -2339,6 +2339,9 @@ paths:
                 followerOnly:
                   type: boolean
                   example: true
+                image:
+                  type: string
+                  format: binary
           application/xml:
             schema:
               type: object
@@ -2364,6 +2367,9 @@ paths:
                 followerOnly:
                   type: boolean
                   example: true
+                image:
+                  type: string
+                  format: binary
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -2389,6 +2395,9 @@ paths:
                 followerOnly:
                   type: boolean
                   example: true
+                image:
+                  type: string
+                  format: binary
       responses:
         "200":
           description: Created event Successfully.
@@ -2474,7 +2483,7 @@ paths:
       requestBody:
         description: Updated campaign
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -2499,6 +2508,9 @@ paths:
                 followerOnly:
                   type: boolean
                   example: true
+                image:
+                  type: string
+                  format: binary
           application/xml:
             schema:
               type: object
@@ -2524,6 +2536,9 @@ paths:
                 followerOnly:
                   type: boolean
                   example: true
+                image:
+                  type: string
+                  format: binary
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -2549,6 +2564,9 @@ paths:
                 followerOnly:
                   type: boolean
                   example: true
+                image:
+                  type: string
+                  format: binary
       responses:
         "200":
           description: Campaign is updated successfully.

@@ -35,6 +35,10 @@ module.exports = {
       followerOnly: {
         type: DataTypes.BOOLEAN
       },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       createdUser: {
         type: DataTypes.INTEGER,
         allowNull: false

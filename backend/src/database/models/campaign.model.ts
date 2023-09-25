@@ -13,6 +13,7 @@ export interface ICampaignModel {
   location: string;
   memberShipContent: boolean;
   followerOnly: boolean;
+  image: string;
   createdUser: string;
   updatedUser: string;
   createdAt: string;
@@ -64,6 +65,10 @@ const modelAttributes: DbModelFieldInit<Partial<ICampaignModel>> = {
   followerOnly: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
+  },
+  image: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   createdUser: {
     type: DataTypes.INTEGER,

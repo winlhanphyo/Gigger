@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.campaignService = void 0;
 const database_1 = require("../../database");
 const constant_1 = require("../../utils/constant");
+const utils_1 = require("../../utils/utils");
 class CampaignService {
     /**
      * get campaign list.
@@ -53,8 +54,13 @@ class CampaignService {
      * @returns
      */
     createCampaign(req, res) {
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                let image = req.body.image;
+                if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.image) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+                    image = (_c = req.files.image[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
+                }
                 const campaignObj = {
                     title: req.body.title,
                     description: req.body.description,
@@ -63,6 +69,7 @@ class CampaignService {
                     location: req.body.location,
                     memberShipContent: req.body.memberShipContent,
                     followerOnly: req.body.followerOnly,
+                    image,
                     createdUser: req.headers['userid']
                 };
                 const createCampaign = yield database_1.CampaignDbModel.create(Object.assign(Object.assign({}, campaignObj), { createdAt: new Date().toISOString() }));
@@ -85,6 +92,7 @@ class CampaignService {
      * @param res
      */
     updateCampaign(req, res) {
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -103,6 +111,16 @@ class CampaignService {
                     updatedUser: req.headers['userid'],
                     updatedAt: new Date().toISOString()
                 };
+                let image = req.body.image;
+                if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.image) === null || _b === void 0 ? void 0 : _b.length) > 0) {
+                    image = (_c = req.files.image[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
+                    if (detailCampaign.image) {
+                        (0, utils_1.deleteFile)(detailCampaign.image);
+                    }
+                    if (detailCampaign) {
+                        campaignObj.image = image;
+                    }
+                }
                 const updateCampaignData = yield database_1.CampaignDbModel.update(campaignObj, {
                     where: { id: id }
                 });

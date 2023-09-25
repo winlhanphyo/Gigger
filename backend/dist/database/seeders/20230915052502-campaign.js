@@ -23,6 +23,7 @@ module.exports = {
                     location: "Artists",
                     memberShipContent: true,
                     followerOnly: true,
+                    image: "upload/user/campaign/1.jpg",
                     createdUser: 1,
                     createdAt: '2023-08-07',
                     updatedAt: '2023-08-07'
@@ -35,6 +36,7 @@ module.exports = {
                     location: "Artists",
                     memberShipContent: true,
                     followerOnly: true,
+                    image: "upload/user/campaign/2.jpg",
                     createdUser: 1,
                     createdAt: '2023-08-07',
                     updatedAt: '2023-08-07'
@@ -47,6 +49,7 @@ module.exports = {
                     location: "Artists",
                     memberShipContent: true,
                     followerOnly: true,
+                    image: "upload/campaign/3.jpg",
                     createdUser: 1,
                     createdAt: '2023-08-07',
                     updatedAt: '2023-08-07'

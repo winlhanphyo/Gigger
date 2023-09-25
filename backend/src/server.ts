@@ -3,7 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import helmet from 'helmet';
-import multer, { FileFilterCallback } from 'multer';
+import multer from 'multer';
 import { v4 } from 'uuid';
 import passport from 'passport';
 import { config } from './config';
@@ -14,7 +14,6 @@ import videoStreamRouter from './routes/videoStream/videoStream.router';
 import { USER_PROFILE_PATH, USER_VIDEO_PATH } from './utils/constant';
 import { userService } from './services/user';
 const swaggerUI = require('swagger-ui-express');
-const { getVideoDurationInSeconds } = require('get-video-duration');
 const YAML = require('yamljs');
 require('./config/passport');
 const swaggerDocument = YAML.load('./api.yaml');
@@ -61,7 +60,7 @@ const fileFilter = async (_req: any, file: any, cb: any) => {
     } else {
       return cb(new Error('Invalid file type. Only video files are allowed.'), false);
     }
-  } else if (files?.profile) {
+  } else if (files?.profile || files?.image) {
     if (
       file.mimetype === "image/png" ||
       file.mimetype === "image/jpg" ||
@@ -91,7 +90,12 @@ export default class Server {
     this.app.use((req, res, next) => {
       try {
         const maxVideoLength = 5 * 1024 * 1024;
-        multer({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }])(req, res, (err) => {
+        multer({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([
+          { name: 'profile', maxCount: 1 },
+          { name: 'video', maxCount: 1 },
+          { name: 'image', maxCount: 1 }
+        ])
+          (req, res, (err) => {
           if (err) {
             res.status(400).json({ error: err.message });
           } else {

@@ -79,7 +79,7 @@ class AuthService {
 </body>
 </html>`;
 
-      const mail = await sendEmail(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
+      // const mail = await sendEmail(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
 
       const payload = {
         username: result.username,
