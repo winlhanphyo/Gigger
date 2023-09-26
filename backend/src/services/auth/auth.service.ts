@@ -55,7 +55,7 @@ class AuthService {
     <h3>Gigger</h3>
     <div style="text-align: center; color: #FEF6F3;">
       <div style="font-size: 12px; margin-bottom: 30px;">
-        Hello Username01
+        Hello ${req.body.username}
       </div>
       <div style="font-size: 20px; margin-bottom: 10px;">
         JUST ONE MORE STEP TO THE TOP
