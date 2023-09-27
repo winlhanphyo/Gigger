@@ -1794,6 +1794,70 @@ paths:
           "404":
             description: "Post is not found"
 
+  /api/v1/posts/{id}/support:
+    post:
+      tags:
+        - Posts
+      summary: Support the post
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: supportPost
+      parameters:
+        - name: id
+          in: path
+          description: ID of post to return
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: ID of login UserId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Support the post
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ""
+                amount:
+                  type: string
+                  example: "1000"
+          application/octet-stream:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ""
+                amount:
+                  type: string
+                  example: "1000"
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: ""
+                amount:
+                  type: string
+                  example: "1000"
+      responses:
+        "200":
+          description: Support Post Successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Post is not found.
+
+
   /api/v1/posts/update/{id}:
     post:
       tags:

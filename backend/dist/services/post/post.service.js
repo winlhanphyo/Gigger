@@ -595,12 +595,12 @@ class PostService {
                         price_data: {
                             currency: "EUR",
                             product_data: {
-                                donatorId: param.loginId,
-                                donatorName: param.username
+                                donatorId: param.userId,
+                                postId: param.id
                             },
                             unit_amount: param.amount,
                         },
-                        quantity: 1,
+                        // quantity: 1,
                     }
                 ];
                 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
