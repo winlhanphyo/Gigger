@@ -13,8 +13,9 @@ class EventController {
    * @returns 
    */
   async getAllEvent(req: Request, res: Response) {
-    const page = Number(req.query.page) || 0;
+    let offset = Number(req.query.page) - 1 || 0;
     const size = Number(req.query.size) || PAGINATION_LIMIT;
+    let page = offset * size;
     const response = await eventService.getEventList(undefined, undefined, page, size, res);
     return response;
   }
@@ -112,7 +113,7 @@ class EventController {
       return eventData;
     } else {
       res.status(400).send({
-        "msg": "Please add login userId in request header"
+        "message": "Please add login userId in request header"
       });
     }
   }

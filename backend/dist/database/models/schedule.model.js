@@ -41,7 +41,7 @@ const modelAttributes = {
         type: sequelize_1.DataTypes.BOOLEAN,
         allowNull: false,
     },
-    customMsg: {
+    custommessage: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true,
     },

@@ -53,7 +53,7 @@ class PostService {
     } catch (e: any) {
       console.log('------get post list API error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -118,7 +118,7 @@ class PostService {
     } catch (e: any) {
       console.log("-----Create Post API error----", e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -182,7 +182,7 @@ class PostService {
     } catch (e: any) {
       console.log('------update post error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -223,11 +223,9 @@ class PostService {
 
       if (!postData) {
         return res.status(404).json({
-          msg: "Post data is not found by this id"
+          message: "Post data is not found by this id"
         });
       }
-
-
 
       if (res) {
         return res.json({
@@ -241,7 +239,7 @@ class PostService {
       console.log("--Get Post By Id API Error---", e);
       if (res) {
         return res.status(400).json({
-          msg: e.toString()
+          message: e.toString()
         });
       } else {
         return null;
@@ -265,7 +263,7 @@ class PostService {
     } catch (e: any) {
       console.log('------get video list with UserId API error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -307,7 +305,7 @@ class PostService {
       const detailPost = await this.getPostById(id);
       if (!detailPost) {
         return res.status(400).json({
-          msg: "Post is not found by this id"
+          message: "Post is not found by this id"
         });
       }
 
@@ -331,7 +329,7 @@ class PostService {
     } catch (e: any) {
       console.log("Delete Post API Error", e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -347,7 +345,7 @@ class PostService {
       const video = await this.getPostById(userLikeViewPostData.postId);
       if (!video) {
         res.status(400).json({
-          msg: "User Post is not found by this id"
+          message: "User Post is not found by this id"
         });
       }
 
@@ -373,7 +371,7 @@ class PostService {
     } catch (e: any) {
       console.log(`------Add Video Status Error----`, e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -391,7 +389,7 @@ class PostService {
       const video = this.getPostById(postId);
       if (!video) {
         res.status(400).json({
-          msg: "Video is not found by this id"
+          message: "Video is not found by this id"
         });
       }
       const removeLikeViewVideo = await UserLikeViewPostDbModel.destroy(
@@ -410,7 +408,7 @@ class PostService {
     } catch (e: any) {
       console.log('------Remove Video Status Error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -430,8 +428,9 @@ class PostService {
         }
       }) as any;
 
-      let offset = Number(req.query.page) || 0;
       let limit = Number(req.query.size) || PAGINATION_LIMIT;
+      let offset = Number(req.query.page) - 1 || 0;
+      let page = offset * limit;
       let condition: any = {};
       if (userData?.dataValues?.interest > 0) {
         condition = {
@@ -452,7 +451,7 @@ class PostService {
 
       console.log('all Video count', allVideoCount);
 
-      let postList = await this.getVideoForTop(limit, offset, condition);
+      let postList = await this.getVideoForTop(limit, page, condition);
       console.log('postList', postList);
       if (allVideoCount < count) {
         limit = limit - postList.length;
@@ -493,7 +492,7 @@ class PostService {
     } catch (e: any) {
       console.log('------Video List API Error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -539,11 +538,12 @@ class PostService {
    */
   async videoList(req: any, res: any) {
     try {
-      const offset = Number(req.query.page) || 0;
-      const limit = Number(req.query.size) || PAGINATION_LIMIT;
+      let limit = Number(req.query.size) || PAGINATION_LIMIT;
+      let offset = Number(req.query.page) - 1 || 0;
+      let page = (offset * limit) || 0;
       const postList = await PostDbModel.findAll({
         limit,
-        offset,
+        offset: page,
         include: [
           {
             model: UserDbModel,
@@ -580,7 +580,7 @@ class PostService {
     } catch (e: any) {
       console.log('------Video List API Error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        message: e.toString()
       });
     }
   }
@@ -593,7 +593,8 @@ class PostService {
           price_data: {
             currency: "EUR",
             product_data: {
-              name: param.planName,
+              donatorId: param.loginId,
+              donatorName: param.username
             },
             unit_amount: param.amount,
           },

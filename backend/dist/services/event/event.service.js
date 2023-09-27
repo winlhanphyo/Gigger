@@ -50,6 +50,7 @@ class EventService {
                     }
                 }
                 return res.json({
+                    success: true,
                     count: eventList.length,
                     data: eventList
                 });
@@ -57,7 +58,8 @@ class EventService {
             catch (e) {
                 console.log('------get event list API error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });
@@ -85,17 +87,23 @@ class EventService {
                         });
                     });
                     const createEventUser = yield eventUser_model_1.EventUserDbModel.bulkCreate(eventUserData);
-                    res.json({
+                    return res.json({
+                        success: true,
                         message: 'Event is created successfully',
                         data: createEventUser
                     });
                 }
-                return createEvent;
+                return res.json({
+                    success: true,
+                    message: 'Event is created successfully',
+                    data: createEvent
+                });
             }
             catch (e) {
                 console.log("-----Create Event API error----", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });
@@ -111,6 +119,7 @@ class EventService {
                     where: { id: eventObj.id }
                 });
                 return res.json({
+                    success: true,
                     message: 'Event is updated successfully',
                     data: updateEvent
                 });
@@ -118,7 +127,8 @@ class EventService {
             catch (e) {
                 console.log('------update event error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });
@@ -146,7 +156,7 @@ class EventService {
                 });
                 if (!detailEvent) {
                     return res.status(400).json({
-                        msg: "Event is not found by this id"
+                        message: "Event is not found by this id"
                     });
                 }
                 const removeEventData = yield database_1.EventDbModel.destroy({
@@ -155,6 +165,7 @@ class EventService {
                     },
                 });
                 return res.json({
+                    success: true,
                     message: `Delete Event is successful.`,
                     data: removeEventData
                 });
@@ -162,7 +173,8 @@ class EventService {
             catch (e) {
                 console.log("Delete Event API Error", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });
@@ -190,7 +202,7 @@ class EventService {
                 console.log('Event Data', eventData);
                 if (!eventData) {
                     return res.status(404).json({
-                        msg: "Event data is not found by this id"
+                        message: "Event data is not found by this id"
                     });
                 }
                 eventData.dataValues.participants = eventData.dataValues.users;
@@ -205,13 +217,15 @@ class EventService {
                     eventData.dataValues.artists = artistList;
                 }
                 return res.json({
+                    success: true,
                     data: eventData
                 });
             }
             catch (e) {
                 console.log("--Get Event By Id API Error---", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });
@@ -263,6 +277,7 @@ class EventService {
                 }
                 console.log('eventData', eventData);
                 return res.status(200).json({
+                    success: true,
                     data: eventData,
                     count: eventData.length
                 });
@@ -270,7 +285,8 @@ class EventService {
             catch (e) {
                 console.log("--Upcoming Event API Error---", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });

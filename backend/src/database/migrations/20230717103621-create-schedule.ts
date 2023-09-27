@@ -32,7 +32,7 @@ module.exports = {
       doNotDisturb: {
         type: DataTypes.BOOLEAN
       },
-      customMsg: {
+      custommessage: {
         type: DataTypes.STRING
       },
       userId: {

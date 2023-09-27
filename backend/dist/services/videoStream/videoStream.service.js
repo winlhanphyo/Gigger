@@ -41,7 +41,7 @@ class VideoStreamService {
         catch (e) {
             console.log('stream API Error', e.toString());
             return res.status(400).json({
-                msg: e.toString()
+                message: e.toString()
             });
         }
     }

@@ -58,7 +58,7 @@ module.exports = {
                     autoBooking: 1,
                     tempUnavailable: 0,
                     doNotDisturb: 0,
-                    customMsg: "Please do not distrub",
+                    custommessage: "Please do not distrub",
                     userId: 1,
                     createdAt: '2023-07-12',
                     updatedAt: '2023-07-12'

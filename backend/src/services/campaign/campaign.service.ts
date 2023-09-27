@@ -31,6 +31,7 @@ class CampaignService {
       });
 
       return res.json({
+        success: true,
         count: campaignList.length,
         data: campaignList
       });
@@ -38,7 +39,8 @@ class CampaignService {
     } catch (e: any) {
       console.log('------get campaign list API error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }
@@ -69,13 +71,15 @@ class CampaignService {
 
       const createCampaign = await CampaignDbModel.create({ ...campaignObj, createdAt: new Date().toISOString() });
       return res.json({
+        success: true,
         message: 'Campaign is created successfully',
         data: createCampaign
       });
     } catch (e: any) {
       console.log("-----Create Campaign API error----", e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }
@@ -122,13 +126,15 @@ class CampaignService {
         where: { id: id as number }
       });
       return res.json({
+        success: true,
         message: 'Campaign is updated successfully',
         data: updateCampaignData
       });
     } catch (e: any) {
       console.log('------update campaign error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }
@@ -158,7 +164,8 @@ class CampaignService {
       console.log('Campaign Data', campaignData);
       if (!campaignData) {
         return res.status(404).json({
-          msg: "Campaign data is not found by this id"
+          success: false,
+          message: "Campaign data is not found by this id"
         });
       }
 
@@ -174,7 +181,8 @@ class CampaignService {
       console.log("--Get Campaign By Id API Error---", e);
       if (res) {
         return res.status(400).json({
-          msg: e.toString()
+          success: false,
+          message: e.toString()
         });
       } else {
         return null;
@@ -194,7 +202,7 @@ class CampaignService {
       const detailCampaign = await this.getCampaignById(id);
       if (!detailCampaign) {
         return res.status(400).json({
-          msg: "Campaign is not found by this id"
+          message: "Campaign is not found by this id"
         });
       }
 
@@ -207,13 +215,15 @@ class CampaignService {
       );
 
       return res.json({
+        success: true,
         message: `Delete Campaign is successful.`,
         data: removeCampaignData
       });
     } catch (e: any) {
       console.log("Delete Campaign API Error", e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }

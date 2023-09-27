@@ -94,7 +94,7 @@ class Server {
         // this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
         this.app.use((req, res, next) => {
             try {
-                const maxVideoLength = 5 * 1024 * 1024;
+                const maxVideoLength = 15 * 1024 * 1024;
                 (0, multer_1.default)({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([
                     { name: 'profile', maxCount: 1 },
                     { name: 'video', maxCount: 1 },

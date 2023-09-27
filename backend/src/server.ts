@@ -89,7 +89,7 @@ export default class Server {
 
     this.app.use((req, res, next) => {
       try {
-        const maxVideoLength = 5 * 1024 * 1024;
+        const maxVideoLength = 15 * 1024 * 1024;
         multer({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([
           { name: 'profile', maxCount: 1 },
           { name: 'video', maxCount: 1 },

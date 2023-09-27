@@ -39,6 +39,7 @@ class EventService {
         }
       }
       return res.json({
+        success: true,
         count: eventList.length,
         data: eventList
       });
@@ -46,7 +47,8 @@ class EventService {
     } catch (e: any) {
       console.log('------get event list API error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }
@@ -73,16 +75,22 @@ class EventService {
           });
         });
         const createEventUser = await EventUserDbModel.bulkCreate(eventUserData);
-        res.json({
+        return res.json({
+          success: true,
           message: 'Event is created successfully',
           data: createEventUser
         });
       }
-      return createEvent;
+      return res.json({
+        success: true,
+        message: 'Event is created successfully',
+        data: createEvent
+      });
     } catch (e: any) {
       console.log("-----Create Event API error----", e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }
@@ -97,13 +105,15 @@ class EventService {
         where: { id: eventObj.id as number }
       });
       return res.json({
+        success: true,
         message: 'Event is updated successfully',
         data: updateEvent
       });
     } catch (e: any) {
       console.log('------update event error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }
@@ -132,7 +142,7 @@ class EventService {
 
       if (!detailEvent) {
         return res.status(400).json({
-          msg: "Event is not found by this id"
+          message: "Event is not found by this id"
         });
       }
 
@@ -145,13 +155,15 @@ class EventService {
       );
 
       return res.json({
+        success: true,
         message: `Delete Event is successful.`,
         data: removeEventData
       });
     } catch (e: any) {
       console.log("Delete Event API Error", e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }
@@ -177,7 +189,7 @@ class EventService {
       console.log('Event Data', eventData);
       if (!eventData) {
         return res.status(404).json({
-          msg: "Event data is not found by this id"
+          message: "Event data is not found by this id"
         });
       }
       eventData.dataValues.participants = eventData.dataValues.users;
@@ -193,12 +205,14 @@ class EventService {
         eventData.dataValues.artists = artistList;
       }
       return res.json({
+        success: true,
         data: eventData
       })
     } catch (e: any) {
       console.log("--Get Event By Id API Error---", e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }
@@ -259,13 +273,15 @@ class EventService {
       console.log('eventData', eventData);
 
       return res.status(200).json({
+        success: true,
         data: eventData,
         count: eventData.length
       });
     } catch (e: any) {
       console.log("--Upcoming Event API Error---", e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }

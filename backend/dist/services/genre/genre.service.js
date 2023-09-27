@@ -23,6 +23,7 @@ class GenreService {
             try {
                 const genre = yield database_1.GenreDbModel.findAll(Object.assign(Object.assign({}, otherFindOptions), { attributes: genreAttributes }));
                 return res.json({
+                    success: true,
                     count: genre.length,
                     data: genre
                 });
@@ -30,7 +31,8 @@ class GenreService {
             catch (e) {
                 console.log('------get genre list API error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });

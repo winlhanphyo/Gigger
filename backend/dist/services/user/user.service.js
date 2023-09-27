@@ -31,11 +31,12 @@ class UserService {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const offset = Number(req.query.page) || 0;
+                let offset = Number(req.query.page) - 1 || 0;
                 const limit = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
+                let page = offset * limit;
                 const userList = yield database_1.UserDbModel.findAll({
                     limit,
-                    offset,
+                    offset: page,
                     // include: [
                     //   {
                     //     model: VideoDbModel,
@@ -73,7 +74,7 @@ class UserService {
             catch (e) {
                 console.log('------get Artist API Error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -151,7 +152,7 @@ class UserService {
             catch (e) {
                 console.log("Create User API Error", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -169,7 +170,7 @@ class UserService {
                 const checkUser = yield this.getUserDataWithId(id, res);
                 if (!checkUser) {
                     return res.status(404).json({
-                        msg: "User is not found"
+                        message: "User is not found"
                     });
                 }
                 const userData = {
@@ -226,7 +227,7 @@ class UserService {
             catch (e) {
                 console.log("Create User API Error", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -248,7 +249,7 @@ class UserService {
                 });
                 if (!detailUser) {
                     return res.status(400).json({
-                        msg: "User is not found by this id"
+                        message: "User is not found by this id"
                     });
                 }
                 const removeUserData = yield database_1.UserDbModel.destroy({
@@ -264,7 +265,7 @@ class UserService {
             catch (e) {
                 console.log("Delete User API Error", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -287,7 +288,7 @@ class UserService {
             catch (e) {
                 console.log("--Get User By Id API Error---", e);
                 return res.status(400).json({
-                    msg: e.toString(),
+                    message: e.toString(),
                 });
             }
         });
@@ -328,7 +329,7 @@ class UserService {
             catch (e) {
                 console.log("--Get User By Id API Error---", e);
                 return res.status(400).json({
-                    msg: e.toString(),
+                    message: e.toString(),
                 });
             }
         });
@@ -345,7 +346,7 @@ class UserService {
                 const profile = yield this.getUserDataWithId(userLikeViewProfileData.artistId, res);
                 if (!profile) {
                     res.status(400).json({
-                        msg: "User Profile is not found by this id"
+                        message: "User Profile is not found by this id"
                     });
                 }
                 const count = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.count({
@@ -369,7 +370,7 @@ class UserService {
             catch (e) {
                 console.log(`------Add Profile Status Error----`, e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -388,7 +389,7 @@ class UserService {
                 const profile = this.getUserDataWithId(artistId, res);
                 if (!profile) {
                     res.status(400).json({
-                        msg: "Profile is not found by this id"
+                        message: "Profile is not found by this id"
                     });
                 }
                 const removeLikeViewProfile = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.destroy({
@@ -406,7 +407,7 @@ class UserService {
             catch (e) {
                 console.log('------Remove User Profile Status Error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -429,7 +430,7 @@ class UserService {
                 console.log('user data', userData);
                 if (!userData) {
                     return res.status(404).json({
-                        msg: "User data is not found by this id"
+                        message: "User data is not found by this id"
                     });
                 }
                 let genre = (_a = userData.dataValues) === null || _a === void 0 ? void 0 : _a.genre;
@@ -455,7 +456,7 @@ class UserService {
             catch (e) {
                 console.log("--Get User By Id API Error---", e);
                 return res.status(400).json({
-                    msg: e.toString(),
+                    message: e.toString(),
                 });
             }
         });
@@ -491,7 +492,7 @@ class UserService {
                 const checkUser = yield this.getUserDataWithId(id, res);
                 if (!checkUser) {
                     return res.status(404).json({
-                        msg: "User is not found"
+                        message: "User is not found"
                     });
                 }
                 const param = {
@@ -505,7 +506,7 @@ class UserService {
             catch (e) {
                 console.log("Verify Account API Error", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });

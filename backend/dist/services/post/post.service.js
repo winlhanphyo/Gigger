@@ -58,7 +58,7 @@ class PostService {
             catch (e) {
                 console.log('------get post list API error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -123,7 +123,7 @@ class PostService {
             catch (e) {
                 console.log("-----Create Post API error----", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -185,7 +185,7 @@ class PostService {
             catch (e) {
                 console.log('------update post error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -226,7 +226,7 @@ class PostService {
                 }
                 if (!postData) {
                     return res.status(404).json({
-                        msg: "Post data is not found by this id"
+                        message: "Post data is not found by this id"
                     });
                 }
                 if (res) {
@@ -242,7 +242,7 @@ class PostService {
                 console.log("--Get Post By Id API Error---", e);
                 if (res) {
                     return res.status(400).json({
-                        msg: e.toString()
+                        message: e.toString()
                     });
                 }
                 else {
@@ -269,7 +269,7 @@ class PostService {
             catch (e) {
                 console.log('------get video list with UserId API error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -314,7 +314,7 @@ class PostService {
                 const detailPost = yield this.getPostById(id);
                 if (!detailPost) {
                     return res.status(400).json({
-                        msg: "Post is not found by this id"
+                        message: "Post is not found by this id"
                     });
                 }
                 if ((_a = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _a === void 0 ? void 0 : _a.video) {
@@ -334,7 +334,7 @@ class PostService {
             catch (e) {
                 console.log("Delete Post API Error", e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -351,7 +351,7 @@ class PostService {
                 const video = yield this.getPostById(userLikeViewPostData.postId);
                 if (!video) {
                     res.status(400).json({
-                        msg: "User Post is not found by this id"
+                        message: "User Post is not found by this id"
                     });
                 }
                 const count = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.count({
@@ -375,7 +375,7 @@ class PostService {
             catch (e) {
                 console.log(`------Add Video Status Error----`, e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -394,7 +394,7 @@ class PostService {
                 const video = this.getPostById(postId);
                 if (!video) {
                     res.status(400).json({
-                        msg: "Video is not found by this id"
+                        message: "Video is not found by this id"
                     });
                 }
                 const removeLikeViewVideo = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.destroy({
@@ -412,7 +412,7 @@ class PostService {
             catch (e) {
                 console.log('------Remove Video Status Error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -433,8 +433,9 @@ class PostService {
                         id: userId
                     }
                 });
-                let offset = Number(req.query.page) || 0;
                 let limit = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
+                let offset = Number(req.query.page) - 1 || 0;
+                let page = offset * limit;
                 let condition = {};
                 if (((_a = userData === null || userData === void 0 ? void 0 : userData.dataValues) === null || _a === void 0 ? void 0 : _a.interest) > 0) {
                     condition = {
@@ -452,7 +453,7 @@ class PostService {
                 });
                 const count = allVideoCount - (limit * (offset + 1));
                 console.log('all Video count', allVideoCount);
-                let postList = yield this.getVideoForTop(limit, offset, condition);
+                let postList = yield this.getVideoForTop(limit, page, condition);
                 console.log('postList', postList);
                 if (allVideoCount < count) {
                     limit = limit - postList.length;
@@ -491,7 +492,7 @@ class PostService {
             catch (e) {
                 console.log('------Video List API Error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -540,11 +541,12 @@ class PostService {
     videoList(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const offset = Number(req.query.page) || 0;
-                const limit = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
+                let limit = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
+                let offset = Number(req.query.page) - 1 || 0;
+                let page = (offset * limit) || 0;
                 const postList = yield database_1.PostDbModel.findAll({
                     limit,
-                    offset,
+                    offset: page,
                     include: [
                         {
                             model: database_1.UserDbModel,
@@ -579,7 +581,7 @@ class PostService {
             catch (e) {
                 console.log('------Video List API Error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    message: e.toString()
                 });
             }
         });
@@ -593,7 +595,8 @@ class PostService {
                         price_data: {
                             currency: "EUR",
                             product_data: {
-                                name: param.planName,
+                                donatorId: param.loginId,
+                                donatorName: param.username
                             },
                             unit_amount: param.amount,
                         },

@@ -50,6 +50,28 @@ class AuthService {
     signupUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                let user = yield database_1.UserDbModel.findOne({
+                    where: {
+                        username: req.body.username
+                    }
+                });
+                if (user) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Username is already taken"
+                    });
+                }
+                user = (yield database_1.UserDbModel.findOne({
+                    where: {
+                        email: req.body.email
+                    }
+                }));
+                if (user) {
+                    return res.status(400).json({
+                        success: false,
+                        message: "Email is already taken"
+                    });
+                }
                 const userData = {
                     username: req.body.username,
                     email: req.body.email,
@@ -89,7 +111,7 @@ class AuthService {
     <h3>Gigger</h3>
     <div style="text-align: center; color: #FEF6F3;">
       <div style="font-size: 12px; margin-bottom: 30px;">
-        Hello Username01
+        Hello ${req.body.username}
       </div>
       <div style="font-size: 20px; margin-bottom: 10px;">
         JUST ONE MORE STEP TO THE TOP
@@ -119,15 +141,17 @@ class AuthService {
                 };
                 const loginToken = jsonwebtoken_1.default.sign(payload, 'secrect', { expiresIn: '1d' });
                 res.json({
+                    success: true,
                     message: 'User sign up successfully and Verification email is sent to your account.',
                     users: result,
                     token: loginToken
                 });
             }
             catch (e) {
-                console.log('------get event list API error----', e);
+                console.log('------get signup API error----', e);
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });
@@ -189,7 +213,8 @@ class AuthService {
             catch (e) {
                 console.log('user login API Error', e.toString());
                 return res.status(400).json({
-                    msg: e.toString()
+                    success: false,
+                    message: e.toString()
                 });
             }
         });
@@ -241,7 +266,10 @@ class AuthService {
             }
             catch (err) {
                 console.log('Stripe API Error', err);
-                throw err.toString();
+                throw {
+                    success: false,
+                    message: err.toString()
+                };
             }
         });
     }
@@ -252,11 +280,19 @@ class AuthService {
      */
     logoutUser(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield database_1.UserDbModel.findOne({
-                where: {
-                    id
-                }
-            });
+            try {
+                return yield database_1.UserDbModel.findOne({
+                    where: {
+                        id
+                    }
+                });
+            }
+            catch (err) {
+                return {
+                    success: false,
+                    message: "Logout API error"
+                };
+            }
         });
     }
 }

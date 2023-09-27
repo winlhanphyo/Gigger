@@ -13,7 +13,7 @@ export interface IScheduleModel {
   autoBooking: boolean;
   tempUnavailable: boolean;
   doNotDisturb: boolean;
-  customMsg: string;
+  custommessage: string;
   userId: number;
   createdAt: string;
   updatedAt: string;
@@ -50,7 +50,7 @@ const modelAttributes: DbModelFieldInit<Partial<IScheduleModel>> = {
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
-  customMsg: {
+  custommessage: {
     type: DataTypes.STRING,
     allowNull: true,
   },

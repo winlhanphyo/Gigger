@@ -40,7 +40,7 @@ module.exports = {
             doNotDisturb: {
                 type: sequelize_1.DataTypes.BOOLEAN
             },
-            customMsg: {
+            custommessage: {
                 type: sequelize_1.DataTypes.STRING
             },
             userId: {

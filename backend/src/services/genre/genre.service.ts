@@ -15,13 +15,15 @@ class GenreService {
         attributes: genreAttributes
       });
       return res.json({
+        success: true,
         count: genre.length,
         data: genre
       });
     } catch (e: any) {
       console.log('------get genre list API error----', e);
       return res.status(400).json({
-        msg: e.toString()
+        success: false,
+        message: e.toString()
       });
     }
   }

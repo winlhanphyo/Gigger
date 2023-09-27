@@ -31,8 +31,9 @@ let PostController = class PostController {
      */
     getAllPost(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const page = Number(req.query.page) || 0;
+            let offset = Number(req.query.page) - 1 || 0;
             const size = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
+            let page = offset * size;
             const response = yield post_1.postService.getPostList(undefined, undefined, page, size, res);
             return response;
         });

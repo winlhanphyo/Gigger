@@ -66,7 +66,7 @@ class AuthController {
       const user = await authService.logoutUser(userId);
       if (!user) {
         return res.status(400).json({
-          msg: "Logout User Id is not found"
+          message: "Logout User Id is not found"
         });
       }
       const token = req.headers.authorization.slipt('')[1];
@@ -85,7 +85,7 @@ class AuthController {
     } catch (err: any) {
       console.log('------update event error----', err);
       return res.status(400).json({
-        msg: err.toString()
+        message: err.toString()
       });
     }
   };
