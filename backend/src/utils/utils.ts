@@ -1,14 +1,9 @@
-import path from "path";
 import fs from "fs";
 import nodemailer from "nodemailer";
-import { USER_VIDEO_PATH } from "./constant";
 
-
-export const rootDir = path.join(__dirname, "../../" + USER_VIDEO_PATH);
-
-export const deleteFile = (fileName: string) => {
-  console.log('filename', fileName);
-  fs.unlink(path.join(rootDir, fileName), (err) => {
+export const deleteFile = (filePath: string) => {
+  console.log('filename', filePath);
+  fs.unlink(filePath, (err: any) => {
     if (err) console.log(err);
   });
 };

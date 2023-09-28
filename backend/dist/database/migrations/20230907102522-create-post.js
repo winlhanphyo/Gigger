@@ -66,6 +66,10 @@ module.exports = {
                 type: sequelize_1.DataTypes.BOOLEAN,
                 defaultValue: false
             },
+            thumbnail: {
+                type: sequelize_1.DataTypes.STRING,
+                allowNull: false
+            },
             video: {
                 type: sequelize_1.DataTypes.STRING,
                 allowNull: false

@@ -12,15 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendEmail = exports.deleteFile = exports.rootDir = void 0;
-const path_1 = __importDefault(require("path"));
+exports.sendEmail = exports.deleteFile = void 0;
 const fs_1 = __importDefault(require("fs"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const constant_1 = require("./constant");
-exports.rootDir = path_1.default.join(__dirname, "../../" + constant_1.USER_VIDEO_PATH);
-const deleteFile = (fileName) => {
-    console.log('filename', fileName);
-    fs_1.default.unlink(path_1.default.join(exports.rootDir, fileName), (err) => {
+const deleteFile = (filePath) => {
+    console.log('filename', filePath);
+    fs_1.default.unlink(filePath, (err) => {
         if (err)
             console.log(err);
     });

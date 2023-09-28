@@ -8,13 +8,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postService = void 0;
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpeg = require('fluent-ffmpeg');
+const path_1 = __importDefault(require("path"));
 const database_1 = require("../../database");
 const userLikeViewPost_model_1 = require("../../database/models/userLikeViewPost.model");
 const constant_1 = require("../../utils/constant");
 const utils_1 = require("../../utils/utils");
 class PostService {
+    constructor() {
+        /**
+         * delete file data.
+         * @param data
+         * @param dataPath
+         */
+        this.deleteFileData = (data, dataPath) => {
+            if (data) {
+                const rootDir = path_1.default.join(__dirname, "../../" + dataPath);
+                const filePath = path_1.default.join(rootDir, data);
+                (0, utils_1.deleteFile)(filePath);
+            }
+        };
+    }
     /**
      * get posts list.
      * @param postAttributes
@@ -113,6 +133,7 @@ class PostService {
                     filename = splitFileName[splitFileName.length - 1];
                     console.log('filename', filename);
                     postObj.video = filename;
+                    postObj.thumbnail = this.saveThumbnail(filename);
                 }
                 const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
                 return res.json({
@@ -134,7 +155,7 @@ class PostService {
      * @param res
      */
     updatePost(req, res) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -163,16 +184,18 @@ class PostService {
                 };
                 postObj.id = +req.params.id;
                 if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.video) === null || _b === void 0 ? void 0 : _b.length) > 0) {
-                    console.log('detail video file name', (_c = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _c === void 0 ? void 0 : _c.video);
-                    if ((_d = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _d === void 0 ? void 0 : _d.video) {
-                        (0, utils_1.deleteFile)(detailPost.dataValues.video);
+                    if ((_c = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _c === void 0 ? void 0 : _c.video) {
+                        this.deleteFileData(detailPost.dataValues.video, constant_1.USER_VIDEO_PATH);
                     }
-                    console.log('video', (_e = req.files.video[0]) === null || _e === void 0 ? void 0 : _e.path);
-                    video = (_f = req.files.video[0].path) === null || _f === void 0 ? void 0 : _f.split("\\").join("/");
+                    if ((_d = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _d === void 0 ? void 0 : _d.thumbnail) {
+                        this.deleteFileData(detailPost.dataValues.thumbnail, constant_1.USER_THUMBNAIL_PATH);
+                    }
+                    video = (_e = req.files.video[0].path) === null || _e === void 0 ? void 0 : _e.split("\\").join("/");
                     const splitFileName = video.split("/");
                     console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];
                     postObj.video = filename;
+                    postObj.thumbnail = this.saveThumbnail(filename);
                 }
                 const updatePostData = yield database_1.PostDbModel.update(postObj, {
                     where: { id: postObj.id }
@@ -189,6 +212,38 @@ class PostService {
                 });
             }
         });
+    }
+    /**
+     * save thumbnail image and get thumbnail file name
+     * @param filename
+     * @returns
+     */
+    saveThumbnail(filename) {
+        // save thumnail image
+        const thumbnailFilename = filename.split(".mp4")[0];
+        const inputFilePath = path_1.default.resolve("upload/user/video" + "/", filename);
+        const outputFilePath = path_1.default.resolve("upload/user/thumbnail" + "/");
+        ffmpeg.setFfmpegPath(ffmpegPath);
+        ffmpeg(inputFilePath)
+            // setup event handlers
+            .on('filenames', function (filenames) {
+            console.log('screenshots are ' + filenames.join(', '));
+        })
+            .on('end', function () {
+            console.log('screenshots were saved');
+        })
+            .on('error', function (err) {
+            console.log('an error happened: ' + err.message);
+        })
+            // take a single screenshot at the specified timemark and size
+            .takeScreenshots({
+            count: 1,
+            timemarks: ['00:00:02.000'],
+            size: '600x600',
+            filename: thumbnailFilename + '.png', // Include the file extension here
+        }, outputFilePath);
+        const thumbnailPath = constant_1.USER_THUMBNAIL_PATH + "/" + thumbnailFilename + ".png";
+        return thumbnailPath.split("upload/").join("api/");
     }
     /**
      * get Post by Id.
@@ -318,8 +373,10 @@ class PostService {
                     });
                 }
                 if ((_a = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _a === void 0 ? void 0 : _a.video) {
-                    console.log('delete video', (_b = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _b === void 0 ? void 0 : _b.video);
-                    (0, utils_1.deleteFile)(detailPost.dataValues.video);
+                    this.deleteFileData(detailPost.dataValues.video, constant_1.USER_VIDEO_PATH);
+                }
+                if ((_b = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _b === void 0 ? void 0 : _b.thumbnail) {
+                    this.deleteFileData(detailPost.dataValues.thumbnail, constant_1.USER_THUMBNAIL_PATH);
                 }
                 const removePostData = yield database_1.PostDbModel.destroy({
                     where: {

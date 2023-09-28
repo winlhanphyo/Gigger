@@ -108,7 +108,7 @@ export default class Server {
       }
     });
 
-    this.app.use("/api", express.static("apiuploads"));
+    this.app.use("/api", express.static("upload"));
 
     this.app.use(passport.initialize());
     this.app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
