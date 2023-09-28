@@ -199,7 +199,7 @@ class PostService {
           setTimeout(async () => {
             postObj.thumbnail = await this.saveThumbnail(filename);
             resolve(null);
-          }, 12000);
+          }, 20000);
         });
       }
 
