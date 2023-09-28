@@ -133,7 +133,12 @@ class PostService {
                     filename = splitFileName[splitFileName.length - 1];
                     console.log('filename', filename);
                     postObj.video = filename;
-                    postObj.thumbnail = yield this.saveThumbnail(filename);
+                    const response = yield new Promise((resolve, reject) => {
+                        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                            postObj.thumbnail = yield this.saveThumbnail(filename);
+                            resolve(null);
+                        }), 4000);
+                    });
                 }
                 const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
                 return res.json({
@@ -195,7 +200,12 @@ class PostService {
                     console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];
                     postObj.video = filename;
-                    postObj.thumbnail = yield this.saveThumbnail(filename);
+                    const response = yield new Promise((resolve, reject) => {
+                        setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                            postObj.thumbnail = yield this.saveThumbnail(filename);
+                            resolve(null);
+                        }), 4000);
+                    });
                 }
                 const updatePostData = yield database_1.PostDbModel.update(postObj, {
                     where: { id: postObj.id }

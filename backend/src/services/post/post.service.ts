@@ -111,7 +111,12 @@ class PostService {
         filename = splitFileName[splitFileName.length - 1];
         console.log('filename', filename);
         postObj.video = filename;
-        postObj.thumbnail = await this.saveThumbnail(filename);
+        const response = await new Promise((resolve, reject) => {
+          setTimeout(async () => {
+            postObj.thumbnail = await this.saveThumbnail(filename);
+            resolve(null);
+          }, 4000);
+        });
       }
 
       const createPost = await PostDbModel.create({ ...postObj, createdAt: new Date().toISOString() });
@@ -190,7 +195,12 @@ class PostService {
         console.log('split file name', splitFileName);
         filename = splitFileName[splitFileName.length - 1];
         postObj.video = filename;
-        postObj.thumbnail = await this.saveThumbnail(filename);
+        const response = await new Promise((resolve, reject) => {
+          setTimeout(async () => {
+            postObj.thumbnail = await this.saveThumbnail(filename);
+            resolve(null);
+          }, 4000);
+        });
       }
 
       const updatePostData = await PostDbModel.update(postObj, {
