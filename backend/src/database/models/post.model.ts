@@ -18,7 +18,6 @@ export interface IPostModel {
   memberShipContent: boolean;
   forMyFollowersOnly: boolean;
   video: string;
-  thumbnail: string;
   createdUser: string;
   updatedUser: string;
   createdAt: string;
@@ -94,10 +93,6 @@ const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
   video: {
     type: DataTypes.STRING,
     allowNull: false,
-  },
-  thumbnail: {
-    type: DataTypes.STRING,
-    allowNull: true,
   },
   createdUser: {
     type: DataTypes.INTEGER,
