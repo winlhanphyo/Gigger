@@ -59,10 +59,6 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         defaultValue: false
       },
-      thumbnail: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
       video: {
         type: DataTypes.STRING,
         allowNull: false
