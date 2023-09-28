@@ -137,7 +137,7 @@ class PostService {
                         setTimeout(() => __awaiter(this, void 0, void 0, function* () {
                             postObj.thumbnail = yield this.saveThumbnail(filename);
                             resolve(null);
-                        }), 4000);
+                        }), 20000);
                     });
                 }
                 const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
