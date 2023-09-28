@@ -61,7 +61,7 @@ module.exports = {
       },
       thumbnail: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       video: {
         type: DataTypes.STRING,

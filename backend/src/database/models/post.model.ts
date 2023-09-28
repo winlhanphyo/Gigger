@@ -97,7 +97,7 @@ const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
   },
   thumbnail: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   createdUser: {
     type: DataTypes.INTEGER,

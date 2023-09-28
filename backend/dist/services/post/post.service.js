@@ -89,7 +89,7 @@ class PostService {
      * @returns
      */
     createPost(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let video = "";
@@ -133,14 +133,20 @@ class PostService {
                     filename = splitFileName[splitFileName.length - 1];
                     console.log('filename', filename);
                     postObj.video = filename;
+                }
+                const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
+                if (((_z = (_y = req.files) === null || _y === void 0 ? void 0 : _y.video) === null || _z === void 0 ? void 0 : _z.length) > 0) {
                     const response = yield new Promise((resolve, reject) => {
                         setTimeout(() => __awaiter(this, void 0, void 0, function* () {
                             postObj.thumbnail = yield this.saveThumbnail(filename);
                             resolve(null);
                         }), 20000);
                     });
+                    delete postObj.video;
+                    const updatePostData = yield database_1.PostDbModel.update(postObj, {
+                        where: { id: createPost.dataValues.id }
+                    });
                 }
-                const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
                 return res.json({
                     message: 'Post is created successfully',
                     data: createPost
@@ -160,7 +166,7 @@ class PostService {
      * @param res
      */
     updatePost(req, res) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -200,16 +206,22 @@ class PostService {
                     console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];
                     postObj.video = filename;
+                }
+                const updatePostData = yield database_1.PostDbModel.update(postObj, {
+                    where: { id: postObj.id }
+                });
+                if (((_g = (_f = req.files) === null || _f === void 0 ? void 0 : _f.video) === null || _g === void 0 ? void 0 : _g.length) > 0) {
                     const response = yield new Promise((resolve, reject) => {
                         setTimeout(() => __awaiter(this, void 0, void 0, function* () {
                             postObj.thumbnail = yield this.saveThumbnail(filename);
                             resolve(null);
                         }), 20000);
                     });
+                    delete postObj.video;
+                    const updatePostData = yield database_1.PostDbModel.update(postObj, {
+                        where: { id: postObj.id }
+                    });
                 }
-                const updatePostData = yield database_1.PostDbModel.update(postObj, {
-                    where: { id: postObj.id }
-                });
                 return res.json({
                     message: 'Post is updated successfully',
                     data: updatePostData

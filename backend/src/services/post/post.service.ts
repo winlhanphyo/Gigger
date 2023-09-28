@@ -88,7 +88,7 @@ class PostService {
         }
       }
 
-      const postObj: IPostModel = {
+      const postObj: any = {
         caption: req.body.caption,
         music: JSON.parse(req.body.music),
         latitude: req.body.latitude,
@@ -111,15 +111,24 @@ class PostService {
         filename = splitFileName[splitFileName.length - 1];
         console.log('filename', filename);
         postObj.video = filename;
+      }
+
+      const createPost = await PostDbModel.create({ ...postObj, createdAt: new Date().toISOString() });
+
+      if (req.files?.video?.length > 0) {
         const response = await new Promise((resolve, reject) => {
           setTimeout(async () => {
             postObj.thumbnail = await this.saveThumbnail(filename);
             resolve(null);
           }, 20000);
         });
-      }
 
-      const createPost = await PostDbModel.create({ ...postObj, createdAt: new Date().toISOString() });
+        delete postObj.video;
+
+        const updatePostData = await PostDbModel.update(postObj, {
+          where: { id: createPost.dataValues.id as number }
+        });
+      }
       return res.json({
         message: 'Post is created successfully',
         data: createPost
@@ -161,7 +170,7 @@ class PostService {
         return res.status(404).send("Post is not found");
       }
 
-      const postObj: IPostModel = {
+      const postObj: any = {
         caption: req.body.caption,
         music: JSON.parse(req.body.music),
         // address: req.body.address,
@@ -195,17 +204,27 @@ class PostService {
         console.log('split file name', splitFileName);
         filename = splitFileName[splitFileName.length - 1];
         postObj.video = filename;
+      }
+
+      const updatePostData = await PostDbModel.update(postObj, {
+        where: { id: postObj.id as number }
+      });
+
+      if (req.files?.video?.length > 0) {
         const response = await new Promise((resolve, reject) => {
           setTimeout(async () => {
             postObj.thumbnail = await this.saveThumbnail(filename);
             resolve(null);
           }, 20000);
         });
+
+        delete postObj.video;
+
+        const updatePostData = await PostDbModel.update(postObj, {
+          where: { id: postObj.id as number }
+        });
       }
 
-      const updatePostData = await PostDbModel.update(postObj, {
-        where: { id: postObj.id as number }
-      });
       return res.json({
         message: 'Post is updated successfully',
         data: updatePostData

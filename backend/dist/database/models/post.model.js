@@ -67,7 +67,7 @@ const modelAttributes = {
     },
     thumbnail: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     createdUser: {
         type: sequelize_1.DataTypes.INTEGER,
