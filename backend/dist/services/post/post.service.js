@@ -243,6 +243,7 @@ class PostService {
     saveThumbnail(filename) {
         return __awaiter(this, void 0, void 0, function* () {
             // save thumnail image
+            console.log('thumbnail----------');
             const thumbnailFilename = filename.split(".mp4")[0];
             const inputFilePath = path_1.default.resolve("upload/user/video" + "/", filename);
             const outputFilePath = path_1.default.resolve("upload/user/thumbnail" + "/");

@@ -244,6 +244,7 @@ class PostService {
    */
   async saveThumbnail(filename: any): Promise<string> {
     // save thumnail image
+    console.log('thumbnail----------');
     const thumbnailFilename = filename.split(".mp4")[0];
     const inputFilePath = path.resolve("upload/user/video" + "/", filename);
     const outputFilePath = path.resolve("upload/user/thumbnail" + "/");
