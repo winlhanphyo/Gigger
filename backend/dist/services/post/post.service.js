@@ -133,7 +133,7 @@ class PostService {
                     filename = splitFileName[splitFileName.length - 1];
                     console.log('filename', filename);
                     postObj.video = filename;
-                    postObj.thumbnail = this.saveThumbnail(filename);
+                    postObj.thumbnail = yield this.saveThumbnail(filename);
                 }
                 const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
                 return res.json({
@@ -195,7 +195,7 @@ class PostService {
                     console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];
                     postObj.video = filename;
-                    postObj.thumbnail = this.saveThumbnail(filename);
+                    postObj.thumbnail = yield this.saveThumbnail(filename);
                 }
                 const updatePostData = yield database_1.PostDbModel.update(postObj, {
                     where: { id: postObj.id }
@@ -219,31 +219,33 @@ class PostService {
      * @returns
      */
     saveThumbnail(filename) {
-        // save thumnail image
-        const thumbnailFilename = filename.split(".mp4")[0];
-        const inputFilePath = path_1.default.resolve("upload/user/video" + "/", filename);
-        const outputFilePath = path_1.default.resolve("upload/user/thumbnail" + "/");
-        ffmpeg.setFfmpegPath(ffmpegPath);
-        ffmpeg(inputFilePath)
-            // setup event handlers
-            .on('filenames', function (filenames) {
-            console.log('screenshots are ' + filenames.join(', '));
-        })
-            .on('end', function () {
-            console.log('screenshots were saved');
-        })
-            .on('error', function (err) {
-            console.log('an error happened: ' + err.message);
-        })
-            // take a single screenshot at the specified timemark and size
-            .takeScreenshots({
-            count: 1,
-            timemarks: ['00:00:02.000'],
-            size: '600x600',
-            filename: thumbnailFilename + '.png', // Include the file extension here
-        }, outputFilePath);
-        const thumbnailPath = constant_1.USER_THUMBNAIL_PATH + "/" + thumbnailFilename + ".png";
-        return thumbnailPath.split("upload/").join("api/");
+        return __awaiter(this, void 0, void 0, function* () {
+            // save thumnail image
+            const thumbnailFilename = filename.split(".mp4")[0];
+            const inputFilePath = path_1.default.resolve("upload/user/video" + "/", filename);
+            const outputFilePath = path_1.default.resolve("upload/user/thumbnail" + "/");
+            ffmpeg.setFfmpegPath(ffmpegPath);
+            const response = yield ffmpeg(inputFilePath)
+                // setup event handlers
+                .on('filenames', function (filenames) {
+                console.log('screenshots are ' + filenames.join(', '));
+            })
+                .on('end', function () {
+                console.log('screenshots were saved');
+            })
+                .on('error', function (err) {
+                console.log('an error happened: ' + err.message);
+            })
+                // take a single screenshot at the specified timemark and size
+                .takeScreenshots({
+                count: 1,
+                timemarks: ['00:00:02.000'],
+                size: '600x600',
+                filename: thumbnailFilename + '.png', // Include the file extension here
+            }, outputFilePath);
+            const thumbnailPath = constant_1.USER_THUMBNAIL_PATH + "/" + thumbnailFilename + ".png";
+            return thumbnailPath.split("upload/").join("api/");
+        });
     }
     /**
      * get Post by Id.

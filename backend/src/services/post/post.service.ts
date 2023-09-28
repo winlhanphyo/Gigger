@@ -111,7 +111,7 @@ class PostService {
         filename = splitFileName[splitFileName.length - 1];
         console.log('filename', filename);
         postObj.video = filename;
-        postObj.thumbnail = this.saveThumbnail(filename);
+        postObj.thumbnail = await this.saveThumbnail(filename);
       }
 
       const createPost = await PostDbModel.create({ ...postObj, createdAt: new Date().toISOString() });
@@ -190,7 +190,7 @@ class PostService {
         console.log('split file name', splitFileName);
         filename = splitFileName[splitFileName.length - 1];
         postObj.video = filename;
-        postObj.thumbnail = this.saveThumbnail(filename);
+        postObj.thumbnail = await this.saveThumbnail(filename);
       }
 
       const updatePostData = await PostDbModel.update(postObj, {
@@ -213,13 +213,13 @@ class PostService {
    * @param filename 
    * @returns 
    */
-  saveThumbnail(filename: any) {
+  async saveThumbnail(filename: any): Promise<string> {
     // save thumnail image
     const thumbnailFilename = filename.split(".mp4")[0];
     const inputFilePath = path.resolve("upload/user/video" + "/", filename);
     const outputFilePath = path.resolve("upload/user/thumbnail" + "/");
     ffmpeg.setFfmpegPath(ffmpegPath);
-    ffmpeg(inputFilePath)
+    const response = await ffmpeg(inputFilePath)
       // setup event handlers
       .on('filenames', function (filenames: any) {
         console.log('screenshots are ' + filenames.join(', '));
