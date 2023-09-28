@@ -204,7 +204,7 @@ class PostService {
                         setTimeout(() => __awaiter(this, void 0, void 0, function* () {
                             postObj.thumbnail = yield this.saveThumbnail(filename);
                             resolve(null);
-                        }), 4000);
+                        }), 12000);
                     });
                 }
                 const updatePostData = yield database_1.PostDbModel.update(postObj, {
