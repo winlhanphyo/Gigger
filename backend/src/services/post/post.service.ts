@@ -1,7 +1,8 @@
 import { FindOptions } from "sequelize";
+import path from "path";
 import { GenreDbModel, IPostModel, PostDbModel, PostInputModel, UserDbModel, UserRoleDbModel } from "../../database";
 import { UserLikeViewPostDbModel } from "../../database/models/userLikeViewPost.model";
-import { PAGINATION_LIMIT } from "../../utils/constant";
+import { PAGINATION_LIMIT, USER_VIDEO_PATH } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
 
 class PostService {
@@ -85,7 +86,7 @@ class PostService {
         }
       }
 
-      const postObj: IPostModel = {
+      const postObj: any = {
         caption: req.body.caption,
         music: JSON.parse(req.body.music),
         latitude: req.body.latitude,
@@ -111,6 +112,7 @@ class PostService {
       }
 
       const createPost = await PostDbModel.create({ ...postObj, createdAt: new Date().toISOString() });
+
       return res.json({
         message: 'Post is created successfully',
         data: createPost
@@ -120,6 +122,19 @@ class PostService {
       return res.status(400).json({
         message: e.toString()
       });
+    }
+  }
+
+  /**
+   * delete file data.
+   * @param data 
+   * @param dataPath 
+   */
+  deleteFileData = (data: any, dataPath: string) => {
+    if (data) {
+      const rootDir = path.join(__dirname, "../../" + dataPath);
+      const filePath = path.join(rootDir, data);
+      deleteFile(filePath);
     }
   }
 
@@ -139,7 +154,7 @@ class PostService {
         return res.status(404).send("Post is not found");
       }
 
-      const postObj: IPostModel = {
+      const postObj: any = {
         caption: req.body.caption,
         music: JSON.parse(req.body.music),
         // address: req.body.address,
@@ -160,11 +175,10 @@ class PostService {
       postObj.id = +req.params.id;
 
       if (req.files?.video?.length > 0) {
-        console.log('detail video file name', detailPost?.dataValues?.video);
         if (detailPost?.dataValues?.video) {
-          deleteFile(detailPost.dataValues.video);
+          this.deleteFileData(detailPost.dataValues.video, USER_VIDEO_PATH);
         }
-        console.log('video', req.files.video[0]?.path);
+
         video = req.files.video[0].path?.split("\\").join("/");
         const splitFileName = video.split("/");
         console.log('split file name', splitFileName);
@@ -175,6 +189,7 @@ class PostService {
       const updatePostData = await PostDbModel.update(postObj, {
         where: { id: postObj.id as number }
       });
+
       return res.json({
         message: 'Post is updated successfully',
         data: updatePostData
@@ -310,8 +325,7 @@ class PostService {
       }
 
       if (detailPost?.dataValues?.video) {
-        console.log('delete video', detailPost?.dataValues?.video);
-        deleteFile(detailPost.dataValues.video);
+        this.deleteFileData(detailPost.dataValues.video, USER_VIDEO_PATH);
       }
 
       const removePostData = await PostDbModel.destroy(

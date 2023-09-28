@@ -113,7 +113,7 @@ class Server {
                 res.status(500).json({ error: 'Internal server error.' });
             }
         });
-        this.app.use("/api", express_1.default.static("apiuploads"));
+        this.app.use("/api", express_1.default.static("upload"));
         this.app.use(passport_1.default.initialize());
         this.app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
         // this.app.use(session({
