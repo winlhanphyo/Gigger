@@ -3,6 +3,7 @@ import { associative } from './associate.decorator';
 import { DataBaseTableNames, DataBaseModelNames } from "../constants";
 import { DbModelFieldInit } from "../db-structure.model";
 import { db } from '../db.provider';
+import { SupportPaymentDbModel } from "./supportPayment.model";
 
 export interface IPostModel {
   id: number;
@@ -18,6 +19,7 @@ export interface IPostModel {
   memberShipContent: boolean;
   forMyFollowersOnly: boolean;
   video: string;
+  thumbnail: string;
   createdUser: string;
   updatedUser: string;
   createdAt: string;
@@ -38,6 +40,7 @@ export interface PostInputModel {
   memberShipContent: boolean;
   forMyFollowersOnly: boolean;
   video: string;
+  thumbnail: string;
 }
 
 const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
@@ -94,6 +97,10 @@ const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  thumbnail: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   createdUser: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -113,11 +120,12 @@ const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
 };
 @associative
 export class PostDbModel extends Model {
-  static associate({ UserDbModel, UserLikeViewPostDbModel }: any) {
+  static associate({ UserDbModel, SupportPaymentDbModel }: any) {
     // this.belongsToMany(UserDbModel, {through: 'event_user'});
     // this.hasMany(UserLikeViewPostDbModel, { foreignKey: 'postId', as: 'postLikeList' });
     this.belongsTo(UserDbModel, { foreignKey: 'createdUser', as: 'createdByUser', targetKey: 'id' });
     this.belongsTo(UserDbModel, { foreignKey: 'updatedUser', as: 'updatedByUser', targetKey: 'id' });
+    // this.hasMany(SupportPaymentDbModel, { foreignKey: 'postId', as: 'supportPost' });
   }
 }
 

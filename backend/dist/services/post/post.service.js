@@ -18,6 +18,7 @@ const database_1 = require("../../database");
 const userLikeViewPost_model_1 = require("../../database/models/userLikeViewPost.model");
 const constant_1 = require("../../utils/constant");
 const utils_1 = require("../../utils/utils");
+const supportPayment_model_1 = require("../../database/models/supportPayment.model");
 class PostService {
     constructor() {
         /**
@@ -87,7 +88,7 @@ class PostService {
      * @returns
      */
     createPost(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let video = "";
@@ -132,6 +133,11 @@ class PostService {
                     console.log('filename', filename);
                     postObj.video = filename;
                 }
+                let thumbnail = req.body.thumbnail;
+                if (((_z = (_y = req.files) === null || _y === void 0 ? void 0 : _y.thumbnail) === null || _z === void 0 ? void 0 : _z.length) > 0) {
+                    thumbnail = (_0 = req.files.thumbnail[0].path) === null || _0 === void 0 ? void 0 : _0.split("\\").join("/");
+                    postObj.thumbnail = thumbnail;
+                }
                 const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
                 return res.json({
                     message: 'Post is created successfully',
@@ -152,7 +158,7 @@ class PostService {
      * @param res
      */
     updatePost(req, res) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e, _f, _g;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -186,9 +192,18 @@ class PostService {
                     }
                     video = (_d = req.files.video[0].path) === null || _d === void 0 ? void 0 : _d.split("\\").join("/");
                     const splitFileName = video.split("/");
-                    console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];
                     postObj.video = filename;
+                }
+                let thumbnail = req.body.thumbnail;
+                if (((_f = (_e = req.files) === null || _e === void 0 ? void 0 : _e.thumbnail) === null || _f === void 0 ? void 0 : _f.length) > 0) {
+                    thumbnail = (_g = req.files.thumbnail[0].path) === null || _g === void 0 ? void 0 : _g.split("\\").join("/");
+                    if (detailPost.thumbnail) {
+                        this.deleteFileData(detailPost.dataValues.thumbnail, constant_1.USER_THUMBNAIL_PATH);
+                    }
+                    if (detailPost) {
+                        detailPost.thumbnail = thumbnail;
+                    }
                 }
                 const updatePostData = yield database_1.PostDbModel.update(postObj, {
                     where: { id: postObj.id }
@@ -601,56 +616,86 @@ class PostService {
             }
         });
     }
+    /**
+     * support the post.
+     * @param req
+     * @param res
+     */
     support(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const param = req.body;
+                const userId = req.headers['userid'];
+                const id = +req.params.id;
                 let productList = [
                     {
                         price_data: {
                             currency: "EUR",
                             product_data: {
-                                donatorId: param.userId,
-                                postId: param.id
+                                donatorId: userId,
+                                postId: id
                             },
                             unit_amount: param.amount,
                         },
                         // quantity: 1,
                     }
                 ];
-                const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-                const domainUrl = param.domainUrl;
-                param === null || param === void 0 ? true : delete param.domainUrl;
-                const session = yield stripe.checkout.sessions.create({
-                    payment_method_types: ["card"],
-                    line_items: productList,
-                    mode: "payment",
-                    payment_intent_data: {
-                        metadata: {
-                            userId: param.loginId,
-                        },
-                    },
-                    // shipping_address_collection: {
-                    //   allowed_countries: ['US', 'SG', "IT"],
-                    // },
-                    // custom_text: {
-                    //   shipping_address: {
-                    //     message: 'Please note that we can\'t guarantee 2-day delivery for PO boxes at this time.',
-                    //   },
-                    //   submit: {
-                    //     message: 'We\'ll email you instructions on how to get started.',
-                    //   },
-                    // },
-                    // success_url: domainUrl + "/payment/success",
-                    // cancel_url: domainUrl + "/payment/cancel",
-                });
+                // const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+                // const domainUrl = param.domainUrl;
+                // delete param?.domainUrl;
+                // const domainUrl = orderData.domainUrl;
+                // delete orderData?.domainUrl;
+                const dist = {
+                    donatorId: Number(userId),
+                    postId: id,
+                    message: param.message,
+                    amount: param.amount,
+                    paymentDone: true
+                };
+                console.log('---------dist', dist);
+                const result = yield this.paymentCreate(dist);
+                console.log('order result', result.dataValues.id);
+                // const session = await stripe.checkout.sessions.create({
+                //   payment_method_types: ["card"],
+                //   line_items: productList,
+                //   mode: "payment",
+                //   payment_intent_data: {
+                //     metadata: {
+                //       paymentId: param.paymentId,
+                //     },
+                //   },
+                //   // shipping_address_collection: {
+                //   //   allowed_countries: ['US', 'SG', "IT"],
+                //   // },
+                //   // custom_text: {
+                //   //   shipping_address: {
+                //   //     message: 'Please note that we can\'t guarantee 2-day delivery for PO boxes at this time.',
+                //   //   },
+                //   //   submit: {
+                //   //     message: 'We\'ll email you instructions on how to get started.',
+                //   //   },
+                //   // },
+                //   // success_url: domainUrl + "/payment/success",
+                //   // cancel_url: domainUrl + "/payment/cancel",
+                // });
                 // return res.json({ id: session.id });
-                res.json(session);
+                return res.json({ msg: "Payment success" });
+                // res.json(session);
             }
             catch (err) {
                 console.log('Stripe API Error', err);
                 throw err.toString();
             }
+        });
+    }
+    /**
+     * payment create data.
+     * @param param
+     */
+    paymentCreate(param) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const createPost = yield supportPayment_model_1.SupportPaymentDbModel.create(Object.assign(Object.assign({}, param), { createdAt: new Date().toISOString() }));
+            return createPost;
         });
     }
     /**

@@ -13,7 +13,8 @@ export enum DataBaseTableNames {
   VIDEO='video',
   INSTRUMENT='instrument',
   POST='post',
-  CAMPAIGN='campaign'
+  CAMPAIGN='campaign',
+  SUPPORT_PAYMENT='support_payment'
 }
 
 export enum DataBaseModelNames {
@@ -30,5 +31,6 @@ export enum DataBaseModelNames {
   USER_LIKE_VIEW_PROFILE='user_like_view_profile',
   VIDEO='video',
   POST='post',
-  CAMPAIGN='campaign'
+  CAMPAIGN='campaign',
+  SUPPORT_PAYMENT='support_payment'
 }

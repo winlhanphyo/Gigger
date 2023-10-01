@@ -63,6 +63,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false
       },
+      thumbnail: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       createdUser: {
         type: DataTypes.INTEGER,
         allowNull: false

@@ -2,8 +2,9 @@ import { FindOptions } from "sequelize";
 import path from "path";
 import { GenreDbModel, IPostModel, PostDbModel, PostInputModel, UserDbModel, UserRoleDbModel } from "../../database";
 import { UserLikeViewPostDbModel } from "../../database/models/userLikeViewPost.model";
-import { PAGINATION_LIMIT, USER_VIDEO_PATH } from "../../utils/constant";
+import { PAGINATION_LIMIT, USER_VIDEO_PATH, USER_THUMBNAIL_PATH } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
+import { SupportPaymentDbModel } from "../../database/models/supportPayment.model";
 
 class PostService {
   /**
@@ -111,6 +112,12 @@ class PostService {
         postObj.video = filename;
       }
 
+      let thumbnail: string = req.body.thumbnail;
+      if (req.files?.thumbnail?.length > 0) {
+        thumbnail = req.files.thumbnail[0].path?.split("\\").join("/");
+        postObj.thumbnail = thumbnail;
+      }
+
       const createPost = await PostDbModel.create({ ...postObj, createdAt: new Date().toISOString() });
 
       return res.json({
@@ -181,9 +188,19 @@ class PostService {
 
         video = req.files.video[0].path?.split("\\").join("/");
         const splitFileName = video.split("/");
-        console.log('split file name', splitFileName);
         filename = splitFileName[splitFileName.length - 1];
         postObj.video = filename;
+      }
+
+      let thumbnail: any = req.body.thumbnail;
+      if (req.files?.thumbnail?.length > 0) {
+        thumbnail = req.files.thumbnail[0].path?.split("\\").join("/");
+        if (detailPost.thumbnail) {
+          this.deleteFileData(detailPost.dataValues.thumbnail, USER_THUMBNAIL_PATH);
+        }
+        if (detailPost) {
+          detailPost.thumbnail = thumbnail;
+        }
       }
 
       const updatePostData = await PostDbModel.update(postObj, {
@@ -599,57 +616,89 @@ class PostService {
     }
   }
 
+  /**
+   * support the post.
+   * @param req 
+   * @param res 
+   */
   async support(req: any, res: any): Promise<any> {
     try {
       const param = req.body;
+      const userId = req.headers['userid'];
+      const id = +req.params.id;
       let productList = [
         {
           price_data: {
             currency: "EUR",
             product_data: {
-              donatorId: param.userId,
-              postId: param.id
+              donatorId: userId,
+              postId: id
             },
             unit_amount: param.amount,
           },
           // quantity: 1,
         }
       ];
-      const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-      const domainUrl = param.domainUrl;
-      delete param?.domainUrl;
+      // const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+      // const domainUrl = param.domainUrl;
+      // delete param?.domainUrl;
 
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: productList,
-        mode: "payment",
-        payment_intent_data: {
-          metadata: {
-            userId: param.loginId,
-          },
-        },
-        // shipping_address_collection: {
-        //   allowed_countries: ['US', 'SG', "IT"],
-        // },
-        // custom_text: {
-        //   shipping_address: {
-        //     message: 'Please note that we can\'t guarantee 2-day delivery for PO boxes at this time.',
-        //   },
-        //   submit: {
-        //     message: 'We\'ll email you instructions on how to get started.',
-        //   },
-        // },
-        // success_url: domainUrl + "/payment/success",
-        // cancel_url: domainUrl + "/payment/cancel",
-      });
+      // const domainUrl = orderData.domainUrl;
+      // delete orderData?.domainUrl;
+      const dist: any = {
+        donatorId: Number(userId),
+        postId: id,
+        message: param.message,
+        amount: param.amount,
+        paymentDone: true
+      };
+
+      console.log('---------dist', dist);
+
+      const result = await this.paymentCreate(dist);
+      console.log('order result', result.dataValues.id);
+
+      // const session = await stripe.checkout.sessions.create({
+      //   payment_method_types: ["card"],
+      //   line_items: productList,
+      //   mode: "payment",
+      //   payment_intent_data: {
+      //     metadata: {
+      //       paymentId: param.paymentId,
+      //     },
+      //   },
+      //   // shipping_address_collection: {
+      //   //   allowed_countries: ['US', 'SG', "IT"],
+      //   // },
+      //   // custom_text: {
+      //   //   shipping_address: {
+      //   //     message: 'Please note that we can\'t guarantee 2-day delivery for PO boxes at this time.',
+      //   //   },
+      //   //   submit: {
+      //   //     message: 'We\'ll email you instructions on how to get started.',
+      //   //   },
+      //   // },
+      //   // success_url: domainUrl + "/payment/success",
+      //   // cancel_url: domainUrl + "/payment/cancel",
+      // });
       // return res.json({ id: session.id });
+      return res.json({ msg: "Payment success" });
 
-      res.json(session);
+      // res.json(session);
 
     } catch (err: any) {
       console.log('Stripe API Error', err);
       throw err.toString();
     }
+  }
+
+  /**
+   * payment create data.
+   * @param param 
+   */
+  async paymentCreate(param: any) {
+    const createPost = await SupportPaymentDbModel.create({ ...param, createdAt: new Date().toISOString() });
+    return createPost;
   }
 
   /**

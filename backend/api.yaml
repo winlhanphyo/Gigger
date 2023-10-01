@@ -1658,6 +1658,9 @@ paths:
                 video:
                   type: string
                   format: binary
+                thumbnail:
+                  type: string
+                  format: binary
           application/octet-stream:
             schema:
               type: object
@@ -1695,6 +1698,9 @@ paths:
                 video:
                   type: string
                   example: "1.mp4"
+                thumbnail:
+                  type: string
+                  format: binary
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -1735,9 +1741,12 @@ paths:
                 video:
                   type: string
                   format: binary
+                thumbnail:
+                  type: string
+                  format: binary
       responses:
         "200":
-          description: Created event Successfully.
+          description: Created post Successfully.
         "401":
           $ref: "#/components/responses/UnauthorizedError"
 
@@ -1835,7 +1844,7 @@ paths:
               properties:
                 message:
                   type: string
-                  example: ""
+                  example: "I support this post"
                 amount:
                   type: string
                   example: "1000"
@@ -1924,6 +1933,9 @@ paths:
                 video:
                   type: string
                   format: binary
+                thumbnail:
+                  type: string
+                  format: binary
           application/octet-stream:
             schema:
               type: object
@@ -1964,6 +1976,9 @@ paths:
                 video:
                   type: string
                   format: binary
+                thumbnail:
+                  type: string
+                  format: binary
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -2002,6 +2017,9 @@ paths:
                   type: boolean
                   example: true
                 video:
+                  type: string
+                  format: binary
+                thumbnail:
                   type: string
                   format: binary
       responses:

@@ -21,6 +21,20 @@ const userLikeViewProfile_model_1 = require("../../database/models/userLikeViewP
 const constant_1 = require("../../utils/constant");
 const utils_1 = require("../../utils/utils");
 class UserService {
+    constructor() {
+        /**
+         * delete file data.
+         * @param data
+         * @param dataPath
+         */
+        this.deleteFileData = (data, dataPath) => {
+            if (data) {
+                const rootDir = path_1.default.join(__dirname, "../../" + dataPath);
+                const filePath = path_1.default.join(rootDir, data);
+                (0, utils_1.deleteFile)(filePath);
+            }
+        };
+    }
     /**
      * get users list.
      * @param req
@@ -208,7 +222,7 @@ class UserService {
                 if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.profile) === null || _b === void 0 ? void 0 : _b.length) > 0) {
                     profile = (_c = req.files.profile[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
                     if (checkUser.profile) {
-                        (0, utils_1.deleteFile)(checkUser.profile);
+                        this.deleteFileData(checkUser.profile, constant_1.USER_THUMBNAIL_PATH);
                     }
                     if (checkUser) {
                         userData.profile = profile;
@@ -239,6 +253,7 @@ class UserService {
      * @returns
      */
     deleteUser(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
@@ -251,6 +266,9 @@ class UserService {
                     return res.status(400).json({
                         message: "User is not found by this id"
                     });
+                }
+                if ((_a = detailUser === null || detailUser === void 0 ? void 0 : detailUser.dataValues) === null || _a === void 0 ? void 0 : _a.video) {
+                    this.deleteFileData(detailUser.dataValues.video, constant_1.USER_VIDEO_PATH);
                 }
                 const removeUserData = yield database_1.UserDbModel.destroy({
                     where: {

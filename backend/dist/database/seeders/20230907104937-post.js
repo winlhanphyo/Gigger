@@ -29,6 +29,7 @@ module.exports = {
                     memberShipContent: true,
                     forMyFollowersOnly: true,
                     video: "1.mp4",
+                    thumbnail: "upload/user/thumbnaiil/1.jpg",
                     createdUser: 1,
                     createdAt: '2023-08-07',
                     updatedAt: '2023-08-07'
@@ -47,6 +48,7 @@ module.exports = {
                     memberShipContent: true,
                     forMyFollowersOnly: true,
                     video: "2.mp4",
+                    thumbnail: "upload/user/thumbnaiil/2.jpg",
                     createdUser: 1,
                     createdAt: '2023-08-07',
                     updatedAt: '2023-08-07'
@@ -65,6 +67,7 @@ module.exports = {
                     memberShipContent: true,
                     forMyFollowersOnly: true,
                     video: "3.mp4",
+                    thumbnail: "upload/user/thumbnaiil/3.jpg",
                     createdUser: 1,
                     createdAt: '2023-08-07',
                     updatedAt: '2023-08-07'

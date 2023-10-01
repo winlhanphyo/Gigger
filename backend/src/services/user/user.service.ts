@@ -2,9 +2,9 @@
 import bcrypt from "bcrypt";
 import moment from "moment";
 import path from "path";
-import { GenreDbModel, UserDbModel} from "../../database";
+import { GenreDbModel, UserDbModel } from "../../database";
 import { UserLikeViewProfileDbModel } from "../../database/models/userLikeViewProfile.model";
-import { PAGINATION_LIMIT } from "../../utils/constant";
+import { PAGINATION_LIMIT, USER_THUMBNAIL_PATH, USER_VIDEO_PATH } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
 
 class UserService {
@@ -148,6 +148,19 @@ class UserService {
   }
 
   /**
+   * delete file data.
+   * @param data 
+   * @param dataPath 
+   */
+  deleteFileData = (data: any, dataPath: string) => {
+    if (data) {
+      const rootDir = path.join(__dirname, "../../" + dataPath);
+      const filePath = path.join(rootDir, data);
+      deleteFile(filePath);
+    }
+  }
+
+  /**
    * update User data.
    * @param req
    * @param res
@@ -201,7 +214,7 @@ class UserService {
       if (req.files?.profile?.length > 0) {
         profile = req.files.profile[0].path?.split("\\").join("/");
         if (checkUser.profile) {
-          deleteFile(checkUser.profile);
+          this.deleteFileData(checkUser.profile, USER_THUMBNAIL_PATH);
         }
         if (checkUser) {
           userData.profile = profile;
@@ -246,6 +259,10 @@ class UserService {
         return res.status(400).json({
           message: "User is not found by this id"
         });
+      }
+
+      if (detailUser?.dataValues?.video) {
+        this.deleteFileData(detailUser.dataValues.video, USER_VIDEO_PATH);
       }
 
       const removeUserData = await UserDbModel.destroy(
@@ -464,19 +481,19 @@ class UserService {
    * @param num 
    * @returns 
    */
-     formatNumber(num: any) {
-      if (typeof num !== 'number') {
-        return "Invalid Input";
-      }
-  
-      if (num >= 1000000) {
-        return (num / 1000000).toFixed(1) + 'M';
-      } else if (num >= 1000) {
-        return (num / 1000).toFixed(1) + 'K';
-      } else {
-        return num.toString();
-      }
+  formatNumber(num: any) {
+    if (typeof num !== 'number') {
+      return "Invalid Input";
     }
+
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + 'M';
+    } else if (num >= 1000) {
+      return (num / 1000).toFixed(1) + 'K';
+    } else {
+      return num.toString();
+    }
+  }
 
   /**
    * account verify after user signup.

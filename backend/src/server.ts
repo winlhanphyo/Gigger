@@ -11,7 +11,7 @@ import { router } from './routes';
 import authRouter from './routes/auth/auth.router';
 import genreRouter from "./routes/genre/genre.router";
 import videoStreamRouter from './routes/videoStream/videoStream.router';
-import { USER_PROFILE_PATH, USER_VIDEO_PATH } from './utils/constant';
+import { USER_PROFILE_PATH, USER_THUMBNAIL_PATH, USER_VIDEO_PATH } from './utils/constant';
 import { userService } from './services/user';
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -23,8 +23,10 @@ const fileStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
     if (_file?.fieldname == "video") {
       cb(null, USER_VIDEO_PATH);
-    } else {
+    } else if (_file?.fieldname == "profile") {
       cb(null, USER_PROFILE_PATH);
+    } else {
+      cb(null, USER_THUMBNAIL_PATH);
     }
   },
   filename: (_req, file, cb) => {
@@ -40,38 +42,43 @@ const fileStorage = multer.diskStorage({
  */
 const fileFilter = async (_req: any, file: any, cb: any) => {
   const files: any = _req.files;
-  if (files?.video) {
-    if (
-      file.mimetype === "video/mp4" ||
-      file.mimetype === "video/mpeg" ||
-      file.mimetype === "video/quicktime"
-    ) {
-      const fileData: any = _req.files;
-      // Define the maximum allowed video length in bytes (adjust as needed)
-      // const maxVideoLength = 60 * 1000 * 1000; // 60 seconds in milliseconds (adjust as needed)
-      // var duration = await getVideoDurationInSeconds(fileData.video[0]);
-      // console.log('duration', duration);
-      // if (fileData.size > maxVideoLength) {
-      //   // File size exceeds the allowed limit
-      //   return cb(new Error('Video length exceeds the allowed limit.'), false);
-      // } else {
+  // if (_req.isAuthenticated()) {
+    if (files?.video) {
+      if (
+        file.mimetype === "video/mp4" ||
+        file.mimetype === "video/mpeg" ||
+        file.mimetype === "video/quicktime"
+      ) {
+        const fileData: any = _req.files;
+        // Define the maximum allowed video length in bytes (adjust as needed)
+        // const maxVideoLength = 60 * 1000 * 1000; // 60 seconds in milliseconds (adjust as needed)
+        // var duration = await getVideoDurationInSeconds(fileData.video[0]);
+        // console.log('duration', duration);
+        // if (fileData.size > maxVideoLength) {
+        //   // File size exceeds the allowed limit
+        //   return cb(new Error('Video length exceeds the allowed limit.'), false);
+        // } else {
         cb(null, true); // Video is valid in terms of type and length
-      // }
-    } else {
-      return cb(new Error('Invalid file type. Only video files are allowed.'), false);
+        // }
+      } else {
+        return cb(new Error('Invalid file type. Only video files are allowed.'), false);
+      }
+    } else if (files?.profile || files?.image || files?.thumbnail) {
+      if (
+        file.mimetype === "image/png" ||
+        file.mimetype === "image/jpg" ||
+        file.mimetype === "image/jpeg"
+      ) {
+        cb(null, true);
+      } else {
+        return cb(new Error('Invalid file type. Only image files are allowed.'), false);
+      }
     }
-  } else if (files?.profile || files?.image) {
-    if (
-      file.mimetype === "image/png" ||
-      file.mimetype === "image/jpg" ||
-      file.mimetype === "image/jpeg"
-    ) {
-      cb(null, true);
-    } else {
-      return cb(new Error('Invalid file type. Only image files are allowed.'), false);
-    }
-  }
+  // } else {
+  //   cb(null, false);
+  // }
 }
+
 export default class Server {
   app: Express;
   httpServer: http.Server;
@@ -86,31 +93,8 @@ export default class Server {
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
     // this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
-
-    this.app.use((req, res, next) => {
-      try {
-        const maxVideoLength = 15 * 1024 * 1024;
-        multer({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([
-          { name: 'profile', maxCount: 1 },
-          { name: 'video', maxCount: 1 },
-          { name: 'image', maxCount: 1 }
-        ])
-          (req, res, (err) => {
-          if (err) {
-            res.status(400).json({ error: err.message });
-          } else {
-            next();
-          }
-        });
-      } catch (error) {
-        // Handle any synchronous errors here
-        res.status(500).json({ error: 'Internal server error.' });
-      }
-    });
-
-    this.app.use("/api", express.static("upload"));
-
     this.app.use(passport.initialize());
+
     this.app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
     // this.app.use(session({
     //   secret: 'secrect', // Replace this with a secure secret key
@@ -118,6 +102,30 @@ export default class Server {
     //   saveUninitialized: false
     // }));
     this.app.use(passport.session());
+
+    this.app.use((req, res, next) => {
+      try {
+        const maxVideoLength = 15 * 1024 * 1024;
+        multer({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([
+          { name: 'profile', maxCount: 1 },
+          { name: 'video', maxCount: 1 },
+          { name: 'image', maxCount: 1 },
+          { name: 'thumbnail', maxCount: 1 }
+        ])
+          (req, res, (err) => {
+            if (err) {
+              res.status(400).json({ error: err.message });
+            } else {
+              next();
+            }
+          });
+      } catch (error) {
+        // Handle any synchronous errors here
+        res.status(500).json({ error: 'Internal server error.' });
+      }
+    });
+
+    this.app.use("/api", express.static("upload"));
 
     this.app.get('/verify-email/:id/:token', (req, res) => {
       return userService.verifyAccount(req, res);

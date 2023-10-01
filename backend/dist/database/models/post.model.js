@@ -65,6 +65,10 @@ const modelAttributes = {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
     },
+    thumbnail: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false,
+    },
     createdUser: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
@@ -83,11 +87,12 @@ const modelAttributes = {
     },
 };
 let PostDbModel = class PostDbModel extends sequelize_1.Model {
-    static associate({ UserDbModel, UserLikeViewPostDbModel }) {
+    static associate({ UserDbModel, SupportPaymentDbModel }) {
         // this.belongsToMany(UserDbModel, {through: 'event_user'});
         // this.hasMany(UserLikeViewPostDbModel, { foreignKey: 'postId', as: 'postLikeList' });
         this.belongsTo(UserDbModel, { foreignKey: 'createdUser', as: 'createdByUser', targetKey: 'id' });
         this.belongsTo(UserDbModel, { foreignKey: 'updatedUser', as: 'updatedByUser', targetKey: 'id' });
+        // this.hasMany(SupportPaymentDbModel, { foreignKey: 'postId', as: 'supportPost' });
     }
 };
 PostDbModel = __decorate([

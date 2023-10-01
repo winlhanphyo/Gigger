@@ -36,8 +36,11 @@ const fileStorage = multer_1.default.diskStorage({
         if ((_file === null || _file === void 0 ? void 0 : _file.fieldname) == "video") {
             cb(null, constant_1.USER_VIDEO_PATH);
         }
-        else {
+        else if ((_file === null || _file === void 0 ? void 0 : _file.fieldname) == "profile") {
             cb(null, constant_1.USER_PROFILE_PATH);
+        }
+        else {
+            cb(null, constant_1.USER_THUMBNAIL_PATH);
         }
     },
     filename: (_req, file, cb) => {
@@ -52,6 +55,7 @@ const fileStorage = multer_1.default.diskStorage({
  */
 const fileFilter = (_req, file, cb) => __awaiter(void 0, void 0, void 0, function* () {
     const files = _req.files;
+    // if (_req.isAuthenticated()) {
     if (files === null || files === void 0 ? void 0 : files.video) {
         if (file.mimetype === "video/mp4" ||
             file.mimetype === "video/mpeg" ||
@@ -72,7 +76,7 @@ const fileFilter = (_req, file, cb) => __awaiter(void 0, void 0, void 0, functio
             return cb(new Error('Invalid file type. Only video files are allowed.'), false);
         }
     }
-    else if ((files === null || files === void 0 ? void 0 : files.profile) || (files === null || files === void 0 ? void 0 : files.image)) {
+    else if ((files === null || files === void 0 ? void 0 : files.profile) || (files === null || files === void 0 ? void 0 : files.image) || (files === null || files === void 0 ? void 0 : files.thumbnail)) {
         if (file.mimetype === "image/png" ||
             file.mimetype === "image/jpg" ||
             file.mimetype === "image/jpeg") {
@@ -82,6 +86,9 @@ const fileFilter = (_req, file, cb) => __awaiter(void 0, void 0, void 0, functio
             return cb(new Error('Invalid file type. Only image files are allowed.'), false);
         }
     }
+    // } else {
+    //   cb(null, false);
+    // }
 });
 class Server {
     constructor() {
@@ -92,13 +99,22 @@ class Server {
         this.app.use(body_parser_1.default.json());
         this.app.use(body_parser_1.default.urlencoded({ extended: true }));
         // this.app.use(multer({ storage: fileStorage, fileFilter }).fields([{ name: 'profile', maxCount: 1 }, { name: 'video', maxCount: 1 }]));
+        this.app.use(passport_1.default.initialize());
+        this.app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+        // this.app.use(session({
+        //   secret: 'secrect', // Replace this with a secure secret key
+        //   resave: false,
+        //   saveUninitialized: false
+        // }));
+        this.app.use(passport_1.default.session());
         this.app.use((req, res, next) => {
             try {
                 const maxVideoLength = 15 * 1024 * 1024;
                 (0, multer_1.default)({ storage: fileStorage, fileFilter, limits: { fileSize: maxVideoLength } }).fields([
                     { name: 'profile', maxCount: 1 },
                     { name: 'video', maxCount: 1 },
-                    { name: 'image', maxCount: 1 }
+                    { name: 'image', maxCount: 1 },
+                    { name: 'thumbnail', maxCount: 1 }
                 ])(req, res, (err) => {
                     if (err) {
                         res.status(400).json({ error: err.message });
@@ -114,14 +130,6 @@ class Server {
             }
         });
         this.app.use("/api", express_1.default.static("upload"));
-        this.app.use(passport_1.default.initialize());
-        this.app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-        // this.app.use(session({
-        //   secret: 'secrect', // Replace this with a secure secret key
-        //   resave: false,
-        //   saveUninitialized: false
-        // }));
-        this.app.use(passport_1.default.session());
         this.app.get('/verify-email/:id/:token', (req, res) => {
             return user_1.userService.verifyAccount(req, res);
         });
