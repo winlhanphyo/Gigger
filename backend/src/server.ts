@@ -125,7 +125,7 @@ export default class Server {
       }
     });
 
-    this.app.use("/api", express.static("upload"));
+    this.app.use("/upload", express.static("upload"));
 
     this.app.get('/verify-email/:id/:token', (req, res) => {
       return userService.verifyAccount(req, res);
