@@ -20,6 +20,7 @@ export interface IPostModel {
   forMyFollowersOnly: boolean;
   video: string;
   thumbnail: string;
+  hashTag: string;
   createdUser: string;
   updatedUser: string;
   createdAt: string;
@@ -41,6 +42,7 @@ export interface PostInputModel {
   forMyFollowersOnly: boolean;
   video: string;
   thumbnail: string;
+  hashTag: string;
 }
 
 const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
@@ -100,6 +102,10 @@ const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
   thumbnail: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  hashTag: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   createdUser: {
     type: DataTypes.INTEGER,

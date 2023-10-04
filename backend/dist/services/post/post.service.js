@@ -122,6 +122,7 @@ class PostService {
                     privateContent: req.body.privateContent,
                     memberShipContent: req.body.memberShipContent,
                     forMyFollowersOnly: req.body.forMyFollowersOnly,
+                    hashTag: req.body.hashTag,
                     createdUser: req.headers['userid']
                 };
                 if (((_u = (_t = req.files) === null || _t === void 0 ? void 0 : _t.video) === null || _u === void 0 ? void 0 : _u.length) > 0) {
@@ -182,6 +183,7 @@ class PostService {
                     memberShipContent: req.body.memberShipContent,
                     forMyFollowersOnly: req.body.forMyFollowersOnly,
                     postId: req.body.postId,
+                    hashTag: req.body.hashTag,
                     updatedUser: req.headers['userid'],
                     updatedAt: new Date().toISOString()
                 };
@@ -245,7 +247,6 @@ class PostService {
                         }
                     ]
                 });
-                console.log('Post Data', postData);
                 let music = JSON.parse((_a = postData.dataValues) === null || _a === void 0 ? void 0 : _a.music);
                 if (music) {
                     const interestList = yield database_1.GenreDbModel.findAll({
@@ -261,6 +262,23 @@ class PostService {
                     });
                 }
                 if (res) {
+                    // like and view count for video.
+                    if (postData) {
+                        const likeCount = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.count({
+                            where: {
+                                postId: postData.dataValues.id,
+                                status: 'like'
+                            }
+                        });
+                        postData.dataValues.likeCount = this.formatNumber(likeCount);
+                        const viewCount = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.count({
+                            where: {
+                                postId: postData.dataValues.id,
+                                status: 'view'
+                            }
+                        });
+                        postData.dataValues.viewCount = this.formatNumber(viewCount);
+                    }
                     return res.json({
                         data: postData
                     });
@@ -312,7 +330,7 @@ class PostService {
    */
     getVideoByUserId(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield database_1.PostDbModel.findAll({
+            const postList = yield database_1.PostDbModel.findAll({
                 include: [
                     {
                         model: database_1.UserDbModel,
@@ -327,7 +345,26 @@ class PostService {
                     }
                 ]
             });
-            return user;
+            // like and view count for video.
+            if ((postList === null || postList === void 0 ? void 0 : postList.length) > 0) {
+                for (let i = 0; i < postList.length; i++) {
+                    const likeCount = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.count({
+                        where: {
+                            postId: postList[i].dataValues.id,
+                            status: 'like'
+                        }
+                    });
+                    postList[i].dataValues.likeCount = this.formatNumber(likeCount);
+                    const viewCount = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.count({
+                        where: {
+                            postId: postList[i].dataValues.id,
+                            status: 'view'
+                        }
+                    });
+                    postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+                }
+            }
+            return postList;
         });
     }
     /**
@@ -448,6 +485,18 @@ class PostService {
         });
     }
     /**
+     * shuffle array
+     * @param arr
+     */
+    shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements
+        }
+        console.log('arrr-----------', arr);
+        return arr;
+    }
+    /**
      * top User video list by pagination.
      * @param req
      * @param res
@@ -513,6 +562,91 @@ class PostService {
                         });
                         postList[i].dataValues.viewCount = this.formatNumber(viewCount);
                     }
+                }
+                return res.json({
+                    data: postList,
+                    count: postList.length
+                });
+            }
+            catch (e) {
+                console.log('------Video List API Error----', e);
+                return res.status(400).json({
+                    message: e.toString()
+                });
+            }
+        });
+    }
+    /**
+     * random top video list.
+     * @param req
+     * @param res
+     */
+    randomTopVideoList(req, res) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = req.headers['userid'];
+                const userData = yield database_1.UserDbModel.findOne({
+                    where: {
+                        id: userId
+                    }
+                });
+                let limit = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
+                let offset = Number(req.query.page) - 1 || 0;
+                let page = offset * limit;
+                let condition = {};
+                if (((_a = userData === null || userData === void 0 ? void 0 : userData.dataValues) === null || _a === void 0 ? void 0 : _a.interest) > 0) {
+                    condition = {
+                        genre: userData.dataValues.interest
+                    };
+                }
+                const allVideoCount = yield database_1.PostDbModel.count({
+                    include: [
+                        {
+                            model: database_1.UserDbModel,
+                            as: "createdByUser",
+                            where: condition
+                        }
+                    ]
+                });
+                const count = allVideoCount - (limit * (offset + 1));
+                console.log('all Video count', allVideoCount);
+                let postList = yield this.getVideoForTop(limit, page, condition);
+                console.log('postList', postList);
+                if (allVideoCount < count) {
+                    limit = limit - postList.length;
+                    offset = (count - allVideoCount) / limit;
+                    const prePostId = (_b = postList === null || postList === void 0 ? void 0 : postList.dataValues) === null || _b === void 0 ? void 0 : _b.map((data) => data.id);
+                    condition = {
+                        id: { $ne: prePostId }
+                    };
+                    let nextPostList = yield this.getVideoForTop(limit, offset, condition);
+                    postList = [...postList, ...nextPostList];
+                }
+                // like and view count for video.
+                if ((postList === null || postList === void 0 ? void 0 : postList.length) > 0) {
+                    for (let i = 0; i < postList.length; i++) {
+                        const likeCount = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.count({
+                            where: {
+                                postId: postList[i].dataValues.id,
+                                status: 'like'
+                            }
+                        });
+                        postList[i].dataValues.likeCount = this.formatNumber(likeCount);
+                        const viewCount = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.count({
+                            where: {
+                                postId: postList[i].dataValues.id,
+                                status: 'view'
+                            }
+                        });
+                        postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+                    }
+                    const id = +req.params.id;
+                    const index = postList.findIndex((post) => post.dataValues.id === id);
+                    const temp = postList[index];
+                    postList.splice(index, 1);
+                    postList = this.shuffleArray(postList);
+                    postList = [...postList, temp];
                 }
                 return res.json({
                     data: postList,

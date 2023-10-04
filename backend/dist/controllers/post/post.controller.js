@@ -92,6 +92,15 @@ let PostController = class PostController {
         return video;
     }
     /**
+     * random top video list.
+     * @param req
+     * @param res
+     */
+    userRandomTopVideoList(req, res) {
+        const video = post_1.postService.randomTopVideoList(req, res);
+        return video;
+    }
+    /**
      * user video list.
      * @param req
      * @param res

@@ -11,6 +11,7 @@ router.post('/update/:id', post_1.postController.updatePost);
 router.delete('/:id', post_1.postController.deletePost);
 router.post('/:id/support', post_1.postController.support);
 router.get('/top/video/list', post_1.postController.userTopVideoList);
+router.get('/top/video/:id/random', post_1.postController.userRandomTopVideoList);
 router.get('/video/list', post_1.postController.userVideoList);
 router.get('/:id/video/like', post_1.postController.likeVideo);
 router.get('/:id/video/view', post_1.postController.viewVideo);

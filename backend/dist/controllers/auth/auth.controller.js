@@ -79,6 +79,7 @@ let AuthController = class AuthController {
      * @returns
      */
     logout(req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const userId = req.headers["userid"];
@@ -88,8 +89,7 @@ let AuthController = class AuthController {
                         message: "Logout User Id is not found"
                     });
                 }
-                const token = req.headers.authorization.slipt('')[1];
-                console.log('token', token);
+                const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split('')[1];
                 req.logout(function (err) {
                     if (err) {
                         return next(err);

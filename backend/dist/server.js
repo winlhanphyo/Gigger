@@ -129,7 +129,7 @@ class Server {
                 res.status(500).json({ error: 'Internal server error.' });
             }
         });
-        this.app.use("/api", express_1.default.static("upload"));
+        this.app.use("/upload", express_1.default.static("upload"));
         this.app.get('/verify-email/:id/:token', (req, res) => {
             return user_1.userService.verifyAccount(req, res);
         });

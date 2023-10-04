@@ -1634,6 +1634,9 @@ paths:
                 longitude:
                   type: string
                   example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1671,9 +1674,15 @@ paths:
                 music:
                   type: json
                   example: [1, 2]
-                address:
+                latitude:
                   type: string
-                  example: "No(35) Green Street"
+                  example: "1.3505696580073028"
+                longitude:
+                  type: string
+                  example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1697,7 +1706,7 @@ paths:
                   example: true
                 video:
                   type: string
-                  example: "1.mp4"
+                  format: binary
                 thumbnail:
                   type: string
                   format: binary
@@ -1717,6 +1726,9 @@ paths:
                 longitude:
                   type: string
                   example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1909,6 +1921,9 @@ paths:
                 longitude:
                   type: string
                   example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1952,6 +1967,9 @@ paths:
                 longitude:
                   type: string
                   example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -1995,6 +2013,9 @@ paths:
                 longitude:
                   type: string
                   example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -2034,7 +2055,7 @@ paths:
     get:
       tags:
         - Posts
-      summary: Get all Videos
+      summary: Get Top Page Video List.
       description: This can only be done by the logged in user.
       security:
         - bearerAuth: []
@@ -2056,9 +2077,46 @@ paths:
             type: number
       responses:
         "200":
-          description: Returns all Videos
+          description: Returns top Videos for top page.
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+
+  /api/v1/posts/top/video/{id}/random:
+    get:
+      tags:
+        - Posts
+      summary: Get Top Video when user refresh.
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: current post id.
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: login UserId 
+          schema:
+            type: number
+        - name: page
+          in: query
+          description: PageNumber 
+          schema:
+            type: number
+        - name: size
+          in: query
+          description: Number of users that want to show per Page
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Returns random top Videos.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
 
   /api/v1/posts/video/list:
     get:
@@ -2240,6 +2298,9 @@ paths:
                 longitude:
                   type: string
                   example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -2264,6 +2325,9 @@ paths:
                 video:
                   type: string
                   format: binary
+                thumbnail:
+                  type: string
+                  format: binary
           application/octet-stream:
             schema:
               type: object
@@ -2274,9 +2338,15 @@ paths:
                 music:
                   type: json
                   example: [1, 2]
-                address:
+                latitude:
                   type: string
-                  example: "No(35) Green Street"
+                  example: "1.3505696580073028"
+                longitude:
+                  type: string
+                  example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -2300,7 +2370,10 @@ paths:
                   example: true
                 video:
                   type: string
-                  example: "1.mp4"
+                  format: binary
+                thumbnail:
+                  type: string
+                  format: binary
           application/x-www-form-urlencoded:
             schema:
               type: object
@@ -2317,6 +2390,9 @@ paths:
                 longitude:
                   type: string
                   example: "103.86638379305228"
+                hashTag:
+                  type: string
+                  example: "#newVideo #newsong #passion #jazz #followme #NFT #thenewmusicera #dickgamberville"
                 advertisementFormat:
                   type: string
                   example: "1"
@@ -2339,6 +2415,9 @@ paths:
                   type: boolean
                   example: true
                 video:
+                  type: string
+                  format: binary
+                thumbnail:
                   type: string
                   format: binary
       responses:

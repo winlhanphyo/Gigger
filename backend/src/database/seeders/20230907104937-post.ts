@@ -23,6 +23,7 @@ module.exports = {
           forMyFollowersOnly: true,
           video: "1.mp4",
           thumbnail: "upload/user/thumbnail/1.png",
+          hashTag: "#newVideo #newsong #passion #jazz #followme #NFT",
           createdUser: 1,
           createdAt: '2023-08-07',
           updatedAt: '2023-08-07'
@@ -42,6 +43,7 @@ module.exports = {
           forMyFollowersOnly: true,
           video: "2.mp4",
           thumbnail: "upload/user/thumbnail/2.png",
+          hashTag: "#newVideo #newsong #passion #jazz #followme #NFT",
           createdUser: 1,
           createdAt: '2023-08-07',
           updatedAt: '2023-08-07'
@@ -61,6 +63,7 @@ module.exports = {
           forMyFollowersOnly: true,
           video: "3.mp4",
           thumbnail: "upload/user/thumbnail/3.png",
+          hashTag: "#thenewmusicera #dickgamberville",
           createdUser: 1,
           createdAt: '2023-08-07',
           updatedAt: '2023-08-07'

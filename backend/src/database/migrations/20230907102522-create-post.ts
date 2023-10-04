@@ -67,6 +67,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false
       },
+      hashTag: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       createdUser: {
         type: DataTypes.INTEGER,
         allowNull: false

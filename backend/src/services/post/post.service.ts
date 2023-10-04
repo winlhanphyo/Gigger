@@ -99,6 +99,7 @@ class PostService {
         privateContent: req.body.privateContent,
         memberShipContent: req.body.memberShipContent,
         forMyFollowersOnly: req.body.forMyFollowersOnly,
+        hashTag: req.body.hashTag,
         createdUser: req.headers['userid']
       } as any;
 
@@ -175,6 +176,7 @@ class PostService {
         memberShipContent: req.body.memberShipContent,
         forMyFollowersOnly: req.body.forMyFollowersOnly,
         postId: req.body.postId,
+        hashTag: req.body.hashTag,
         updatedUser: req.headers['userid'],
         updatedAt: new Date().toISOString()
       } as any;
@@ -241,7 +243,6 @@ class PostService {
           }
         ]
       }) as any;
-      console.log('Post Data', postData);
 
       let music = JSON.parse(postData.dataValues?.music);
       if (music) {
@@ -260,6 +261,25 @@ class PostService {
       }
 
       if (res) {
+        // like and view count for video.
+        if (postData) {
+          const likeCount = await UserLikeViewPostDbModel.count({
+            where: {
+              postId: postData.dataValues.id,
+              status: 'like'
+            }
+          });
+          postData.dataValues.likeCount = this.formatNumber(likeCount);
+
+          const viewCount = await UserLikeViewPostDbModel.count({
+            where: {
+              postId: postData.dataValues.id,
+              status: 'view'
+            }
+          });
+          postData.dataValues.viewCount = this.formatNumber(viewCount);
+        }
+
         return res.json({
           data: postData
         })
@@ -306,7 +326,7 @@ class PostService {
  * @returns 
  */
   async getVideoByUserId(id: any) {
-    const user = await PostDbModel.findAll({
+    const postList = await PostDbModel.findAll({
       include: [
         {
           model: UserDbModel,
@@ -321,7 +341,29 @@ class PostService {
         }
       ]
     }) as any;
-    return user;
+
+    // like and view count for video.
+    if (postList?.length > 0) {
+      for (let i = 0; i < postList.length; i++) {
+        const likeCount = await UserLikeViewPostDbModel.count({
+          where: {
+            postId: postList[i].dataValues.id,
+            status: 'like'
+          }
+        });
+        postList[i].dataValues.likeCount = this.formatNumber(likeCount);
+
+        const viewCount = await UserLikeViewPostDbModel.count({
+          where: {
+            postId: postList[i].dataValues.id,
+            status: 'view'
+          }
+        });
+        postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+      }
+    }
+
+    return postList;
   }
 
   /**
@@ -445,6 +487,19 @@ class PostService {
   }
 
   /**
+   * shuffle array
+   * @param arr
+   */
+  shuffleArray(arr: any[]) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements
+    }
+    console.log('arrr-----------', arr);
+    return arr;
+  }
+
+  /**
    * top User video list by pagination.
    * @param req 
    * @param res 
@@ -514,6 +569,95 @@ class PostService {
           });
           postList[i].dataValues.viewCount = this.formatNumber(viewCount);
         }
+      }
+
+      return res.json({
+        data: postList,
+        count: postList.length
+      });
+    } catch (e: any) {
+      console.log('------Video List API Error----', e);
+      return res.status(400).json({
+        message: e.toString()
+      });
+    }
+  }
+
+  /**
+   * random top video list.
+   * @param req 
+   * @param res 
+   */
+  async randomTopVideoList(req: any, res: any) {
+    try {
+      const userId = req.headers['userid'];
+      const userData = await UserDbModel.findOne({
+        where: {
+          id: userId
+        }
+      }) as any;
+
+      let limit = Number(req.query.size) || PAGINATION_LIMIT;
+      let offset = Number(req.query.page) - 1 || 0;
+      let page = offset * limit;
+      let condition: any = {};
+      if (userData?.dataValues?.interest > 0) {
+        condition = {
+          genre: userData.dataValues.interest
+        }
+      }
+      const allVideoCount = await PostDbModel.count({
+        include: [
+          {
+            model: UserDbModel,
+            as: "createdByUser",
+            where: condition
+          }
+        ]
+      }) as any;
+
+      const count = allVideoCount - (limit * (offset + 1));
+
+      console.log('all Video count', allVideoCount);
+
+      let postList = await this.getVideoForTop(limit, page, condition);
+      console.log('postList', postList);
+      if (allVideoCount < count) {
+        limit = limit - postList.length;
+        offset = (count - allVideoCount) / limit;
+        const prePostId = postList?.dataValues?.map((data: any) => data.id);
+        condition = {
+          id: { $ne: prePostId }
+        };
+        let nextPostList = await this.getVideoForTop(limit, offset, condition);
+        postList = [...postList, ...nextPostList];
+      }
+
+      // like and view count for video.
+      if (postList?.length > 0) {
+        for (let i = 0; i < postList.length; i++) {
+          const likeCount = await UserLikeViewPostDbModel.count({
+            where: {
+              postId: postList[i].dataValues.id,
+              status: 'like'
+            }
+          });
+          postList[i].dataValues.likeCount = this.formatNumber(likeCount);
+
+          const viewCount = await UserLikeViewPostDbModel.count({
+            where: {
+              postId: postList[i].dataValues.id,
+              status: 'view'
+            }
+          });
+          postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+        }
+        const id = +req.params.id;
+        const index = postList.findIndex((post:any) => post.dataValues.id === id);
+        const temp = postList[index];
+        postList.splice(index, 1);
+        postList = this.shuffleArray(postList);
+        postList = [...postList, temp];
       }
 
       return res.json({
