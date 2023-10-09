@@ -34,7 +34,8 @@ let PostController = class PostController {
             let offset = Number(req.query.page) - 1 || 0;
             const size = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
             let page = offset * size;
-            const response = yield post_1.postService.getPostList(undefined, undefined, page, size, res);
+            const userId = req.headers['userid'];
+            const response = yield post_1.postService.getPostList(undefined, undefined, page, size, userId, res);
             return response;
         });
     }
@@ -69,7 +70,8 @@ let PostController = class PostController {
     detailPost(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = +req.params.id;
-            const postData = yield post_1.postService.getPostById(id, res);
+            const userId = req.headers["userid"];
+            const postData = yield post_1.postService.getPostById(id, res, userId);
             return postData;
         });
     }

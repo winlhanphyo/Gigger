@@ -5,6 +5,7 @@ import { UserLikeViewPostDbModel } from "../../database/models/userLikeViewPost.
 import { PAGINATION_LIMIT, USER_VIDEO_PATH, USER_THUMBNAIL_PATH } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
 import { SupportPaymentDbModel } from "../../database/models/supportPayment.model";
+import { UserLikeViewProfileDbModel } from "../../database/models/userLikeViewProfile.model";
 
 class PostService {
   /**
@@ -13,7 +14,7 @@ class PostService {
    * @param otherFindOptions 
    * @returns 
    */
-  async getPostList(postAttributes?: Array<any>, otherFindOptions?: FindOptions, offset?: number, limit?: number, res?: any): Promise<any> {
+  async getPostList(postAttributes?: Array<any>, otherFindOptions?: FindOptions, offset?: number, limit?: number, userId?: any, res?: any): Promise<any> {
     try {
       limit = limit && limit > 0 ? limit : undefined;
       let postList = await PostDbModel.findAll({
@@ -42,9 +43,33 @@ class PostService {
               id: music
             }
           });
-          console.log('interestList', interestList);
           postList[i].dataValues.music = interestList;
         }
+
+        let dist = await UserLikeViewPostDbModel.findAll({
+          where: {
+            postId: postList[i].dataValues.id,
+            userId: parseInt(userId)
+          }
+        });
+
+        if (dist.length > 0) {
+          postList[i].dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+          postList[i].dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+        } else {
+          postList[i].dataValues.like = false;
+          postList[i].dataValues.view = false;
+        }
+
+        dist = await UserLikeViewProfileDbModel.findAll({
+          where: {
+            artistId: postList[i].dataValues.createdUser,
+            userId: parseInt(userId),
+            status: 'follow'
+          }
+        });
+
+        postList[i].dataValues.follow = dist.length > 0 ? true : false;
       }
 
       return res.json({
@@ -226,7 +251,7 @@ class PostService {
    * @param post_id 
    * @returns 
    */
-  async getPostById(post_id: number, res: any = null): Promise<any> {
+  async getPostById(post_id: number, res: any = null, userId: any = null): Promise<any> {
     try {
       const postData = await PostDbModel.findOne({
         where: {
@@ -278,6 +303,31 @@ class PostService {
             }
           });
           postData.dataValues.viewCount = this.formatNumber(viewCount);
+
+          let dist = await UserLikeViewPostDbModel.findAll({
+            where: {
+              postId: postData.dataValues.id,
+              userId: parseInt(userId)
+            }
+          });
+
+          if (dist.length > 0) {
+            postData.dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+            postData.dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+          } else {
+            postData.dataValues.like = false;
+            postData.dataValues.view = false;
+          }
+
+          dist = await UserLikeViewProfileDbModel.findAll({
+            where: {
+              artistId: postData.dataValues.createdUser,
+              userId: parseInt(userId),
+              status: 'follow'
+            }
+          });
+
+          postData.dataValues.follow = dist.length > 0 ? true : false;
         }
 
         return res.json({
@@ -535,10 +585,7 @@ class PostService {
 
       const count = allVideoCount - (limit * (offset + 1));
 
-      console.log('all Video count', allVideoCount);
-
       let postList = await this.getVideoForTop(limit, page, condition);
-      console.log('postList', postList);
       if (allVideoCount < count) {
         limit = limit - postList.length;
         offset = (count - allVideoCount) / limit;
@@ -568,6 +615,31 @@ class PostService {
             }
           });
           postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+
+          let dist = await UserLikeViewPostDbModel.findAll({
+            where: {
+              postId: postList[i].dataValues.id,
+              userId: parseInt(userId)
+            }
+          });
+
+          if (dist.length > 0) {
+            postList[i].dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+            postList[i].dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+          } else {
+            postList[i].dataValues.like = false;
+            postList[i].dataValues.view = false;
+          }
+
+          dist = await UserLikeViewProfileDbModel.findAll({
+            where: {
+              artistId: postList[i].dataValues.createdUser,
+              userId: parseInt(userId),
+              status: 'follow'
+            }
+          });
+
+          postList[i].dataValues.follow = dist.length > 0 ? true : false;
         }
       }
 
@@ -651,9 +723,34 @@ class PostService {
             }
           });
           postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+
+          let dist = await UserLikeViewPostDbModel.findAll({
+            where: {
+              postId: postList[i].dataValues.id,
+              userId: parseInt(userId)
+            }
+          });
+
+          if (dist.length > 0) {
+            postList[i].dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+            postList[i].dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+          } else {
+            postList[i].dataValues.like = false;
+            postList[i].dataValues.view = false;
+          }
+
+          dist = await UserLikeViewProfileDbModel.findAll({
+            where: {
+              artistId: postList[i].dataValues.createdUser,
+              userId: parseInt(userId),
+              status: 'follow'
+            }
+          });
+
+          postList[i].dataValues.follow = dist.length > 0 ? true : false;
         }
         const id = +req.params.id;
-        const index = postList.findIndex((post:any) => post.dataValues.id === id);
+        const index = postList.findIndex((post: any) => post.dataValues.id === id);
         const temp = postList[index];
         postList.splice(index, 1);
         postList = this.shuffleArray(postList);
@@ -713,8 +810,10 @@ class PostService {
    */
   async videoList(req: any, res: any) {
     try {
+
       let limit = Number(req.query.size) || PAGINATION_LIMIT;
       let offset = Number(req.query.page) - 1 || 0;
+      const userId = req.headers["userid"];
       let page = (offset * limit) || 0;
       const postList = await PostDbModel.findAll({
         limit,
@@ -745,6 +844,31 @@ class PostService {
             }
           });
           postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+
+          let dist = await UserLikeViewPostDbModel.findAll({
+            where: {
+              postId: postList[i].dataValues.id,
+              userId: parseInt(userId)
+            }
+          });
+
+          if (dist.length > 0) {
+            postList[i].dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+            postList[i].dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+          } else {
+            postList[i].dataValues.like = false;
+            postList[i].dataValues.view = false;
+          }
+
+          dist = await UserLikeViewProfileDbModel.findAll({
+            where: {
+              artistId: postList[i].dataValues.createdUser,
+              userId: parseInt(userId),
+              status: 'follow'
+            }
+          });
+
+          postList[i].dataValues.follow = dist.length > 0 ? true : false;
         }
       }
 

@@ -886,6 +886,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
       responses:
           "200":
             description: Returns User By Id
@@ -893,6 +899,158 @@ paths:
             $ref: "#/components/responses/UnauthorizedError"
           "404":
             description: "User is not found"
+
+
+  /api/v1/users/profile/{id}/like:
+    get:
+      tags:
+        - Users
+      summary: User like video
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userLikeProfile
+      parameters:
+        - name: id
+          in: path
+          description: artistId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User like profile status is successfully added.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Profile is not found.
+
+  /api/v1/users/profile/{id}/view:
+    get:
+      tags:
+        - Users
+      summary: User view profile
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userViewProfile
+      parameters:
+        - name: id
+          in: path
+          description: artistId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User view profile status is successfully added.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Video is not found.
+
+  /api/v1/user/profile/{id}/unlike:
+    get:
+      tags:
+        - Users
+      summary: User unlike profile
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userUnlikeProfile
+      parameters:
+        - name: id
+          in: path
+          description: artistId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User unlike profile status successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Profile is not found.
+
+  /api/v1/users/profile/{id}/follow:
+    get:
+      tags:
+        - Users
+      summary: User follow profile
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userFollowProfile
+      parameters:
+        - name: id
+          in: path
+          description: artistId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User follow profile status is successfully added.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Profile is not found.
+
+  /api/v1/user/profile/{id}/unfollow:
+    get:
+      tags:
+        - Users
+      summary: User unfollow profile
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: userUnfollowProfile
+      parameters:
+        - name: id
+          in: path
+          description: artistId
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: header
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User unfollow profile status successfully.
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Profile is not found.
+
 
   /api/v1/users/{id}:
     post:

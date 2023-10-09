@@ -16,7 +16,8 @@ class PostController {
     let offset = Number(req.query.page) - 1 || 0;
     const size = Number(req.query.size) || PAGINATION_LIMIT;
     let page = offset * size;
-    const response = await postService.getPostList(undefined, undefined, page, size, res);
+    const userId = req.headers['userid'];
+    const response = await postService.getPostList(undefined, undefined, page, size, userId, res);
     return response;
   }
 
@@ -48,7 +49,8 @@ class PostController {
    */
   async detailPost(req: Request, res: Response) {
     const id = +req.params.id;
-    const postData = await postService.getPostById(id, res);
+    const userId = req.headers["userid"];
+    const postData = await postService.getPostById(id, res, userId);
     return postData;
   }
 

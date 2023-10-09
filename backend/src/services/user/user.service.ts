@@ -315,6 +315,7 @@ class UserService {
   async getUserProfile(req: any, res: any): Promise<any> {
     try {
       const id = +req.params.id;
+      const userId = req.headers["userid"];
       const userData = await this.getUserDataWithId(id, res);
 
       const getCountData = async (id: any, status: any) => {
@@ -337,6 +338,23 @@ class UserService {
 
         const followCount = await getCountData(userData.dataValues.id, "follow");
         userData.dataValues.followCount = this.formatNumber(followCount);
+
+        const dist = await UserLikeViewProfileDbModel.findAll({
+          where: {
+            artistId: id,
+            userId: parseInt(userId)
+          }
+        });
+  
+        if (dist.length > 0) {
+          userData.dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+          userData.dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+          userData.dataValues.follow = dist.some((data) => data.dataValues.status === 'follow');
+        } else {
+          userData.dataValues.like = false;
+          userData.dataValues.view = false;
+          userData.dataValues.follow = false;
+        }
       }
 
       return res.json({

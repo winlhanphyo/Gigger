@@ -19,6 +19,7 @@ const userLikeViewPost_model_1 = require("../../database/models/userLikeViewPost
 const constant_1 = require("../../utils/constant");
 const utils_1 = require("../../utils/utils");
 const supportPayment_model_1 = require("../../database/models/supportPayment.model");
+const userLikeViewProfile_model_1 = require("../../database/models/userLikeViewProfile.model");
 class PostService {
     constructor() {
         /**
@@ -40,7 +41,7 @@ class PostService {
      * @param otherFindOptions
      * @returns
      */
-    getPostList(postAttributes, otherFindOptions, offset, limit, res) {
+    getPostList(postAttributes, otherFindOptions, offset, limit, userId, res) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -65,9 +66,30 @@ class PostService {
                                 id: music
                             }
                         });
-                        console.log('interestList', interestList);
                         postList[i].dataValues.music = interestList;
                     }
+                    let dist = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.findAll({
+                        where: {
+                            postId: postList[i].dataValues.id,
+                            userId: parseInt(userId)
+                        }
+                    });
+                    if (dist.length > 0) {
+                        postList[i].dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+                        postList[i].dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+                    }
+                    else {
+                        postList[i].dataValues.like = false;
+                        postList[i].dataValues.view = false;
+                    }
+                    dist = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.findAll({
+                        where: {
+                            artistId: postList[i].dataValues.createdUser,
+                            userId: parseInt(userId),
+                            status: 'follow'
+                        }
+                    });
+                    postList[i].dataValues.follow = dist.length > 0 ? true : false;
                 }
                 return res.json({
                     count: postList.length,
@@ -228,7 +250,7 @@ class PostService {
      * @param post_id
      * @returns
      */
-    getPostById(post_id, res = null) {
+    getPostById(post_id, res = null, userId = null) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -278,6 +300,28 @@ class PostService {
                             }
                         });
                         postData.dataValues.viewCount = this.formatNumber(viewCount);
+                        let dist = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.findAll({
+                            where: {
+                                postId: postData.dataValues.id,
+                                userId: parseInt(userId)
+                            }
+                        });
+                        if (dist.length > 0) {
+                            postData.dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+                            postData.dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+                        }
+                        else {
+                            postData.dataValues.like = false;
+                            postData.dataValues.view = false;
+                        }
+                        dist = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.findAll({
+                            where: {
+                                artistId: postData.dataValues.createdUser,
+                                userId: parseInt(userId),
+                                status: 'follow'
+                            }
+                        });
+                        postData.dataValues.follow = dist.length > 0 ? true : false;
                     }
                     return res.json({
                         data: postData
@@ -531,9 +575,7 @@ class PostService {
                     ]
                 });
                 const count = allVideoCount - (limit * (offset + 1));
-                console.log('all Video count', allVideoCount);
                 let postList = yield this.getVideoForTop(limit, page, condition);
-                console.log('postList', postList);
                 if (allVideoCount < count) {
                     limit = limit - postList.length;
                     offset = (count - allVideoCount) / limit;
@@ -561,6 +603,28 @@ class PostService {
                             }
                         });
                         postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+                        let dist = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.findAll({
+                            where: {
+                                postId: postList[i].dataValues.id,
+                                userId: parseInt(userId)
+                            }
+                        });
+                        if (dist.length > 0) {
+                            postList[i].dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+                            postList[i].dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+                        }
+                        else {
+                            postList[i].dataValues.like = false;
+                            postList[i].dataValues.view = false;
+                        }
+                        dist = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.findAll({
+                            where: {
+                                artistId: postList[i].dataValues.createdUser,
+                                userId: parseInt(userId),
+                                status: 'follow'
+                            }
+                        });
+                        postList[i].dataValues.follow = dist.length > 0 ? true : false;
                     }
                 }
                 return res.json({
@@ -640,6 +704,28 @@ class PostService {
                             }
                         });
                         postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+                        let dist = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.findAll({
+                            where: {
+                                postId: postList[i].dataValues.id,
+                                userId: parseInt(userId)
+                            }
+                        });
+                        if (dist.length > 0) {
+                            postList[i].dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+                            postList[i].dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+                        }
+                        else {
+                            postList[i].dataValues.like = false;
+                            postList[i].dataValues.view = false;
+                        }
+                        dist = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.findAll({
+                            where: {
+                                artistId: postList[i].dataValues.createdUser,
+                                userId: parseInt(userId),
+                                status: 'follow'
+                            }
+                        });
+                        postList[i].dataValues.follow = dist.length > 0 ? true : false;
                     }
                     const id = +req.params.id;
                     const index = postList.findIndex((post) => post.dataValues.id === id);
@@ -707,6 +793,7 @@ class PostService {
             try {
                 let limit = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
                 let offset = Number(req.query.page) - 1 || 0;
+                const userId = req.headers["userid"];
                 let page = (offset * limit) || 0;
                 const postList = yield database_1.PostDbModel.findAll({
                     limit,
@@ -735,6 +822,28 @@ class PostService {
                             }
                         });
                         postList[i].dataValues.viewCount = this.formatNumber(viewCount);
+                        let dist = yield userLikeViewPost_model_1.UserLikeViewPostDbModel.findAll({
+                            where: {
+                                postId: postList[i].dataValues.id,
+                                userId: parseInt(userId)
+                            }
+                        });
+                        if (dist.length > 0) {
+                            postList[i].dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+                            postList[i].dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+                        }
+                        else {
+                            postList[i].dataValues.like = false;
+                            postList[i].dataValues.view = false;
+                        }
+                        dist = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.findAll({
+                            where: {
+                                artistId: postList[i].dataValues.createdUser,
+                                userId: parseInt(userId),
+                                status: 'follow'
+                            }
+                        });
+                        postList[i].dataValues.follow = dist.length > 0 ? true : false;
                     }
                 }
                 return res.json({

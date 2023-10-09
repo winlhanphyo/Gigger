@@ -321,6 +321,7 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
+                const userId = req.headers["userid"];
                 const userData = yield this.getUserDataWithId(id, res);
                 const getCountData = (id, status) => __awaiter(this, void 0, void 0, function* () {
                     const count = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.count({
@@ -339,6 +340,22 @@ class UserService {
                     userData.dataValues.viewCount = this.formatNumber(viewCount);
                     const followCount = yield getCountData(userData.dataValues.id, "follow");
                     userData.dataValues.followCount = this.formatNumber(followCount);
+                    const dist = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.findAll({
+                        where: {
+                            artistId: id,
+                            userId: parseInt(userId)
+                        }
+                    });
+                    if (dist.length > 0) {
+                        userData.dataValues.like = dist.some((data) => data.dataValues.status === 'like');
+                        userData.dataValues.view = dist.some((data) => data.dataValues.status === 'view');
+                        userData.dataValues.follow = dist.some((data) => data.dataValues.status === 'follow');
+                    }
+                    else {
+                        userData.dataValues.like = false;
+                        userData.dataValues.view = false;
+                        userData.dataValues.follow = false;
+                    }
                 }
                 return res.json({
                     data: userData
