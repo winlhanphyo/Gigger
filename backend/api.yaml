@@ -870,6 +870,31 @@ paths:
           "404":
             description: "User is not found"
 
+  /api/v1/users/{id}/video:
+    get:
+      tags:
+        - Users
+      summary: Get Video list by User ID
+      description: This can only be done by the logged in user.
+      security:
+        - bearerAuth: []
+      operationId: getPostByUserId
+      parameters:
+        - name: id
+          in: path
+          description: UserId
+          required: true
+          schema:
+            type: string
+      responses:
+          "200":
+            description: Returns all Video By UserId
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+          "404":
+            description: "User is not found"
+
+
   /api/v1/users/profile/{id}:
     get:
       tags:
