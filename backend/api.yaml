@@ -1,6 +1,6 @@
 openapi: 3.0.2
 servers:
-  - url: https://gigger-api.orionmmtecheng.com
+  - url: http://localhost:3000
 info:
   description: This is API Doc for Gigger
   title: Swagger API Doc for Gigger

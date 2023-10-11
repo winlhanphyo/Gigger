@@ -1,4 +1,4 @@
-import express, { Express, Request } from 'express';
+import express, { Express } from 'express';
 import http from 'http';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -114,14 +114,14 @@ export default class Server {
         ])
           (req, res, (err) => {
             if (err) {
-              res.status(400).json({ error: err.message });
+              res.status(400).json({ message: err.message });
             } else {
               next();
             }
           });
       } catch (error) {
         // Handle any synchronous errors here
-        res.status(500).json({ error: 'Internal server error.' });
+        res.status(500).json({ message: 'Internal server error.' });
       }
     });
 

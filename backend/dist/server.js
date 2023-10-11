@@ -117,7 +117,7 @@ class Server {
                     { name: 'thumbnail', maxCount: 1 }
                 ])(req, res, (err) => {
                     if (err) {
-                        res.status(400).json({ error: err.message });
+                        res.status(400).json({ message: err.message });
                     }
                     else {
                         next();
@@ -126,7 +126,7 @@ class Server {
             }
             catch (error) {
                 // Handle any synchronous errors here
-                res.status(500).json({ error: 'Internal server error.' });
+                res.status(500).json({ message: 'Internal server error.' });
             }
         });
         this.app.use("/upload", express_1.default.static("upload"));
