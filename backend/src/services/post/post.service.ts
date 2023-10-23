@@ -1,4 +1,4 @@
-import { FindOptions } from "sequelize";
+import { FindOptions, Op } from "sequelize";
 import path from "path";
 import { GenreDbModel, IPostModel, PostDbModel, PostInputModel, UserDbModel, UserRoleDbModel } from "../../database";
 import { UserLikeViewPostDbModel } from "../../database/models/userLikeViewPost.model";
@@ -663,6 +663,7 @@ class PostService {
   async randomTopVideoList(req: any, res: any) {
     try {
       const userId = req.headers['userid'];
+      const id = +req.params.id;
       const userData = await UserDbModel.findOne({
         where: {
           id: userId
@@ -675,7 +676,8 @@ class PostService {
       let condition: any = {};
       if (userData?.dataValues?.interest > 0) {
         condition = {
-          genre: userData.dataValues.interest
+          genre: userData.dataValues.interest,
+          id: { [Op.ne]: id },
         }
       }
       const allVideoCount = await PostDbModel.count({
@@ -693,11 +695,11 @@ class PostService {
       console.log('all Video count', allVideoCount);
 
       let postList = await this.getVideoForTop(limit, page, condition);
-      console.log('postList', postList);
       if (allVideoCount < count) {
         limit = limit - postList.length;
         offset = (count - allVideoCount) / limit;
         const prePostId = postList?.dataValues?.map((data: any) => data.id);
+        prePostId.push(id);
         condition = {
           id: { $ne: prePostId }
         };
@@ -749,12 +751,6 @@ class PostService {
 
           postList[i].dataValues.follow = dist.length > 0 ? true : false;
         }
-        const id = +req.params.id;
-        const index = postList.findIndex((post: any) => post.dataValues.id === id);
-        const temp = postList[index];
-        postList.splice(index, 1);
-        postList = this.shuffleArray(postList);
-        postList = [...postList, temp];
       }
 
       return res.json({
@@ -781,6 +777,7 @@ class PostService {
       const postList = await PostDbModel.findAll({
         limit,
         offset,
+        ...condition,
         include: [
           {
             model: UserDbModel,

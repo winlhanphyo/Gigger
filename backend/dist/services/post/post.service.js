@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postService = void 0;
+const sequelize_1 = require("sequelize");
 const path_1 = __importDefault(require("path"));
 const database_1 = require("../../database");
 const userLikeViewPost_model_1 = require("../../database/models/userLikeViewPost.model");
@@ -650,6 +651,7 @@ class PostService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const userId = req.headers['userid'];
+                const id = +req.params.id;
                 const userData = yield database_1.UserDbModel.findOne({
                     where: {
                         id: userId
@@ -661,7 +663,8 @@ class PostService {
                 let condition = {};
                 if (((_a = userData === null || userData === void 0 ? void 0 : userData.dataValues) === null || _a === void 0 ? void 0 : _a.interest) > 0) {
                     condition = {
-                        genre: userData.dataValues.interest
+                        genre: userData.dataValues.interest,
+                        id: { [sequelize_1.Op.ne]: id },
                     };
                 }
                 const allVideoCount = yield database_1.PostDbModel.count({
@@ -676,11 +679,11 @@ class PostService {
                 const count = allVideoCount - (limit * (offset + 1));
                 console.log('all Video count', allVideoCount);
                 let postList = yield this.getVideoForTop(limit, page, condition);
-                console.log('postList', postList);
                 if (allVideoCount < count) {
                     limit = limit - postList.length;
                     offset = (count - allVideoCount) / limit;
                     const prePostId = (_b = postList === null || postList === void 0 ? void 0 : postList.dataValues) === null || _b === void 0 ? void 0 : _b.map((data) => data.id);
+                    prePostId.push(id);
                     condition = {
                         id: { $ne: prePostId }
                     };
@@ -727,12 +730,6 @@ class PostService {
                         });
                         postList[i].dataValues.follow = dist.length > 0 ? true : false;
                     }
-                    const id = +req.params.id;
-                    const index = postList.findIndex((post) => post.dataValues.id === id);
-                    const temp = postList[index];
-                    postList.splice(index, 1);
-                    postList = this.shuffleArray(postList);
-                    postList = [...postList, temp];
                 }
                 return res.json({
                     data: postList,
@@ -757,10 +754,8 @@ class PostService {
     getVideoForTop(limit, offset, condition) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const postList = yield database_1.PostDbModel.findAll({
-                    limit,
-                    offset,
-                    include: [
+                const postList = yield database_1.PostDbModel.findAll(Object.assign(Object.assign({ limit,
+                    offset }, condition), { include: [
                         {
                             model: database_1.UserDbModel,
                             as: "createdByUser",
@@ -772,8 +767,7 @@ class PostService {
                                 }
                             ]
                         }
-                    ]
-                });
+                    ] }));
                 return postList;
             }
             catch (err) {
