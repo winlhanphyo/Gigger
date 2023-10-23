@@ -105,19 +105,18 @@ class AuthService {
 </body>
 </html>`;
 
-      // const mail = await sendEmail(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
+      const mail = await sendEmail(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
 
-      const payload = {
-        username: result.username,
-        id: result.id
-      }
-      const loginToken = jwt.sign(payload, 'secrect', { expiresIn: '1d' });
+      // const payload = {
+      //   username: result.username,
+      //   id: result.id
+      // }
+      // const loginToken = jwt.sign(payload, 'secrect', { expiresIn: '1d' });
 
       res.json({
         success: true,
         message: 'User sign up successfully and Verification email is sent to your account.',
-        users: result,
-        token: loginToken
+        users: result
       });
     } catch (e: any) {
       console.log('------get signup API error----', e);
