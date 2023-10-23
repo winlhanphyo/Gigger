@@ -47,7 +47,7 @@ class AuthService {
         role: req.body.role,
         dob: req.body.dob,
         interest: req.body.interest,
-        verifyAccount: true
+        verifyAccount: false
       } as any;
       const createUser: any = await UserDbModel.create({ ...userData, createdAt: new Date().toISOString() });
       let result = await UserDbModel.findOne({
