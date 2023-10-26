@@ -131,6 +131,10 @@ export default class Server {
       return userService.verifyAccount(req, res);
     });
 
+    this.app.get('/forget-password-update/:id/:token', (req, res) => {
+      return userService.forgetPasswordUpdate(req, res);
+    });
+
     this.app.use('/api', authRouter);
     this.app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
     this.app.use('/api/interests', genreRouter);

@@ -2,7 +2,7 @@
 import bcrypt from "bcrypt";
 import moment from "moment";
 import path from "path";
-import { GenreDbModel, UserDbModel } from "../../database";
+import { GenreDbModel, UserDbModel, PasswordResetDbModel } from "../../database";
 import { UserLikeViewProfileDbModel } from "../../database/models/userLikeViewProfile.model";
 import { PAGINATION_LIMIT, USER_THUMBNAIL_PATH, USER_VIDEO_PATH } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
@@ -541,6 +541,34 @@ class UserService {
         message: e.toString()
       });
     }
+  }
+
+  /**
+   * forget password update.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async forgetPasswordUpdate(req: any, res: any): Promise<any> {
+    try {
+      const user = await UserDbModel.findOne({
+        where: {
+          id: req.params.id
+        }
+      });
+      if (!user) return res.status(400).send("User Id does not exist");
+      const passwordReset = await PasswordResetDbModel.findOne({
+        where: {
+          token: req.params.token
+        }
+      });
+      if (!passwordReset) return res.status(400).send("Invalid link or expired");
+      const rootDir = path.join(__dirname, "../../../");
+      return res.sendFile(path.join(rootDir, 'password_reset.html'));
+    } catch (err: any) {
+      res.status(400).send("An error occured " + err.toString());
+    }
+
   }
 }
 

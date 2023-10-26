@@ -89,6 +89,27 @@ class AuthController {
     }
   };
 
+    /**
+   * forget password.
+   * @param req 
+   * @param res 
+   */
+    async forgetPassword (req: any, res: any) {
+      const data = await authService.forgetPassword(req, res);
+      return data;
+    }
+    
+    /**
+     * reset password.
+     * @param req 
+     * @param res 
+     * @returns 
+     */
+    async resetPassword (req: any, res: any) {
+      const data = await authService.resetPassword(req, res);
+      return data;
+    }
+
   /**
    * login with google error.
    * @param req 

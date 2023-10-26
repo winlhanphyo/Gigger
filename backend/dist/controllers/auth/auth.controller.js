@@ -114,6 +114,29 @@ let AuthController = class AuthController {
     }
     ;
     /**
+   * forget password.
+   * @param req
+   * @param res
+   */
+    forgetPassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = yield auth_service_1.authService.forgetPassword(req, res);
+            return data;
+        });
+    }
+    /**
+     * reset password.
+     * @param req
+     * @param res
+     * @returns
+     */
+    resetPassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = yield auth_service_1.authService.resetPassword(req, res);
+            return data;
+        });
+    }
+    /**
      * login with google error.
      * @param req
      * @param res

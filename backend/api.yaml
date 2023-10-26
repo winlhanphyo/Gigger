@@ -129,6 +129,27 @@ paths:
         "200":
           description: Signup user Successfully.
 
+  /api/forget-password:
+    post:
+      tags:
+        - Authentication
+      summary: Forget password
+      security:
+        - {}
+      requestBody:
+        description: Forget password with email
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "user1@gmail.com"
+      responses:
+        "200":
+          description: Password reset link sent to your email account.
+
   # Interest Routes
   /api/interests:
     get:

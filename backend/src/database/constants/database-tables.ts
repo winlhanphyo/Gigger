@@ -14,7 +14,8 @@ export enum DataBaseTableNames {
   INSTRUMENT='instrument',
   POST='post',
   CAMPAIGN='campaign',
-  SUPPORT_PAYMENT='support_payment'
+  SUPPORT_PAYMENT='support_payment',
+  PASSWORD_RESET='password_reset'
 }
 
 export enum DataBaseModelNames {
@@ -32,5 +33,6 @@ export enum DataBaseModelNames {
   VIDEO='video',
   POST='post',
   CAMPAIGN='campaign',
-  SUPPORT_PAYMENT='support_payment'
+  SUPPORT_PAYMENT='support_payment',
+  PASSWORD_RESET='password_reset'
 }

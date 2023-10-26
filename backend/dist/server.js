@@ -133,6 +133,9 @@ class Server {
         this.app.get('/verify-email/:id/:token', (req, res) => {
             return user_1.userService.verifyAccount(req, res);
         });
+        this.app.get('/forget-password-update/:id/:token', (req, res) => {
+            return user_1.userService.forgetPasswordUpdate(req, res);
+        });
         this.app.use('/api', auth_router_1.default);
         this.app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
         this.app.use('/api/interests', genre_router_1.default);

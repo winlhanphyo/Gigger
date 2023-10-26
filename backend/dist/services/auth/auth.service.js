@@ -39,7 +39,9 @@ exports.authService = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importStar(require("bcrypt"));
 const crypto_1 = __importDefault(require("crypto"));
+const utils_1 = require("../../utils/utils");
 const database_1 = require("../../database");
+const passwordReset_model_1 = require("../../database/models/passwordReset.model");
 class AuthService {
     /**
      * user signup
@@ -48,25 +50,26 @@ class AuthService {
      * @returns
      */
     signupUser(req, res) {
+        var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                let user = yield database_1.UserDbModel.findOne({
+                const username = yield database_1.UserDbModel.findOne({
                     where: {
                         username: req.body.username
                     }
                 });
-                if (user) {
+                if (username && ((_a = username === null || username === void 0 ? void 0 : username.dataValues) === null || _a === void 0 ? void 0 : _a.verifyAccount)) {
                     return res.status(400).json({
                         success: false,
                         message: "Username is already taken"
                     });
                 }
-                user = (yield database_1.UserDbModel.findOne({
+                const email = yield database_1.UserDbModel.findOne({
                     where: {
                         email: req.body.email
                     }
-                }));
-                if (user) {
+                });
+                if (email && ((_b = username === null || username === void 0 ? void 0 : username.dataValues) === null || _b === void 0 ? void 0 : _b.verifyAccount)) {
                     return res.status(400).json({
                         success: false,
                         message: "Email is already taken"
@@ -79,12 +82,22 @@ class AuthService {
                     role: req.body.role,
                     dob: req.body.dob,
                     interest: req.body.interest,
-                    verifyAccount: true
+                    verifyAccount: false
                 };
-                const createUser = yield database_1.UserDbModel.create(Object.assign(Object.assign({}, userData), { createdAt: new Date().toISOString() }));
+                let resUser = null;
+                if (!username && !email && !((_c = username === null || username === void 0 ? void 0 : username.dataValues) === null || _c === void 0 ? void 0 : _c.verifyAccount)) {
+                    resUser = yield database_1.UserDbModel.create(Object.assign(Object.assign({}, userData), { createdAt: new Date().toISOString() }));
+                }
+                else {
+                    userData.id = ((_d = username === null || username === void 0 ? void 0 : username.dataValues) === null || _d === void 0 ? void 0 : _d.id) || ((_e = email === null || email === void 0 ? void 0 : email.dataValues) === null || _e === void 0 ? void 0 : _e.id);
+                    resUser = yield database_1.UserDbModel.update(userData, {
+                        where: { id: userData.id }
+                    });
+                }
+                const id = ((_f = resUser === null || resUser === void 0 ? void 0 : resUser.dataValues) === null || _f === void 0 ? void 0 : _f.id) || (userData === null || userData === void 0 ? void 0 : userData.id);
                 let result = yield database_1.UserDbModel.findOne({
                     where: {
-                        id: createUser.dataValues.id,
+                        id
                     },
                     include: [
                         {
@@ -101,7 +114,8 @@ class AuthService {
                 result.dataValues.interest = interest;
                 const token = crypto_1.default.randomBytes(16).toString("hex");
                 const domainUrl = "https://gigger-api.orionmmtecheng.com";
-                const link = `${domainUrl}/verify-email/${createUser.dataValues.id}/${token}`;
+                // const domainUrl = "http://localhost:3000";
+                const link = `${domainUrl}/verify-email/${id}/${token}`;
                 const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -134,17 +148,16 @@ class AuthService {
   </div>
 </body>
 </html>`;
-                // const mail = await sendEmail(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
-                const payload = {
-                    username: result.username,
-                    id: result.id
-                };
-                const loginToken = jsonwebtoken_1.default.sign(payload, 'secrect', { expiresIn: '1d' });
+                const mail = yield (0, utils_1.sendEmail)(req.body.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
+                // const payload = {
+                //   username: result.username,
+                //   id: result.id
+                // }
+                // const loginToken = jwt.sign(payload, 'secrect', { expiresIn: '1d' });
                 res.json({
                     success: true,
                     message: 'User sign up successfully and Verification email is sent to your account.',
-                    users: result,
-                    token: loginToken
+                    users: result
                 });
             }
             catch (e) {
@@ -163,6 +176,7 @@ class AuthService {
      * @returns
      */
     loginUser(req, res) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const username = req.body.username;
@@ -180,7 +194,7 @@ class AuthService {
                         message: 'Incorrect Password'
                     });
                 }
-                if (!userData.verifyAccount) {
+                if (!((_a = userData === null || userData === void 0 ? void 0 : userData.dataValues) === null || _a === void 0 ? void 0 : _a.verifyAccount)) {
                     return res.status(400).send({
                         success: false,
                         message: 'Your account is not verified.'
@@ -292,6 +306,88 @@ class AuthService {
                     success: false,
                     message: "Logout API error"
                 };
+            }
+        });
+    }
+    /**
+     * forget password.
+     * @param req
+     * @param res
+     * @returns
+     */
+    forgetPassword(req, res) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield database_1.UserDbModel.findOne({
+                    where: {
+                        email: req.body.email,
+                    }
+                });
+                if (!user)
+                    return res.status(400).send("Email does not exist");
+                let passwordReset = yield passwordReset_model_1.PasswordResetDbModel.findOne({
+                    where: {
+                        email: req.body.email
+                    }
+                });
+                let token = (_a = passwordReset === null || passwordReset === void 0 ? void 0 : passwordReset.dataValues) === null || _a === void 0 ? void 0 : _a.token;
+                if (!((_b = passwordReset === null || passwordReset === void 0 ? void 0 : passwordReset.dataValues) === null || _b === void 0 ? void 0 : _b.token)) {
+                    token = crypto_1.default.randomBytes(16).toString("hex");
+                    const passwordResetData = {
+                        email: req.body.email,
+                        token
+                    };
+                    const createPasswordReset = yield passwordReset_model_1.PasswordResetDbModel.create(Object.assign(Object.assign({}, passwordResetData), { createdAt: new Date().toISOString() }));
+                }
+                const link = `${process.env.BASE_URL}/forget-password-update/${user.dataValues.id}/${passwordReset === null || passwordReset === void 0 ? void 0 : passwordReset.dataValues.token}`;
+                const msg = `Here is the password reset link \n ${link}`;
+                const mail = yield (0, utils_1.sendEmail)(user.email, "Oscar Password Reset", false, msg);
+                res.status(200).json({
+                    message: "Password reset link sent to your email account."
+                });
+            }
+            catch (err) {
+                console.log('error');
+                res.status(400).send("An error occured" + err.toString());
+            }
+        });
+    }
+    /**
+     * reset password.
+     * @param req
+     * @param res
+     */
+    resetPassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield database_1.UserDbModel.findOne({
+                    where: {
+                        id: req.params.userId
+                    }
+                });
+                if (!user)
+                    return res.status(400).send("User Id does not exist");
+                const passwordReset = yield passwordReset_model_1.PasswordResetDbModel.findOne({
+                    where: {
+                        token: req.params.token
+                    }
+                });
+                if (!passwordReset)
+                    return res.status(400).send("Invalid link or expired");
+                const userData = {
+                    password: yield bcrypt_1.default.hash(req.body.password, 12),
+                };
+                const updateUser = yield database_1.UserDbModel.update(userData, {
+                    where: { id: user.dataValues.id }
+                });
+                yield passwordReset.destroy();
+                res.json({
+                    message: "Password reset sucessfully."
+                });
+            }
+            catch (err) {
+                res.status(400).send("An error occured " + err.toString());
             }
         });
     }

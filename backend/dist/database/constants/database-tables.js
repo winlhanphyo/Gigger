@@ -19,6 +19,7 @@ var DataBaseTableNames;
     DataBaseTableNames["POST"] = "post";
     DataBaseTableNames["CAMPAIGN"] = "campaign";
     DataBaseTableNames["SUPPORT_PAYMENT"] = "support_payment";
+    DataBaseTableNames["PASSWORD_RESET"] = "password_reset";
 })(DataBaseTableNames = exports.DataBaseTableNames || (exports.DataBaseTableNames = {}));
 var DataBaseModelNames;
 (function (DataBaseModelNames) {
@@ -37,4 +38,5 @@ var DataBaseModelNames;
     DataBaseModelNames["POST"] = "post";
     DataBaseModelNames["CAMPAIGN"] = "campaign";
     DataBaseModelNames["SUPPORT_PAYMENT"] = "support_payment";
+    DataBaseModelNames["PASSWORD_RESET"] = "password_reset";
 })(DataBaseModelNames = exports.DataBaseModelNames || (exports.DataBaseModelNames = {}));

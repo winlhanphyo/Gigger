@@ -546,5 +546,36 @@ class UserService {
             }
         });
     }
+    /**
+     * forget password update.
+     * @param req
+     * @param res
+     * @returns
+     */
+    forgetPasswordUpdate(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield database_1.UserDbModel.findOne({
+                    where: {
+                        id: req.params.id
+                    }
+                });
+                if (!user)
+                    return res.status(400).send("User Id does not exist");
+                const passwordReset = yield database_1.PasswordResetDbModel.findOne({
+                    where: {
+                        token: req.params.token
+                    }
+                });
+                if (!passwordReset)
+                    return res.status(400).send("Invalid link or expired");
+                const rootDir = path_1.default.join(__dirname, "../../../");
+                return res.sendFile(path_1.default.join(rootDir, 'password_reset.html'));
+            }
+            catch (err) {
+                res.status(400).send("An error occured " + err.toString());
+            }
+        });
+    }
 }
 exports.userService = new UserService();

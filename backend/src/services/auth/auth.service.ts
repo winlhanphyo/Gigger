@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
 import bcrypt, { compareSync } from "bcrypt";
-import crypto from "crypto";
+import crypto, { verify } from "crypto";
 import { sendEmail } from "../../utils/utils";
 import { GenreDbModel, IUserModel, UserDbModel, UserRoleDbModel } from "../../database";
+import { PasswordResetDbModel } from '../../database/models/passwordReset.model';
 
 class AuthService {
 
@@ -14,26 +15,26 @@ class AuthService {
    */
   async signupUser(req: any, res: any) {
     try {
-      let user = await UserDbModel.findOne({
+      const username = await UserDbModel.findOne({
         where: {
           username: req.body.username
         }
       }) as any;
 
-      if (user) {
+      if (username && username?.dataValues?.verifyAccount) {
         return res.status(400).json({
           success: false,
           message: "Username is already taken"
         });
       }
 
-      user = await UserDbModel.findOne({
+      const email = await UserDbModel.findOne({
         where: {
           email: req.body.email
         }
       }) as any;
 
-      if (user) {
+      if (email && username?.dataValues?.verifyAccount) {
         return res.status(400).json({
           success: false,
           message: "Email is already taken"
@@ -49,10 +50,22 @@ class AuthService {
         interest: req.body.interest,
         verifyAccount: false
       } as any;
-      const createUser: any = await UserDbModel.create({ ...userData, createdAt: new Date().toISOString() });
+
+      let resUser: any = null;
+
+      if (!username && !email && !username?.dataValues?.verifyAccount) {
+        resUser = await UserDbModel.create({ ...userData, createdAt: new Date().toISOString() });
+      } else {
+        userData.id = username?.dataValues?.id || email?.dataValues?.id;
+        resUser = await UserDbModel.update(userData, {
+          where: { id: userData.id as number }
+        });
+      }
+      const id = resUser?.dataValues?.id || userData?.id;
+
       let result = await UserDbModel.findOne({
         where: {
-          id: createUser.dataValues.id,
+          id
         },
         include: [
           {
@@ -71,7 +84,8 @@ class AuthService {
 
       const token = crypto.randomBytes(16).toString("hex");
       const domainUrl = "https://gigger-api.orionmmtecheng.com";
-      const link = `${domainUrl}/verify-email/${createUser.dataValues.id}/${token}`;
+      // const domainUrl = "http://localhost:3000";
+      const link = `${domainUrl}/verify-email/${id}/${token}`;
       const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -105,7 +119,7 @@ class AuthService {
 </body>
 </html>`;
 
-      const mail = await sendEmail(createUser.dataValues.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
+      const mail = await sendEmail(req.body.email, "Il tuo Account Google è attivo: ora fai crescere la tua attività", true, html);
 
       // const payload = {
       //   username: result.username,
@@ -152,7 +166,7 @@ class AuthService {
         })
       }
 
-      if (!userData.verifyAccount) {
+      if (!userData?.dataValues?.verifyAccount) {
         return res.status(400).send({
           success: false,
           message: 'Your account is not verified.'
@@ -266,6 +280,87 @@ class AuthService {
         success: false,
         message: "Logout API error"
       }
+    }
+  }
+
+  /**
+   * forget password.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async forgetPassword(req: any, res: any): Promise<any> {
+    try {
+      const user = await UserDbModel.findOne({
+        where: {
+          email: req.body.email,
+        }
+      }) as any;
+      if (!user)
+        return res.status(400).send("Email does not exist");
+
+      let passwordReset = await PasswordResetDbModel.findOne({
+        where: {
+          email: req.body.email
+        }
+      });
+      let token = passwordReset?.dataValues?.token;
+      if (!passwordReset?.dataValues?.token) {
+        token = crypto.randomBytes(16).toString("hex");
+        const passwordResetData = {
+          email: req.body.email,
+          token
+        };
+        const createPasswordReset: any = await PasswordResetDbModel.create({ ...passwordResetData, createdAt: new Date().toISOString() });
+      }
+
+      const link = `${process.env.BASE_URL}/forget-password-update/${user.dataValues.id}/${passwordReset?.dataValues.token}`;
+      const msg = `Here is the password reset link \n ${link}`;
+      const mail = await sendEmail(user.email, "Oscar Password Reset", false, msg);
+
+      res.status(200).json({
+        message: "Password reset link sent to your email account."
+      });
+    } catch (err: any) {
+      console.log('error');
+      res.status(400).send("An error occured" + err.toString());
+    }
+  }
+
+  /**
+   * reset password.
+   * @param req 
+   * @param res 
+   */
+  async resetPassword(req: any, res: any) {
+    try {
+      const user = await UserDbModel.findOne({
+        where: {
+          id: req.params.userId
+        }
+      });
+      if (!user) return res.status(400).send("User Id does not exist");
+
+      const passwordReset = await PasswordResetDbModel.findOne({
+        where: {
+          token: req.params.token
+        }
+      });
+      if (!passwordReset) return res.status(400).send("Invalid link or expired");
+
+      const userData = {
+        password: await bcrypt.hash(req.body.password, 12),
+      } as any;
+      const updateUser = await UserDbModel.update(userData, {
+        where: { id: user.dataValues.id as number }
+      });
+      await passwordReset.destroy();
+
+      res.json({
+        message: "Password reset sucessfully."
+      });
+    } catch (err: any) {
+      res.status(400).send("An error occured " + err.toString());
     }
   }
 

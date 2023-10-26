@@ -21,4 +21,5 @@ __exportStar(require("./userRole.model"), exports);
 __exportStar(require("./event.model"), exports);
 __exportStar(require("./post.model"), exports);
 __exportStar(require("./campaign.model"), exports);
+__exportStar(require("./passwordReset.model"), exports);
 (0, associate_decorator_1.processAssociations)();
