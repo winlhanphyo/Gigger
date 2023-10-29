@@ -4,7 +4,7 @@ import moment from "moment";
 import path from "path";
 import { GenreDbModel, UserDbModel, PasswordResetDbModel } from "../../database";
 import { UserLikeViewProfileDbModel } from "../../database/models/userLikeViewProfile.model";
-import { PAGINATION_LIMIT, USER_THUMBNAIL_PATH, USER_VIDEO_PATH } from "../../utils/constant";
+import { PAGINATION_LIMIT, USER_COVER_PHOTO_PATH, USER_THUMBNAIL_PATH, USER_VIDEO_PATH } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
 
 class UserService {
@@ -79,12 +79,18 @@ class UserService {
         profile = req.files.profile[0].path?.split("\\").join("/");
       }
 
+      let coverPhoto: string = req.body.coverPhoto;
+      if (req.files?.profile?.length > 0) {
+        coverPhoto = req.files.coverPhoto[0].path?.split("\\").join("/");
+      }
+
       const userData = {
         username: req.body.username,
         email: req.body.email,
         password: await bcrypt.hash(req.body.password, 12),
         role: req.body.role,
         profile,
+        coverPhoto,
         highlight: req.body.highlight,
         address: req.body.address,
         description: req.body.description,
@@ -108,7 +114,7 @@ class UserService {
         }
       }
 
-      const paramList = ["dob", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
+      const paramList = ["dob", "quote", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
         "youtube", "facebook", "twitter", "tiktok", "website"];
 
       for (let i = 0; i <= paramList.length; i++) {
@@ -176,16 +182,6 @@ class UserService {
       }
 
       const userData = {
-        username: req.body.username,
-        email: req.body.email,
-        password: await bcrypt.hash(req.body.password, 12),
-        role: req.body.role,
-        name: req.body.name,
-        highlight: req.body.highlight,
-        address: req.body.address,
-        description: req.body.description,
-        status: req.body.status,
-        instrument: req.body.instrument,
         updatedAt: new Date().toISOString()
       } as any;
 
@@ -198,19 +194,24 @@ class UserService {
               // Parse the date string using Moment.js
               const date = moment(obj[propName], "YYYY-MM-DD");
               dist[propName] = date;
+            } else if (propName === "interest") {
+              dist[propName] = JSON.parse(obj[propName]);
             }
           }
         }
       }
 
-      const paramList = ["dob", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
-        "youtube", "facebook", "twitter", "tiktok", "website"];
+      const paramList = ["username", "email", "role", "name", "highlight", "address",
+        "description", "status", "instrument", "dob", "interest", "phone", "services",
+        "experiences", "studies", "achievements", "customTitle", "instagram",
+        "youtube", "facebook", "twitter", "tiktok", "website", "quote"];
 
       for (let i = 0; i <= paramList.length; i++) {
         addUserData(userData, paramList[i], req.body);
       }
 
       let profile: any = req.body.profile;
+      let coverPhoto: any = req.body.coverPhoto;
       if (req.files?.profile?.length > 0) {
         profile = req.files.profile[0].path?.split("\\").join("/");
         if (checkUser.profile) {
@@ -218,6 +219,16 @@ class UserService {
         }
         if (checkUser) {
           userData.profile = profile;
+        }
+      }
+
+      if (req.files?.coverPhoto?.length > 0) {
+        coverPhoto = req.files.coverPhoto[0].path?.split("\\").join("/");
+        if (checkUser.coverPhoto) {
+          this.deleteFileData(checkUser.coverPhoto, USER_COVER_PHOTO_PATH);
+        }
+        if (checkUser) {
+          userData.coverPhoto = coverPhoto;
         }
       }
 

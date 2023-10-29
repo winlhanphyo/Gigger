@@ -23,6 +23,8 @@ export interface IUserModel {
   experiences: string;
   studies: string;
   achievements: string;
+  coverPhoto: string;
+  quote: string;
   customTitle: string;
   instagram: string;
   youtube: string;
@@ -114,6 +116,15 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
   achievements: {
     type: DataTypes.STRING,
     allowNull: true
+  },
+  coverPhoto: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  quote: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: "Let Me Stay Among the Star"
   },
   customTitle: {
     type: DataTypes.STRING,

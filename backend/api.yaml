@@ -1143,6 +1143,12 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote:
+                  type: string
+                  example: "Let Me Stay Among the Star"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1214,6 +1220,12 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote:
+                  type: string
+                  example: "Let Me Stay Among the Star"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1285,6 +1297,12 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote:
+                  type: string
+                  example: "Let Me Stay Among the Star"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1379,6 +1397,12 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote:
+                  type: string
+                  example: "Let Me Stay Among the Star"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1445,6 +1469,12 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote:
+                  type: string
+                  example: "Let Me Stay Among the Star"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1511,6 +1541,12 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote:
+                  type: string
+                  example: "Let Me Stay Among the Star"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"

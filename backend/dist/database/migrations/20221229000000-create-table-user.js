@@ -95,6 +95,14 @@ exports.default = {
                     type: sequelize_1.DataTypes.STRING,
                     allowNull: true
                 },
+                coverPhoto: {
+                    type: sequelize_1.DataTypes.STRING,
+                    allowNull: true
+                },
+                quote: {
+                    type: sequelize_1.DataTypes.STRING,
+                    allowNull: true
+                },
                 customTitle: {
                     type: sequelize_1.DataTypes.STRING,
                     allowNull: true

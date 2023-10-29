@@ -27,20 +27,20 @@ const sendEmail = (email, subject, html = false, text) => __awaiter(void 0, void
     try {
         console.log(process.env.USER, process.env.PASS);
         const transporter = nodemailer_1.default.createTransport({
-            host: "gigger-api.orionmmtecheng.com",
-            port: 465,
-            secure: true,
-            auth: {
-                user: "support@gigger-api.orionmmtecheng.com",
-                pass: "a0CPCk6n}ho3"
-            },
-            // host: 'smtp.gmail.com',
-            // port: 587,
-            // secure: false,
+            // host: "gigger-api.orionmmtecheng.com",
+            // port: 465,
+            // secure: true,
             // auth: {
-            //   user: "spprt.oscar@gmail.com",
-            //   pass: "cdbxlblhmnpobpyl"
-            // }
+            //   user: "support@gigger-api.orionmmtecheng.com",
+            //   pass: "a0CPCk6n}ho3"
+            // },
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: "spprt.oscar@gmail.com",
+                pass: "cdbxlblhmnpobpyl"
+            }
             // host: "oscar-admin.orionmmtecheng.com",
             // port: 465,
             // secure: true,
@@ -50,7 +50,7 @@ const sendEmail = (email, subject, html = false, text) => __awaiter(void 0, void
             // },
         });
         const mailObj = {
-            from: "support@gigger-api.orionmmtecheng.com",
+            from: "spprt.oscar@gmail.com",
             to: email,
             subject: subject
         };

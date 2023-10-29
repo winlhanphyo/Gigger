@@ -39,6 +39,9 @@ const fileStorage = multer_1.default.diskStorage({
         else if ((_file === null || _file === void 0 ? void 0 : _file.fieldname) == "profile") {
             cb(null, constant_1.USER_PROFILE_PATH);
         }
+        else if ((_file === null || _file === void 0 ? void 0 : _file.fieldname) == "coverPhoto") {
+            cb(null, constant_1.USER_COVER_PHOTO_PATH);
+        }
         else {
             cb(null, constant_1.USER_THUMBNAIL_PATH);
         }
@@ -76,7 +79,7 @@ const fileFilter = (_req, file, cb) => __awaiter(void 0, void 0, void 0, functio
             return cb(new Error('Invalid file type. Only video files are allowed.'), false);
         }
     }
-    else if ((files === null || files === void 0 ? void 0 : files.profile) || (files === null || files === void 0 ? void 0 : files.image) || (files === null || files === void 0 ? void 0 : files.thumbnail)) {
+    else if ((files === null || files === void 0 ? void 0 : files.profile) || (files === null || files === void 0 ? void 0 : files.image) || (files === null || files === void 0 ? void 0 : files.thumbnail) || (files === null || files === void 0 ? void 0 : files.coverPhoto)) {
         if (file.mimetype === "image/png" ||
             file.mimetype === "image/jpg" ||
             file.mimetype === "image/jpeg") {
@@ -114,6 +117,7 @@ class Server {
                     { name: 'profile', maxCount: 1 },
                     { name: 'video', maxCount: 1 },
                     { name: 'image', maxCount: 1 },
+                    { name: 'coverPhoto', maxCount: 1 },
                     { name: 'thumbnail', maxCount: 1 }
                 ])(req, res, (err) => {
                     if (err) {

@@ -89,6 +89,14 @@ export default {
             type: DataTypes.STRING,
             allowNull: true
           },
+          coverPhoto: {
+            type: DataTypes.STRING,
+            allowNull: true
+          },
+          quote: {
+            type: DataTypes.STRING,
+            allowNull: true
+          },
           customTitle: {
             type: DataTypes.STRING,
             allowNull: true

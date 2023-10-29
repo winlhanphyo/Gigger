@@ -2,7 +2,6 @@ import fs from "fs";
 import nodemailer from "nodemailer";
 
 export const deleteFile = (filePath: string) => {
-  console.log('filename', filePath);
   fs.unlink(filePath, (err: any) => {
     if (err) console.log(err);
   });
@@ -10,7 +9,6 @@ export const deleteFile = (filePath: string) => {
 
 export const sendEmail = async (email: any, subject: any, html: any = false, text: any) => {
   try {
-    console.log(process.env.USER, process.env.PASS);
     const transporter = nodemailer.createTransport({
       host: "gigger-api.orionmmtecheng.com",
       port: 465,

@@ -11,7 +11,7 @@ import { router } from './routes';
 import authRouter from './routes/auth/auth.router';
 import genreRouter from "./routes/genre/genre.router";
 import videoStreamRouter from './routes/videoStream/videoStream.router';
-import { USER_PROFILE_PATH, USER_THUMBNAIL_PATH, USER_VIDEO_PATH } from './utils/constant';
+import { USER_PROFILE_PATH, USER_THUMBNAIL_PATH, USER_COVER_PHOTO_PATH, USER_VIDEO_PATH } from './utils/constant';
 import { userService } from './services/user';
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -25,6 +25,8 @@ const fileStorage = multer.diskStorage({
       cb(null, USER_VIDEO_PATH);
     } else if (_file?.fieldname == "profile") {
       cb(null, USER_PROFILE_PATH);
+    } else if (_file?.fieldname == "coverPhoto") {
+      cb(null, USER_COVER_PHOTO_PATH);
     } else {
       cb(null, USER_THUMBNAIL_PATH);
     }
@@ -63,7 +65,7 @@ const fileFilter = async (_req: any, file: any, cb: any) => {
       } else {
         return cb(new Error('Invalid file type. Only video files are allowed.'), false);
       }
-    } else if (files?.profile || files?.image || files?.thumbnail) {
+    } else if (files?.profile || files?.image || files?.thumbnail || files?.coverPhoto) {
       if (
         file.mimetype === "image/png" ||
         file.mimetype === "image/jpg" ||
@@ -110,6 +112,7 @@ export default class Server {
           { name: 'profile', maxCount: 1 },
           { name: 'video', maxCount: 1 },
           { name: 'image', maxCount: 1 },
+          { name: 'coverPhoto', maxCount: 1 },
           { name: 'thumbnail', maxCount: 1 }
         ])
           (req, res, (err) => {

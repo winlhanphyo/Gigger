@@ -100,12 +100,16 @@ class UserService {
      * @returns
      */
     createUser(req, res) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let profile = req.body.profile;
                 if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.profile) === null || _b === void 0 ? void 0 : _b.length) > 0) {
                     profile = (_c = req.files.profile[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
+                }
+                let coverPhoto = req.body.coverPhoto;
+                if (((_e = (_d = req.files) === null || _d === void 0 ? void 0 : _d.profile) === null || _e === void 0 ? void 0 : _e.length) > 0) {
+                    coverPhoto = (_f = req.files.coverPhoto[0].path) === null || _f === void 0 ? void 0 : _f.split("\\").join("/");
                 }
                 const userData = {
                     username: req.body.username,
@@ -113,6 +117,8 @@ class UserService {
                     password: yield bcrypt_1.default.hash(req.body.password, 12),
                     role: req.body.role,
                     profile,
+                    coverPhoto,
+                    quote: req.body.quote,
                     highlight: req.body.highlight,
                     address: req.body.address,
                     description: req.body.description,
@@ -142,7 +148,7 @@ class UserService {
                 }
                 const createUser = yield database_1.UserDbModel.create(Object.assign(Object.assign({}, userData), { createdAt: new Date().toISOString() }));
                 console.log('createUser', createUser);
-                if ((_d = createUser === null || createUser === void 0 ? void 0 : createUser.dataValues) === null || _d === void 0 ? void 0 : _d.interest) {
+                if ((_g = createUser === null || createUser === void 0 ? void 0 : createUser.dataValues) === null || _g === void 0 ? void 0 : _g.interest) {
                     const interest = yield database_1.GenreDbModel.findAll({
                         where: {
                             id: createUser.dataValues.interest
@@ -150,7 +156,7 @@ class UserService {
                     });
                     createUser.dataValues.interest = interest;
                 }
-                if ((_e = createUser === null || createUser === void 0 ? void 0 : createUser.dataValues) === null || _e === void 0 ? void 0 : _e.genre) {
+                if ((_h = createUser === null || createUser === void 0 ? void 0 : createUser.dataValues) === null || _h === void 0 ? void 0 : _h.genre) {
                     const genre = yield database_1.GenreDbModel.findAll({
                         where: {
                             id: createUser.dataValues.genre
@@ -177,7 +183,7 @@ class UserService {
      * @param res
      */
     updateUser(req, res) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -210,15 +216,19 @@ class UserService {
                                 const date = (0, moment_1.default)(obj[propName], "YYYY-MM-DD");
                                 dist[propName] = date;
                             }
+                            else if (propName === "interest") {
+                                dist[propName] = JSON.parse(obj[propName]);
+                            }
                         }
                     }
                 };
                 const paramList = ["dob", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
-                    "youtube", "facebook", "twitter", "tiktok", "website"];
+                    "youtube", "facebook", "twitter", "tiktok", "website", "quote"];
                 for (let i = 0; i <= paramList.length; i++) {
                     addUserData(userData, paramList[i], req.body);
                 }
                 let profile = req.body.profile;
+                let coverPhoto = req.body.coverPhoto;
                 if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.profile) === null || _b === void 0 ? void 0 : _b.length) > 0) {
                     profile = (_c = req.files.profile[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
                     if (checkUser.profile) {
@@ -226,6 +236,15 @@ class UserService {
                     }
                     if (checkUser) {
                         userData.profile = profile;
+                    }
+                }
+                else if (((_e = (_d = req.files) === null || _d === void 0 ? void 0 : _d.coverPhoto) === null || _e === void 0 ? void 0 : _e.length) > 0) {
+                    coverPhoto = (_f = req.files.coverPhoto[0].path) === null || _f === void 0 ? void 0 : _f.split("\\").join("/");
+                    if (checkUser.coverPhoto) {
+                        this.deleteFileData(checkUser.coverPhoto, constant_1.USER_COVER_PHOTO_PATH);
+                    }
+                    if (checkUser) {
+                        userData.coverPhoto = coverPhoto;
                     }
                 }
                 userData.id = +req.params.id;

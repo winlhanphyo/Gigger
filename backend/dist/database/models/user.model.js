@@ -90,6 +90,15 @@ const modelAttributes = {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true
     },
+    coverPhoto: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true,
+    },
+    quote: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true,
+        defaultValue: "Let Me Stay Among the Star"
+    },
     customTitle: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true
