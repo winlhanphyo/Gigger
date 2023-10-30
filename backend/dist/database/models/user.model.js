@@ -94,10 +94,15 @@ const modelAttributes = {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true,
     },
-    quote: {
+    quote1: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true,
         defaultValue: "Let Me Stay Among the Star"
+    },
+    quote2: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true,
+        defaultValue: "I wanna Rock on the Stairways to Heaven!!"
     },
     customTitle: {
         type: sequelize_1.DataTypes.STRING,

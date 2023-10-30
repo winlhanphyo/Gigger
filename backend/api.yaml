@@ -1,6 +1,6 @@
 openapi: 3.0.2
 servers:
-  - url: https://gigger-api.orionmmtecheng.com
+  - url: http://gigger-api.orionmmtecheng.com
 info:
   description: This is API Doc for Gigger
   title: Swagger API Doc for Gigger
@@ -649,6 +649,15 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote1:
+                  type: string
+                  example: "Let Me Stay Among the Star"
+                quote2:
+                  type: string
+                  example: "I wanna Rock on the Stairways to Heaven!!"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -720,6 +729,15 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote1:
+                  type: string
+                  example: "Let Me Stay Among the Star"
+                quote2:
+                  type: string
+                  example: "I wanna Rock on the Stairways to Heaven!!"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -791,6 +809,15 @@ paths:
                 profile:
                   type: string
                   format: binary
+                coverPhoto:
+                  type: string
+                  format: binary
+                quote1:
+                  type: string
+                  example: "Let Me Stay Among the Star"
+                quote2:
+                  type: string
+                  example: "I wanna Rock on the Stairways to Heaven!!"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1146,9 +1173,12 @@ paths:
                 coverPhoto:
                   type: string
                   format: binary
-                quote:
+                quote1:
                   type: string
                   example: "Let Me Stay Among the Star"
+                quote2:
+                  type: string
+                  example: "I wanna Rock on the Stairways to Heaven!!"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1223,9 +1253,12 @@ paths:
                 coverPhoto:
                   type: string
                   format: binary
-                quote:
+                quote1:
                   type: string
                   example: "Let Me Stay Among the Star"
+                quote2:
+                  type: string
+                  example: "I wanna Rock on the Stairways to Heaven!!"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1300,9 +1333,12 @@ paths:
                 coverPhoto:
                   type: string
                   format: binary
-                quote:
+                quote1:
                   type: string
                   example: "Let Me Stay Among the Star"
+                quote2:
+                  type: string
+                  example: "I wanna Rock on the Stairways to Heaven!!"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1400,9 +1436,12 @@ paths:
                 coverPhoto:
                   type: string
                   format: binary
-                quote:
+                quote1:
                   type: string
                   example: "Let Me Stay Among the Star"
+                quote2:
+                  type: string
+                  example: "I wanna Rock on the Stairways to Heaven!!"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"
@@ -1472,9 +1511,12 @@ paths:
                 coverPhoto:
                   type: string
                   format: binary
-                quote:
+                quote1:
                   type: string
                   example: "Let Me Stay Among the Star"
+                quote2:
+                  type: string
+                  example: "I wanna Rock on the Stairways to Heaven!!"
                 highlight:
                   type: string
                   example: "Professional Sound Engeering"

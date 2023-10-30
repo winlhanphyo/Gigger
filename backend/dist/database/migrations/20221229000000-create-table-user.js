@@ -99,7 +99,11 @@ exports.default = {
                     type: sequelize_1.DataTypes.STRING,
                     allowNull: true
                 },
-                quote: {
+                quote1: {
+                    type: sequelize_1.DataTypes.STRING,
+                    allowNull: true
+                },
+                quote2: {
                     type: sequelize_1.DataTypes.STRING,
                     allowNull: true
                 },

@@ -111,17 +111,16 @@ class PostService {
      * @returns
      */
     createPost(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let video = "";
                 let filename = "";
                 const userId = req.headers['userid'];
                 const checkVideoCount = yield this.getVideoByUserId(userId);
-                console.log('checkVideoCount', (_a = checkVideoCount[0]) === null || _a === void 0 ? void 0 : _a.dataValues);
-                if ((checkVideoCount === null || checkVideoCount === void 0 ? void 0 : checkVideoCount.length) > 0 && ((_e = (_d = (_c = (_b = checkVideoCount[0]) === null || _b === void 0 ? void 0 : _b.dataValues) === null || _c === void 0 ? void 0 : _c.createdByUser) === null || _d === void 0 ? void 0 : _d.dataValues) === null || _e === void 0 ? void 0 : _e.user_role)
-                    && ((_l = (_k = (_j = (_h = (_g = (_f = checkVideoCount[0]) === null || _f === void 0 ? void 0 : _f.dataValues) === null || _g === void 0 ? void 0 : _g.createdByUser) === null || _h === void 0 ? void 0 : _h.dataValues) === null || _j === void 0 ? void 0 : _j.user_role) === null || _k === void 0 ? void 0 : _k.dataValues) === null || _l === void 0 ? void 0 : _l.name)) {
-                    const role = (_s = (_r = (_q = (_p = (_o = (_m = checkVideoCount[0]) === null || _m === void 0 ? void 0 : _m.dataValues) === null || _o === void 0 ? void 0 : _o.createdByUser) === null || _p === void 0 ? void 0 : _p.dataValues) === null || _q === void 0 ? void 0 : _q.user_role) === null || _r === void 0 ? void 0 : _r.dataValues) === null || _s === void 0 ? void 0 : _s.name;
+                if ((checkVideoCount === null || checkVideoCount === void 0 ? void 0 : checkVideoCount.length) > 0 && ((_d = (_c = (_b = (_a = checkVideoCount[0]) === null || _a === void 0 ? void 0 : _a.dataValues) === null || _b === void 0 ? void 0 : _b.createdByUser) === null || _c === void 0 ? void 0 : _c.dataValues) === null || _d === void 0 ? void 0 : _d.user_role)
+                    && ((_k = (_j = (_h = (_g = (_f = (_e = checkVideoCount[0]) === null || _e === void 0 ? void 0 : _e.dataValues) === null || _f === void 0 ? void 0 : _f.createdByUser) === null || _g === void 0 ? void 0 : _g.dataValues) === null || _h === void 0 ? void 0 : _h.user_role) === null || _j === void 0 ? void 0 : _j.dataValues) === null || _k === void 0 ? void 0 : _k.name)) {
+                    const role = (_r = (_q = (_p = (_o = (_m = (_l = checkVideoCount[0]) === null || _l === void 0 ? void 0 : _l.dataValues) === null || _m === void 0 ? void 0 : _m.createdByUser) === null || _o === void 0 ? void 0 : _o.dataValues) === null || _p === void 0 ? void 0 : _p.user_role) === null || _q === void 0 ? void 0 : _q.dataValues) === null || _r === void 0 ? void 0 : _r.name;
                     if (role === "Free Account" && (checkVideoCount === null || checkVideoCount === void 0 ? void 0 : checkVideoCount.length) > 9) {
                         return res.json({
                             message: `Free User Account uploaded only 9 videos.`,
@@ -148,9 +147,9 @@ class PostService {
                     hashTag: req.body.hashTag,
                     createdUser: req.headers['userid']
                 };
-                if (((_u = (_t = req.files) === null || _t === void 0 ? void 0 : _t.video) === null || _u === void 0 ? void 0 : _u.length) > 0) {
-                    console.log('video', (_v = req.files.video[0]) === null || _v === void 0 ? void 0 : _v.path);
-                    video = (_x = (_w = req.files.video[0]) === null || _w === void 0 ? void 0 : _w.path) === null || _x === void 0 ? void 0 : _x.split("\\").join("/");
+                if (((_t = (_s = req.files) === null || _s === void 0 ? void 0 : _s.video) === null || _t === void 0 ? void 0 : _t.length) > 0) {
+                    console.log('video', (_u = req.files.video[0]) === null || _u === void 0 ? void 0 : _u.path);
+                    video = (_w = (_v = req.files.video[0]) === null || _v === void 0 ? void 0 : _v.path) === null || _w === void 0 ? void 0 : _w.split("\\").join("/");
                     const splitFileName = video.split("/");
                     console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];
@@ -158,8 +157,8 @@ class PostService {
                     postObj.video = filename;
                 }
                 let thumbnail = req.body.thumbnail;
-                if (((_z = (_y = req.files) === null || _y === void 0 ? void 0 : _y.thumbnail) === null || _z === void 0 ? void 0 : _z.length) > 0) {
-                    thumbnail = (_0 = req.files.thumbnail[0].path) === null || _0 === void 0 ? void 0 : _0.split("\\").join("/");
+                if (((_y = (_x = req.files) === null || _x === void 0 ? void 0 : _x.thumbnail) === null || _y === void 0 ? void 0 : _y.length) > 0) {
+                    thumbnail = (_z = req.files.thumbnail[0].path) === null || _z === void 0 ? void 0 : _z.split("\\").join("/");
                     postObj.thumbnail = thumbnail;
                 }
                 const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));

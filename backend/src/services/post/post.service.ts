@@ -97,7 +97,6 @@ class PostService {
 
       const userId = req.headers['userid'];
       const checkVideoCount = await this.getVideoByUserId(userId);
-      console.log('checkVideoCount', checkVideoCount[0]?.dataValues);
       if (checkVideoCount?.length > 0 && checkVideoCount[0]?.dataValues?.createdByUser?.dataValues?.user_role
         && checkVideoCount[0]?.dataValues?.createdByUser?.dataValues?.user_role?.dataValues?.name) {
         const role = checkVideoCount[0]?.dataValues?.createdByUser?.dataValues?.user_role?.dataValues?.name;

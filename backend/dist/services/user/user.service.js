@@ -117,13 +117,7 @@ class UserService {
                     password: yield bcrypt_1.default.hash(req.body.password, 12),
                     role: req.body.role,
                     profile,
-                    coverPhoto,
-                    quote: req.body.quote,
-                    highlight: req.body.highlight,
-                    address: req.body.address,
-                    description: req.body.description,
-                    status: req.body.status,
-                    instrument: req.body.instrument,
+                    coverPhoto
                 };
                 const addUserData = (dist, propName, data) => {
                     let obj = JSON.parse(JSON.stringify(data));
@@ -141,8 +135,9 @@ class UserService {
                         }
                     }
                 };
-                const paramList = ["dob", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
-                    "youtube", "facebook", "twitter", "tiktok", "website"];
+                const paramList = ["dob", "status", "highlight", "address", "description", "instrument,", "quote1", "quote2", "interest", "phone",
+                    "services", "experiences", "studies", "achievements", "customTitle", "instagram", "youtube", "facebook", "twitter",
+                    "tiktok", "website"];
                 for (let i = 0; i <= paramList.length; i++) {
                     addUserData(userData, paramList[i], req.body);
                 }
@@ -183,7 +178,7 @@ class UserService {
      * @param res
      */
     updateUser(req, res) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e, _f, _g;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -194,18 +189,11 @@ class UserService {
                     });
                 }
                 const userData = {
-                    username: req.body.username,
-                    email: req.body.email,
-                    password: yield bcrypt_1.default.hash(req.body.password, 12),
-                    role: req.body.role,
-                    name: req.body.name,
-                    highlight: req.body.highlight,
-                    address: req.body.address,
-                    description: req.body.description,
-                    status: req.body.status,
-                    instrument: req.body.instrument,
                     updatedAt: new Date().toISOString()
                 };
+                if ((_a = req.body) === null || _a === void 0 ? void 0 : _a.password) {
+                    userData.password = yield bcrypt_1.default.hash(req.body.password, 12);
+                }
                 const addUserData = (dist, propName, data) => {
                     let obj = JSON.parse(JSON.stringify(data));
                     if (typeof obj === 'object' && obj !== null) {
@@ -222,15 +210,17 @@ class UserService {
                         }
                     }
                 };
-                const paramList = ["dob", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
-                    "youtube", "facebook", "twitter", "tiktok", "website", "quote"];
+                const paramList = ["username", "email", "role", "name", "highlight", "address",
+                    "description", "status", "instrument", "dob", "interest", "phone", "services",
+                    "experiences", "studies", "achievements", "customTitle", "instagram",
+                    "youtube", "facebook", "twitter", "tiktok", "website", "quote1", "quote2"];
                 for (let i = 0; i <= paramList.length; i++) {
                     addUserData(userData, paramList[i], req.body);
                 }
                 let profile = req.body.profile;
                 let coverPhoto = req.body.coverPhoto;
-                if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.profile) === null || _b === void 0 ? void 0 : _b.length) > 0) {
-                    profile = (_c = req.files.profile[0].path) === null || _c === void 0 ? void 0 : _c.split("\\").join("/");
+                if (((_c = (_b = req.files) === null || _b === void 0 ? void 0 : _b.profile) === null || _c === void 0 ? void 0 : _c.length) > 0) {
+                    profile = (_d = req.files.profile[0].path) === null || _d === void 0 ? void 0 : _d.split("\\").join("/");
                     if (checkUser.profile) {
                         this.deleteFileData(checkUser.profile, constant_1.USER_THUMBNAIL_PATH);
                     }
@@ -238,8 +228,8 @@ class UserService {
                         userData.profile = profile;
                     }
                 }
-                else if (((_e = (_d = req.files) === null || _d === void 0 ? void 0 : _d.coverPhoto) === null || _e === void 0 ? void 0 : _e.length) > 0) {
-                    coverPhoto = (_f = req.files.coverPhoto[0].path) === null || _f === void 0 ? void 0 : _f.split("\\").join("/");
+                if (((_f = (_e = req.files) === null || _e === void 0 ? void 0 : _e.coverPhoto) === null || _f === void 0 ? void 0 : _f.length) > 0) {
+                    coverPhoto = (_g = req.files.coverPhoto[0].path) === null || _g === void 0 ? void 0 : _g.split("\\").join("/");
                     if (checkUser.coverPhoto) {
                         this.deleteFileData(checkUser.coverPhoto, constant_1.USER_COVER_PHOTO_PATH);
                     }

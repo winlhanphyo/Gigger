@@ -90,12 +90,7 @@ class UserService {
         password: await bcrypt.hash(req.body.password, 12),
         role: req.body.role,
         profile,
-        coverPhoto,
-        highlight: req.body.highlight,
-        address: req.body.address,
-        description: req.body.description,
-        status: req.body.status,
-        instrument: req.body.instrument,
+        coverPhoto
       } as any;
 
       const addUserData = (dist: any, propName: any, data: any) => {
@@ -114,8 +109,9 @@ class UserService {
         }
       }
 
-      const paramList = ["dob", "quote", "interest", "phone", "services", "experiences", "studies", "achievements", "customTitle", "instagram",
-        "youtube", "facebook", "twitter", "tiktok", "website"];
+      const paramList = ["dob", "status", "highlight", "address", "description", "instrument,", "quote1", "quote2", "interest", "phone",
+        "services", "experiences", "studies", "achievements", "customTitle", "instagram", "youtube", "facebook", "twitter",
+        "tiktok", "website"];
 
       for (let i = 0; i <= paramList.length; i++) {
         addUserData(userData, paramList[i], req.body);
@@ -185,6 +181,10 @@ class UserService {
         updatedAt: new Date().toISOString()
       } as any;
 
+      if (req.body?.password) {
+        userData.password = await bcrypt.hash(req.body.password, 12);
+      }
+
       const addUserData = (dist: any, propName: any, data: any) => {
         let obj = JSON.parse(JSON.stringify(data));
         if (typeof obj === 'object' && obj !== null) {
@@ -204,7 +204,7 @@ class UserService {
       const paramList = ["username", "email", "role", "name", "highlight", "address",
         "description", "status", "instrument", "dob", "interest", "phone", "services",
         "experiences", "studies", "achievements", "customTitle", "instagram",
-        "youtube", "facebook", "twitter", "tiktok", "website", "quote"];
+        "youtube", "facebook", "twitter", "tiktok", "website", "quote1", "quote2"];
 
       for (let i = 0; i <= paramList.length; i++) {
         addUserData(userData, paramList[i], req.body);

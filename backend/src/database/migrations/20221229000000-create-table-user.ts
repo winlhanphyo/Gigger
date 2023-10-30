@@ -93,7 +93,11 @@ export default {
             type: DataTypes.STRING,
             allowNull: true
           },
-          quote: {
+          quote1: {
+            type: DataTypes.STRING,
+            allowNull: true
+          },
+          quote2: {
             type: DataTypes.STRING,
             allowNull: true
           },
