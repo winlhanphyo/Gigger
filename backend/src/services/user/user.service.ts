@@ -2,10 +2,13 @@
 import bcrypt from "bcrypt";
 import moment from "moment";
 import path from "path";
+import { google } from 'googleapis';
 import { GenreDbModel, UserDbModel, PasswordResetDbModel } from "../../database";
 import { UserLikeViewProfileDbModel } from "../../database/models/userLikeViewProfile.model";
+import { oauth2Client } from "../../config/passport";
 import { PAGINATION_LIMIT, USER_COVER_PHOTO_PATH, USER_THUMBNAIL_PATH, USER_VIDEO_PATH } from "../../utils/constant";
 import { deleteFile } from "../../utils/utils";
+import { FindOptions } from "sequelize";
 
 class UserService {
 
@@ -15,31 +18,22 @@ class UserService {
    * @param res 
    * @returns 
    */
-  async getUserList(req: any, res: any): Promise<any> {
+  async getUserList(userAttributes?: Array<any>, otherFindOptions?: FindOptions, offset?: number, limit?: number, res?: any): Promise<any> {
     try {
-      let offset = Number(req.query.page) - 1 || 0;
-      const limit = Number(req.query.size) || PAGINATION_LIMIT;
-      let page = offset * limit;
+      limit = limit && limit > 0 ? limit : PAGINATION_LIMIT;
       const userList = await UserDbModel.findAll({
         limit,
-        offset: page,
-        // include: [
-        //   {
-        //     model: VideoDbModel,
-        //     through: { attributes: [] }
-        //   }
-        // ]
+        offset,
+        ...otherFindOptions
       }) as any;
       for (let i = 0; i < userList.length; i++) {
         let genre = userList[i].dataValues?.genre;
         if (genre) {
-          console.log('genre', genre);
           const genreList = await GenreDbModel.findAll({
             where: {
               id: genre
             }
           });
-          console.log('genreList', genreList);
           userList[i].dataValues.genre = genreList;
         }
 
@@ -327,6 +321,7 @@ class UserService {
     try {
       const id = +req.params.id;
       const userId = req.headers["userid"];
+      const googleToken = req.headers["googleToken"];
       const userData = await this.getUserDataWithId(id, res);
 
       const getCountData = async (id: any, status: any) => {
@@ -356,7 +351,7 @@ class UserService {
             userId: parseInt(userId)
           }
         });
-  
+
         if (dist.length > 0) {
           userData.dataValues.like = dist.some((data) => data.dataValues.status === 'like');
           userData.dataValues.view = dist.some((data) => data.dataValues.status === 'view');
@@ -366,6 +361,36 @@ class UserService {
           userData.dataValues.view = false;
           userData.dataValues.follow = false;
         }
+
+        const list: any = [];
+        oauth2Client.setCredentials(googleToken);
+        const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
+        const response = await calendar.events.list({
+          calendarId: 'primary',
+          timeMin: moment().toISOString(),
+          maxResults: 30,
+          singleEvents: true,
+          orderBy: 'startTime',
+        });
+
+        const events: any = response.data.items;
+        if (events?.length) {
+          for (let i = 0; i < events?.length; i++) {
+            const start = events[i]?.start?.dateTime || events[i]?.start.date;
+            const end = events[i]?.end?.dateTime || events[i]?.end.date;
+            list.push({
+              id: events[i].id,
+              start,
+              end,
+              summary: events[i]?.summary,
+              status: events[i]?.status
+            });
+          }
+        } else {
+          console.log('No upcoming events found.');
+        }
+        userData.dataValues.upcomingEvents = list;
+
       }
 
       return res.json({

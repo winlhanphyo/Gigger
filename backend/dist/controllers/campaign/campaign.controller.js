@@ -22,6 +22,7 @@ exports.campaignController = void 0;
 const autobind_decorator_1 = __importDefault(require("autobind-decorator"));
 const campaign_1 = require("../../services/campaign");
 const constant_1 = require("../../utils/constant");
+const sequelize_1 = require("sequelize");
 let CampaignController = class CampaignController {
     /**
      * get all campaign data.
@@ -34,7 +35,32 @@ let CampaignController = class CampaignController {
             let offset = Number(req.query.page) - 1 || 0;
             const size = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
             let page = offset * size;
-            const response = yield campaign_1.campaignService.getCampaignList(undefined, undefined, page, size, res);
+            let otherFindOptions = undefined;
+            let condition = {};
+            const title = req.query.title;
+            const genre = req.query.genre;
+            const highlight = req.query.highlight; // for role in UI
+            const instrument = req.query.instrument;
+            const role = req.query.role;
+            const status = req.query.status; // for available
+            title ? condition.title = {
+                [sequelize_1.Op.like]: `%${title}%`,
+            } : null;
+            genre ? condition.genre = genre : null;
+            highlight ? condition.highlight = {
+                [sequelize_1.Op.like]: `%${highlight}%`,
+            }
+                : null;
+            instrument ? condition.instrument = instrument : null;
+            role ? condition.role = role : null;
+            status ? condition.status = status : null;
+            // when date and time
+            // place
+            // radius eg. 25km
+            otherFindOptions = {
+                where: condition
+            };
+            const response = yield campaign_1.campaignService.getCampaignList(undefined, otherFindOptions, page, size, res);
             return response;
         });
     }

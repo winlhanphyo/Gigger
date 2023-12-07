@@ -1,6 +1,8 @@
 import { Response, Request } from 'express';
 import autobind from 'autobind-decorator';
 import { userService } from '../../services/user';
+import { PAGINATION_LIMIT } from '../../utils/constant';
+import { Op } from 'sequelize';
 
 @autobind
 class UserController {
@@ -12,7 +14,46 @@ class UserController {
    * @returns 
    */
   async getAllUser(req: Request, res: Response) {
-    const user = await userService.getUserList(req, res);
+    let offset = Number(req.query.page) - 1 || 0;
+    const size = Number(req.query.size) || PAGINATION_LIMIT;
+    let page = offset * size;
+    let otherFindOptions: any = undefined;
+    let condition: any = {};
+    const username = req.query.username;
+    const email = req.query.email;
+    const genre = req.query.genre;
+    const highlight = req.query.highlight; // for role in UI
+    const instrument = req.query.instrument;
+    const role = req.query.role;
+    const status = req.query.status; // for available
+
+    username ? condition.username = username : null;
+    email ? condition.username = username : null;
+
+    username ? condition.username = {
+      [Op.like]: `%${username}%`,
+    } : null;
+    email ? condition.email = {
+      [Op.like]: `%${email}%`,
+    }
+    : null;
+
+    genre ? condition.genre = genre : null;
+    highlight ? condition.highlight = {
+      [Op.like]: `%${highlight}%`,
+    }
+    : null;
+    instrument ? condition.instrument = instrument : null;
+    role ? condition.role = role : null;
+    status ? condition.status = status : null;
+    // when date and time
+    // place
+    // radius eg. 25km
+
+    otherFindOptions = {
+      where: condition
+    };
+    const user = await userService.getUserList(undefined, otherFindOptions, page, size, res);
     return user;
   }
 

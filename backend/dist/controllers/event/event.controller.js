@@ -38,6 +38,18 @@ let EventController = class EventController {
             return response;
         });
     }
+    // /**
+    //  * get other user event.
+    //  * @param req 
+    //  * @param res 
+    //  */
+    // async getOtherUserEvent(req: Request, res: Response) {
+    //   let offset = Number(req.query.page) - 1 || 0;
+    //   const size = Number(req.query.size) || PAGINATION_LIMIT;
+    //   let page = offset * size;
+    //   const response = await eventService.getOtherUserEvent(undefined, undefined, page, size, res);
+    //   return response;
+    // }
     /**
      * create Event.
      * @param req
@@ -45,12 +57,11 @@ let EventController = class EventController {
      */
     createEvent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('create event------------');
             const eventData = {
                 eventName: req.body.eventName,
-                fromTime: req.body.fromTime,
-                toTime: req.body.toTime,
-                address: req.body.address,
-                date: req.body.date,
+                fromDateTime: req.body.fromDateTime,
+                toDateTime: req.body.toDateTime,
                 description: req.body.description,
                 participants: req.body.participants,
                 beforeReminder: req.body.beforeReminder,
@@ -73,30 +84,15 @@ let EventController = class EventController {
      */
     updateEvent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = +req.params.id;
-            console.log('update id----------', id);
+            const id = req.params.id;
+            console.log('Event Data by id', id);
             const checkEvent = yield event_1.eventService.getEventById(id, res);
-            if (!checkEvent) {
+            const oldData = checkEvent;
+            if (!oldData) {
                 return res.status(404).send("Event is not found");
             }
-            const eventData = {
-                eventName: req.body.eventName,
-                fromTime: req.body.fromTime,
-                toTime: req.body.toTime,
-                address: req.body.address,
-                date: req.body.date,
-                description: req.body.description,
-                participants: req.body.participants,
-                beforeReminder: req.body.beforeReminder,
-                reminderStatus: req.body.reminderStatus,
-                latitude: req.body.latitude,
-                longitude: req.body.longitude,
-                artists: req.body.artists,
-                color: req.body.color,
-                updatedUserId: req.headers['userId']
-            };
-            eventData.id = +req.params.id;
-            const updateEventData = yield event_1.eventService.updateEvent(eventData, res);
+            const data = req.body;
+            const updateEventData = yield event_1.eventService.updateEvent(data, oldData, res);
             return updateEventData;
         });
     }
@@ -110,17 +106,26 @@ let EventController = class EventController {
         return data;
     }
     /**
-     * event Detail
+     * detail user event.
      * @param req
      * @param res
      */
     detailEvent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = +req.params.id;
+            const id = req.params.id;
             const eventData = yield event_1.eventService.getEventById(id, res);
-            return eventData;
+            return res.json({
+                success: true,
+                data: eventData
+            });
         });
     }
+    /**
+     * upcoming event.
+     * @param req
+     * @param res
+     * @returns
+     */
     upComingEvent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userId = req.headers['userid'];

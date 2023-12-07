@@ -49,7 +49,7 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                username:
                   type: string
                   example: "user1"
                 password:
@@ -60,7 +60,7 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                username:
                   type: string
                   example: "user1"
                 password:
@@ -177,7 +177,7 @@ paths:
       parameters:
         - name: page
           in: query
-          description: PageNumber 
+          description: PageNumber
           schema:
             type: number
         - name: size
@@ -208,27 +208,24 @@ paths:
                 eventName:
                   type: string
                   example: "Pink Floyd Live"
-                fromTime:
+                fromDateTime:
                   type: string
-                  example: "8:00 pm"
-                toTime:
+                  example: "2023-12-30 20:00:00"
+                toDateTime:
                   type: string
-                  example: "11:00 pm"
-                address:
+                  example: " 2024-01-01 02:00:00"
+                timezone:
                   type: string
-                  example: "Arena di Verona"
-                date:
-                  type: string
-                  example: "2023-07-20"
+                  example: "Asia/Rangoon"
                 description:
                   type: string
                   example: "Preparazione concerto in piazza di sabato"
                 participants:
                   type: json
-                  example: [1, 2, 3]
+                  example: ["john@gmail.com", "mary@gmail.com", "jerry@gmail.com"]
                 beforeReminder:
                   type: string
-                  example: "00:30"
+                  example: "30"
                 reminderStatus:
                   type: string
                   example: "busy"
@@ -243,7 +240,7 @@ paths:
                   example: [1, 2, 3]
                 color:
                   type: string
-                  example: "#fff"
+                  example: "5"
                 createdUser:
                   type: number
                   example: 1
@@ -254,27 +251,24 @@ paths:
                 eventName:
                   type: string
                   example: "Pink Floyd Live"
-                fromTime:
+                fromDateTime:
                   type: string
-                  example: "8:00 pm"
-                toTime:
+                  example: "2023-12-30 20:00:00"
+                toDateTime:
                   type: string
-                  example: "11:00 pm"
-                address:
+                  example: " 2024-01-01 02:00:00"
+                timezone:
                   type: string
-                  example: "Arena di Verona"
-                date:
-                  type: string
-                  example: "2023-07-20"
+                  example: "Asia/Rangoon"
                 description:
                   type: string
                   example: "Preparazione concerto in piazza di sabato"
                 participants:
                   type: json
-                  example: [1, 2, 3]
+                  example: ["john@gmail.com", "mary@gmail.com", "jerry@gmail.com"]
                 beforeReminder:
                   type: string
-                  example: "00:30"
+                  example: "30"
                 reminderStatus:
                   type: string
                   example: "busy"
@@ -289,7 +283,7 @@ paths:
                   example: [1, 2, 3]
                 color:
                   type: string
-                  example: "#fff"
+                  example: "5"
                 createdUser:
                   type: number
                   example: 1
@@ -300,27 +294,27 @@ paths:
                 eventName:
                   type: string
                   example: "Pink Floyd Live"
-                fromTime:
+                fromDateTime:
                   type: string
-                  example: "8:00 pm"
-                toTime:
+                  example: "2023-12-30 20:00:00"
+                toDateTime:
                   type: string
-                  example: "11:00 pm"
-                address:
+                  example: " 2024-01-01 02:00:00"
+                timezone:
                   type: string
-                  example: "Arena di Verona"
-                date:
-                  type: string
-                  example: "2023-07-20"
+                  example: "Asia/Rangoon"
                 description:
                   type: string
                   example: "Preparazione concerto in piazza di sabato"
                 participants:
                   type: json
+                  example: ["john@gmail.com", "mary@gmail.com", "jerry@gmail.com"]
+                artists:
+                  type: json
                   example: [1, 2, 3]
                 beforeReminder:
                   type: string
-                  example: "00:30"
+                  example: "30"
                 reminderStatus:
                   type: string
                   example: "busy"
@@ -330,12 +324,9 @@ paths:
                 longitude:
                   type: string
                   example: "103.87865454226616"
-                artists:
-                  type: string
-                  example: [1, 2, 3]
                 color:
                   type: string
-                  example: "#fff"
+                  example: "5"
                 createdUser:
                   type: number
                   example: 1
@@ -392,7 +383,7 @@ paths:
           "404":
             description: "Event is not found"
 
-  /api/v1/events/update/{id}:
+  /api/v1/events/{id}/update:
     post:
       tags:
         - Events
@@ -602,6 +593,41 @@ paths:
           description: Number of users that want to show per Page
           schema:
             type: number
+        - name: username
+          in: query
+          description: username
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: email
+          schema:
+            type: string
+        - name: genre
+          in: query
+          description: genre
+          schema:
+            type: string
+        - name: highlight
+          in: query
+          description: highlight
+          schema:
+            type: string
+        - name: instrument
+          in: query
+          description: instrument
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: role
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: status
+          schema:
+            type: string
       responses:
         "200":
           description: Returns all Users
@@ -962,6 +988,12 @@ paths:
         - name: userId
           in: header
           description: userId
+          required: true
+          schema:
+            type: string
+        - name: googleToken
+          in: header
+          description: googleToken
           required: true
           schema:
             type: string
@@ -2728,6 +2760,42 @@ paths:
           description: Number of users that want to show per Page
           schema:
             type: number
+        - name: title
+          in: query
+          description: title
+          required: false
+          schema:
+            type: string
+        - name: genre
+          in: query
+          description: genre
+          required: false
+          schema:
+            type: string
+        - name: highlight
+          in: query
+          description: highlight
+          required: false
+          schema:
+            type: string
+        - name: instrument
+          in: query
+          description: instrument
+          required: false
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: role
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: status
+          required: false
+          schema:
+            type: string
         - name: userId
           in: header
           description: ID of login UserId

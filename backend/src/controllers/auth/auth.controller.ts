@@ -3,6 +3,7 @@ import { Response } from "express";
 import passport from 'passport';
 import { authService } from "../../services/auth/auth.service";
 require('../../config/passport');
+import {oauth2Client} from '../../config/passport';
 
 @autobind
 
@@ -39,8 +40,13 @@ class AuthController {
    * @param res 
    */
   loginWithGoogle(req: any, res: Response) {
-    console.log('login With Google');
-    passport.authenticate('google', { scope: ['profile', 'email'] })
+    // console.log('login With Google');
+    passport.authenticate('google', { scope: ['profile', 'email'] });
+    res.sendStatus(200);
+    // passport.authenticate('google', { 
+    //   scope: ['profile', 'email'],
+    //   callbackURL: '/auth/google/callback'
+    // });
   }
 
   /**
@@ -48,10 +54,19 @@ class AuthController {
    * @param req
    * @param res 
    */
-  googleCallBack(req: any, res: Response) {
+  async googleCallBack(req: any, res: Response) {
     console.log('---------google callback function');
-    passport.authenticate('google', { failureRedirect: 'api/google/error' }),
-      res.send("google signin success");
+
+    const code = req.query.code;
+
+    const { tokens } = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
+
+    passport.authenticate('google', {
+      successRedirect: '/api/auth/google/success',
+      failureRedirect: '/api/auth/google/failure'
+    });
+    res.sendStatus(200);
   }
 
   /**
@@ -89,26 +104,26 @@ class AuthController {
     }
   };
 
-    /**
+  /**
    * forget password.
    * @param req 
    * @param res 
    */
-    async forgetPassword (req: any, res: any) {
-      const data = await authService.forgetPassword(req, res);
-      return data;
-    }
-    
-    /**
-     * reset password.
-     * @param req 
-     * @param res 
-     * @returns 
-     */
-    async resetPassword (req: any, res: any) {
-      const data = await authService.resetPassword(req, res);
-      return data;
-    }
+  async forgetPassword(req: any, res: any) {
+    const data = await authService.forgetPassword(req, res);
+    return data;
+  }
+
+  /**
+   * reset password.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
+  async resetPassword(req: any, res: any) {
+    const data = await authService.resetPassword(req, res);
+    return data;
+  }
 
   /**
    * login with google error.
@@ -119,6 +134,18 @@ class AuthController {
     res.status(401).json({
       error: true,
       message: "Log in failure",
+    });
+  }
+
+  /**
+   * login with google success.
+   * @param req 
+   * @param res 
+   */
+  loginWithGoogleSuccess(req: any, res: Response): any {
+    res.json({
+      success: true,
+      message: "Google Login Successful!",
     });
   }
 }

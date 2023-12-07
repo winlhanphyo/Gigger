@@ -12,13 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.oauth2Client = void 0;
 const passport_1 = __importDefault(require("passport"));
 const passport_jwt_1 = __importDefault(require("passport-jwt"));
+const googleapis_1 = require("googleapis");
 // import OAuth2Strategy from 'passport-google-oauth';
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+// const GoogleStrategy = require('passport-google-oauth2').Strategy;
+const passport_google_oauth20_1 = require("passport-google-oauth20");
 const database_1 = require("../database");
 var JwtStrategy = passport_jwt_1.default.Strategy;
 var ExtractJwt = passport_jwt_1.default.ExtractJwt;
+const calendar = googleapis_1.google.calendar({
+    version: "v3",
+    auth: "AIzaSyB3HHe7xCBUyN0yt0xnMcbozvr8N0iXe9Y"
+});
+exports.oauth2Client = new googleapis_1.google.auth.OAuth2("648492758078-57jgi987oia7e46mprdsg4umnaee8kkp.apps.googleusercontent.com", "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", "http://localhost:3000/api/auth/google/callback");
 /**
  * JWT Authentication
  */
@@ -55,24 +63,30 @@ passport_1.default.deserializeUser((id, done) => __awaiter(void 0, void 0, void 
         done(null, false);
     }
 }));
-// passport.use(new GoogleStrategy({
-//   clientID: process.env.GOOGLE_CLIENT_ID,
-//   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//   callbackURL: "http://localhost:3000/auth/google/callback"
-// },
-// function (accessToken: any, refreshToken: any, profile: any, done: any) {
-//     const user = profile;
-//     console.log('user-----', user);
-//     return done(null, user);
-// }
-// ));
-console.log('--------client id', process.env.GOOGLE_CLIENT_ID);
-console.log('--------client secret', process.env.GOOGLE_CLIENT_SECRET);
-passport_1.default.use(new GoogleStrategy({
+passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/auth/google/callback",
-    scope: ["profile", "email"],
-}, function (accessToken, refreshToken, profile, callback) {
-    callback(null, profile);
-}));
+    callbackURL: process.env.GOOGLE_REDIRECT_URL,
+    scope: [
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/calendar'
+    ],
+}, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('------------thenn login');
+    console.log(accessToken);
+    console.log(profile);
+    // const USER = await UserDbModel.findOne(
+    //   {
+    //     where: {
+    //       email: profile.email
+    //     }
+    //   }
+    // );
+    // if (USER) {
+    //   done(null, USER);
+    // } else {
+    //   done(null, false);
+    // }
+    done(null, { username: profile.displayName });
+})));

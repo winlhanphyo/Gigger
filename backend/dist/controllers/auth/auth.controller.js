@@ -23,6 +23,7 @@ const autobind_decorator_1 = __importDefault(require("autobind-decorator"));
 const passport_1 = __importDefault(require("passport"));
 const auth_service_1 = require("../../services/auth/auth.service");
 require('../../config/passport');
+const passport_2 = require("../../config/passport");
 let AuthController = class AuthController {
     /**
      * user signup
@@ -59,8 +60,13 @@ let AuthController = class AuthController {
      * @param res
      */
     loginWithGoogle(req, res) {
-        console.log('login With Google');
+        // console.log('login With Google');
         passport_1.default.authenticate('google', { scope: ['profile', 'email'] });
+        res.sendStatus(200);
+        // passport.authenticate('google', { 
+        //   scope: ['profile', 'email'],
+        //   callbackURL: '/auth/google/callback'
+        // });
     }
     /**
      * google call back function.
@@ -68,9 +74,17 @@ let AuthController = class AuthController {
      * @param res
      */
     googleCallBack(req, res) {
-        console.log('---------google callback function');
-        passport_1.default.authenticate('google', { failureRedirect: 'api/google/error' }),
-            res.send("google signin success");
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('---------google callback function');
+            const code = req.query.code;
+            const { tokens } = yield passport_2.oauth2Client.getToken(code);
+            passport_2.oauth2Client.setCredentials(tokens);
+            passport_1.default.authenticate('google', {
+                successRedirect: '/api/auth/google/success',
+                failureRedirect: '/api/auth/google/failure'
+            });
+            res.sendStatus(200);
+        });
     }
     /**
      * user logout
@@ -114,10 +128,10 @@ let AuthController = class AuthController {
     }
     ;
     /**
-   * forget password.
-   * @param req
-   * @param res
-   */
+     * forget password.
+     * @param req
+     * @param res
+     */
     forgetPassword(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const data = yield auth_service_1.authService.forgetPassword(req, res);
@@ -145,6 +159,17 @@ let AuthController = class AuthController {
         res.status(401).json({
             error: true,
             message: "Log in failure",
+        });
+    }
+    /**
+     * login with google success.
+     * @param req
+     * @param res
+     */
+    loginWithGoogleSuccess(req, res) {
+        res.json({
+            success: true,
+            message: "Google Login Successful!",
         });
     }
 };

@@ -1,5 +1,5 @@
 import express from "express";
-
+import passport from 'passport';
 import { authController } from "../../controllers/auth/auth.controller";
 
 const router =express.Router();
@@ -10,9 +10,9 @@ router.post('/forget-password', authController.forgetPassword);
 router.post('/password-reset-update/:userId/:token', authController.resetPassword);
 
 router.post('/login', authController.login);
-router.get('/auth/google', authController.loginWithGoogle);
-router.get('/auth/google/error', authController.loginWithGoogleError);
+router.get('/auth/google/callback', authController.googleCallBack);
+router.post('/auth/google/success', passport.authenticate('google'), authController.loginWithGoogleSuccess);
+router.get('/auth/google/failure', passport.authenticate('google'), authController.loginWithGoogleError);
+router.get('/auth/google', passport.authenticate('google'), authController.loginWithGoogle);
 router.get('/logout', authController.logout);
-router.post('/auth/google/callback', authController.googleCallBack);
-
 export default router;

@@ -1,12 +1,28 @@
 import passport from "passport";
 import passportJWT from "passport-jwt";
+import { google } from 'googleapis';
 // import OAuth2Strategy from 'passport-google-oauth';
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-
+// const GoogleStrategy = require('passport-google-oauth2').Strategy;
+import {
+  Profile,
+  Strategy as GoogleStrategy,
+  VerifyCallback,
+} from 'passport-google-oauth20';
 import { UserDbModel } from "../database";
 
 var JwtStrategy = passportJWT.Strategy;
 var ExtractJwt = passportJWT.ExtractJwt;
+
+const calendar = google.calendar({
+  version: "v3",
+  auth: "AIzaSyB3HHe7xCBUyN0yt0xnMcbozvr8N0iXe9Y"
+})
+
+export const oauth2Client = new google.auth.OAuth2(
+  "648492758078-57jgi987oia7e46mprdsg4umnaee8kkp.apps.googleusercontent.com",
+  "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",
+  "http://localhost:3000/api/auth/google/callback"
+)
 
 /**
  * JWT Authentication
@@ -48,31 +64,40 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-// passport.use(new GoogleStrategy({
-//   clientID: process.env.GOOGLE_CLIENT_ID,
-//   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//   callbackURL: "http://localhost:3000/auth/google/callback"
-// },
-// function (accessToken: any, refreshToken: any, profile: any, done: any) {
-//     const user = profile;
-//     console.log('user-----', user);
-//     return done(null, user);
-// }
-// ));
-
-console.log('--------client id', process.env.GOOGLE_CLIENT_ID);
-console.log('--------client secret', process.env.GOOGLE_CLIENT_SECRET);
-
 passport.use(
   new GoogleStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/api/auth/google/callback",
-      scope: ["profile", "email"],
+      clientID: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      callbackURL: process.env.GOOGLE_REDIRECT_URL,
+      scope: [
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/calendar'
+      ],
     },
-    function (accessToken: any, refreshToken: any, profile: any, callback: any) {
-      callback(null, profile);
+    async (
+      accessToken: string,
+      refreshToken: string,
+      profile: Profile,
+      done: VerifyCallback
+    ) => {
+      console.log('------------thenn login');
+      console.log(accessToken);
+      console.log(profile);
+      // const USER = await UserDbModel.findOne(
+      //   {
+      //     where: {
+      //       email: profile.email
+      //     }
+      //   }
+      // );
+      // if (USER) {
+      //   done(null, USER);
+      // } else {
+      //   done(null, false);
+      // }
+      done(null, { username: profile.displayName });
     }
   )
 );

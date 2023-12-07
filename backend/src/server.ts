@@ -6,6 +6,8 @@ import helmet from 'helmet';
 import multer from 'multer';
 import { v4 } from 'uuid';
 import passport from 'passport';
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
 import { config } from './config';
 import { router } from './routes';
 import authRouter from './routes/auth/auth.router';
@@ -13,8 +15,6 @@ import genreRouter from "./routes/genre/genre.router";
 import videoStreamRouter from './routes/videoStream/videoStream.router';
 import { USER_PROFILE_PATH, USER_THUMBNAIL_PATH, USER_COVER_PHOTO_PATH, USER_VIDEO_PATH } from './utils/constant';
 import { userService } from './services/user';
-const swaggerUI = require('swagger-ui-express');
-const YAML = require('yamljs');
 require('./config/passport');
 const swaggerDocument = YAML.load('./api.yaml');
 

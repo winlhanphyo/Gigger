@@ -7,16 +7,15 @@ import { db } from '../db.provider';
 export interface IEventModel {
   id: number;
   eventName: string;
-  address: string;
-  date: string;
-  fromTime: string;
-  toTime: string;
+  fromDateTime: string;
+  toDateTime: string;
   description: string;
   beforeReminder: string;
   reminderStatus: string;
   latitude: string;
   longitude: string;
   artists: JSON;
+  participants: JSON;
   color: string;
   createdUser: number;
   updatedUser: number;
@@ -28,17 +27,15 @@ export interface IEventModel {
 export interface EventInputModel {
   id: number;
   eventName: string;
-  address: string;
-  date: string;
   participants: [];
-  fromTime: string;
-  toTime: string;
+  fromDateTime: string;
+  toDateTime: string;
   description: string;
   beforeReminder: string;
   reminderStatus: string;
   latitude: string;
   longitude: string;
-  artists: JSON;
+  artists: [];
   color: string;
   createdAt: string;
   updatedAt: string;
@@ -51,6 +48,10 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
     primaryKey: true,
     autoIncrement: true
   },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   eventName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -59,23 +60,7 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
       notEmpty: true
     }
   },
-  address: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: true,
-        notEmpty: true
-      }
-  },
-  date: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notNull: true,
-      notEmpty: true
-    }
-  },
-  fromTime: {
+  fromDateTime: {
     type: DataTypes.STRING(50),
     allowNull: false,
     validate: {
@@ -83,17 +68,13 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
       notEmpty: true
     }
   },
-  toTime: {
+  toDateTime: {
     type: DataTypes.STRING(50),
     allowNull: false,
     validate: {
       notNull: true,
       notEmpty: true
     }
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: true
   },
   beforeReminder: {
     type: DataTypes.STRING(50),
@@ -110,6 +91,10 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
       notNull: true,
       notEmpty: true
     }
+  },
+  participants: {
+    type: DataTypes.JSON,
+    allowNull: true
   },
   color: {
     type: DataTypes.STRING(50)
@@ -150,7 +135,7 @@ const modelAttributes: DbModelFieldInit<Partial<IEventModel>> = {
 @associative
 export class EventDbModel extends Model {
   static associate({ UserDbModel }: any) {
-    this.belongsToMany(UserDbModel, {through: 'event_user'});
+    this.belongsToMany(UserDbModel, { through: 'event_user' });
     // this.belongsTo(UserDbModel, { foreignKey: 'createdUser', as: 'user', targetKey: 'id' });
   }
 }

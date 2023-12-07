@@ -3,6 +3,7 @@ import autobind from 'autobind-decorator';
 import { campaignService } from '../../services/campaign';
 import { ICampaignModel } from '../../database';
 import { PAGINATION_LIMIT } from '../../utils/constant';
+import { Op } from 'sequelize';
 
 @autobind
 class CampaignController {
@@ -17,7 +18,36 @@ class CampaignController {
     let offset = Number(req.query.page) - 1 || 0;
     const size = Number(req.query.size) || PAGINATION_LIMIT;
     let page = offset * size;
-    const response = await campaignService.getCampaignList(undefined, undefined, page, size, res);
+    
+    let otherFindOptions: any = undefined;
+    let condition: any = {};
+    const title = req.query.title;
+    const genre = req.query.genre;
+    const highlight = req.query.highlight; // for role in UI
+    const instrument = req.query.instrument;
+    const role = req.query.role;
+    const status = req.query.status; // for available
+
+    title ? condition.title = {
+      [Op.like]: `%${title}%`,
+    } : null;
+    genre ? condition.genre = genre : null;
+    highlight ? condition.highlight = {
+      [Op.like]: `%${highlight}%`,
+    }
+    : null;
+    instrument ? condition.instrument = instrument : null;
+    role ? condition.role = role : null;
+    status ? condition.status = status : null;
+    // when date and time
+    // place
+    // radius eg. 25km
+
+    otherFindOptions = {
+      where: condition
+    };
+
+    const response = await campaignService.getCampaignList(undefined, otherFindOptions, page, size, res);
     return response;
   }
 

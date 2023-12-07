@@ -20,18 +20,30 @@ class EventController {
     return response;
   }
 
+  // /**
+  //  * get other user event.
+  //  * @param req 
+  //  * @param res 
+  //  */
+  // async getOtherUserEvent(req: Request, res: Response) {
+  //   let offset = Number(req.query.page) - 1 || 0;
+  //   const size = Number(req.query.size) || PAGINATION_LIMIT;
+  //   let page = offset * size;
+  //   const response = await eventService.getOtherUserEvent(undefined, undefined, page, size, res);
+  //   return response;
+  // }
+
   /**
    * create Event.
    * @param req 
    * @param res 
    */
   async createEvent(req: Request, res: Response) {
+    console.log('create event------------');
     const eventData: IEventModel = {
       eventName: req.body.eventName,
-      fromTime: req.body.fromTime,
-      toTime: req.body.toTime,
-      address: req.body.address,
-      date: req.body.date,
+      fromDateTime: req.body.fromDateTime,
+      toDateTime: req.body.toDateTime,
       description: req.body.description,
       participants: req.body.participants,
       beforeReminder: req.body.beforeReminder,
@@ -54,33 +66,17 @@ class EventController {
    * @returns 
    */
   async updateEvent(req: Request, res: Response) {
-    const id = +req.params.id;
-    console.log('update id----------', id);
+    const id = req.params.id;
+    console.log('Event Data by id', id);
     const checkEvent = await eventService.getEventById(id, res);
+    const oldData = checkEvent;
 
-    if (!checkEvent) {
+    if (!oldData) {
       return res.status(404).send("Event is not found");
     }
 
-    const eventData: IEventModel = {
-      eventName: req.body.eventName,
-      fromTime: req.body.fromTime,
-      toTime: req.body.toTime,
-      address: req.body.address,
-      date: req.body.date,
-      description: req.body.description,
-      participants: req.body.participants,
-      beforeReminder: req.body.beforeReminder,
-      reminderStatus: req.body.reminderStatus,
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
-      artists: req.body.artists,
-      color: req.body.color,
-      updatedUserId: req.headers['userId']
-    } as any;
-
-    eventData.id = +req.params.id;
-    const updateEventData = await eventService.updateEvent(eventData, res);
+    const data = req.body;
+    const updateEventData = await eventService.updateEvent(data, oldData, res);
     return updateEventData;
   }
 
@@ -95,16 +91,25 @@ class EventController {
   }
 
   /**
-   * event Detail
+   * detail user event.
    * @param req 
    * @param res 
    */
   async detailEvent(req: Request, res: Response) {
-    const id = +req.params.id
+    const id = req.params.id
     const eventData = await eventService.getEventById(id, res);
-    return eventData;
+    return res.json({
+      success: true,
+      data: eventData
+    })
   }
 
+  /**
+   * upcoming event.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
   async upComingEvent(req: Request, res: Response) {
     const userId = req.headers['userid'];
     console.log('upComing event---------controller', userId);

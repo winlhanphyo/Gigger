@@ -1,7 +1,12 @@
 import sequelize from "sequelize";
 import { FindOptions, Op, fn } from "sequelize";
+import { google } from 'googleapis';
+import passport from 'passport';
+import moment from "moment";
 import { IEventModel, EventDbModel, EventInputModel, UserDbModel } from "../../database";
 import { EventUserDbModel } from "../../database/models/eventUser.model";
+import { oauth2Client } from "../../config/passport";
+import { eventNames } from "process";
 
 class EventService {
   /**
@@ -12,38 +17,69 @@ class EventService {
    */
   async getEventList(eventAttributes?: Array<any>, otherFindOptions?: FindOptions, offset?: number, limit?: number, res?: any): Promise<any> {
     try {
-      limit = limit && limit > 0 ? limit : undefined;
-      let eventList = await EventDbModel.findAll({
-        ...otherFindOptions,
-        attributes: eventAttributes,
-        limit,
-        offset,
-        include: [
-          {
-            model: UserDbModel,
-            through: { attributes: [] },
-            as: "users",
-            attributes: []
-          }
-        ]
+      // limit = limit && limit > 0 ? limit : undefined;
+      // let eventList = await EventDbModel.findAll({
+      //   ...otherFindOptions,
+      //   attributes: eventAttributes,
+      //   limit,
+      //   offset,
+      //   include: [
+      //     {
+      //       model: UserDbModel,
+      //       through: { attributes: [] },
+      //       as: "users",
+      //       attributes: []
+      //     }
+      //   ]
+      // });
+      // for (let i = 0; i < eventList.length; i++) {
+      //   let artists = eventList[i].dataValues?.artists;
+      //   if (artists) {
+      //     const artistList = await UserDbModel.findAll({
+      //       where: {
+      //         id: artists
+      //       }
+      //     });
+      //     eventList[i].dataValues.artists = artistList;
+      //   }
+      // }
+      // return res.json({
+      //   success: true,
+      //   count: eventList.length,
+      //   data: eventList
+      // });
+
+      const list: any = [];
+      const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
+      const response = await calendar.events.list({
+        calendarId: 'primary',
+        timeMin: moment().toISOString(),
+        maxResults: 30,
+        singleEvents: true,
+        orderBy: 'startTime',
       });
-      for (let i = 0; i < eventList.length; i++) {
-        let artists = eventList[i].dataValues?.artists;
-        if (artists) {
-          const artistList = await UserDbModel.findAll({
-            where: {
-              id: artists
-            }
+
+      const events: any = response.data.items;
+      if (events?.length) {
+        for (let i = 0; i < events?.length; i++) {
+          const start = events[i]?.start?.dateTime || events[i]?.start.date;
+          const end = events[i]?.end?.dateTime || events[i]?.end.date;
+          list.push({
+            id: events[i].id,
+            start,
+            end,
+            summary: events[i]?.summary,
+            status: events[i]?.status
           });
-          eventList[i].dataValues.artists = artistList;
         }
+      } else {
+        console.log('No upcoming events found.');
       }
       return res.json({
         success: true,
-        count: eventList.length,
-        data: eventList
+        data: list,
+        count: list.length
       });
-
     } catch (e: any) {
       console.log('------get event list API error----', e);
       return res.status(400).json({
@@ -58,34 +94,49 @@ class EventService {
    * @param eventObj 
    * @returns 
    */
-  async createEvent(eventObj: Partial<EventInputModel>, res: any): Promise<EventDbModel> {
+  async createEvent(eventObj: any, res: any) {
     try {
       const participants: any = eventObj.participants;
-      delete eventObj.participants;
-      const createEvent = await EventDbModel.create({ ...eventObj, createdAt: new Date().toISOString() });
-      const eventUserData: { eventId: any; userId: any; status: string; createdAt: any }[] = [];
-
-      if (participants && participants.length > 0 && createEvent?.dataValues?.id) {
-        await participants.map((userId: any) => {
-          eventUserData.push({
-            eventId: createEvent.dataValues.id,
-            userId,
-            status: "going",
-            createdAt: new Date().toISOString()
-          });
+      const attendees: any = [];
+      participants.map((participant: any) => {
+        attendees.push({
+          email: participant
         });
-        const createEventUser = await EventUserDbModel.bulkCreate(eventUserData);
-        return res.json({
-          success: true,
-          message: 'Event is created successfully',
-          data: createEventUser
-        });
-      }
-      return res.json({
-        success: true,
-        message: 'Event is created successfully',
-        data: createEvent
       });
+      const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
+      await calendar.events.insert({
+        calendarId: "primary",
+        auth: oauth2Client,
+        requestBody: {
+          summary: eventObj.eventName,
+          description: eventObj.description,
+          location: `${eventObj.latitude}, ${eventObj.longitude}`,
+          start: {
+            dateTime: moment(eventObj.fromDateTime).toISOString(),
+            timeZone: 'Asia/Rangoon'
+          },
+          end: {
+            dateTime: moment(eventObj.toDateTime).toISOString(),
+            timeZone: 'Asia/Rangoon'
+          },
+          attendees: attendees,
+          status: 'confirmed',
+          reminders: {
+            useDefault: false,
+            overrides: [
+              { method: 'email', minutes: eventObj.beforeReminder },
+              { method: 'popup', minutes: eventObj.beforeReminder },
+            ],
+          },
+          colorId: eventObj?.color || "5",
+        }
+      })
+
+      res.json({
+        success: true,
+        msg: "Event is created succeessfully"
+      });
+
     } catch (e: any) {
       console.log("-----Create Event API error----", e);
       return res.status(400).json({
@@ -99,15 +150,66 @@ class EventService {
    * update Event data.
    * @param eventObj 
    */
-  async updateEvent(eventObj: Partial<IEventModel>, res: any): Promise<any> {
+  async updateEvent(body: any, oldData: any, res: any): Promise<any> {
     try {
-      const updateEvent = await EventDbModel.update(eventObj, {
-        where: { id: eventObj.id as number }
+      console.log('-------body', body);
+      console.log('------oldData', oldData);
+      // const updateEvent = await EventDbModel.update(eventObj, {
+      //   where: { id: eventObj.id as number }
+      // });
+      const participants: any = oldData?.participants;
+      const attendees: any = [];
+      participants?.map((participant: any) => {
+        attendees.push({
+          email: participant
+        });
       });
+      const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
+
+      body?.eventName ? oldData.summary = body?.eventName : null;
+      body?.location ? oldData.location = body?.eventName : null;
+      oldData?.description ? oldData.description = body?.description : null;
+      if (body?.fromDateTime) {
+        oldData.start = {
+          dateTime: moment(body.fromDateTime).toISOString(),
+          timeZone: "Asia/Rangoon"
+        };
+      } else {
+        oldData.start = {
+          dateTime: moment(oldData.start.dateTime).toISOString(),
+          timeZone: "Asia/Rangoon"
+        }
+      }
+      if (body?.toDateTime) {
+        oldData.end = {
+          dateTime: moment(body.toDateTime).toISOString(),
+          timeZone: "Asia/Rangoon"
+        };
+      } else {
+        oldData.end = {
+          dateTime: moment(oldData.end.dateTime).toISOString(),
+          timeZone: "Asia/Rangoon"
+        }
+      }
+
+      body?.status ? oldData.status = body?.status : null;
+      if (body?.latitude && body?.longitude) {
+        oldData.location = `${body.latitude}, ${body.longitude}`;
+      }
+      console.log('old Data-----', oldData);
+      const id = oldData.id;
+      delete oldData.id;
+
+      const result = await calendar.events.update({
+        calendarId: 'primary',
+        eventId: id,
+        auth: oauth2Client,
+        requestBody: oldData
+      });
+
       return res.json({
         success: true,
-        message: 'Event is updated successfully',
-        data: updateEvent
+        message: 'Event is updated successfully'
       });
     } catch (e: any) {
       console.log('------update event error----', e);
@@ -127,18 +229,24 @@ class EventService {
   async deleteEvent(req: any, res: any): Promise<EventDbModel> {
     try {
       const id = req.params.id;
+      const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
 
-      const detailEvent = await EventDbModel.findOne({
-        where: {
-          id
-        },
-        include: [
-          {
-            model: UserDbModel,
-            through: { attributes: [] }
-          }
-        ]
-      }) as any;
+      // const detailEvent = await EventDbModel.findOne({
+      //   where: {
+      //     id
+      //   },
+      //   include: [
+      //     {
+      //       model: UserDbModel,
+      //       through: { attributes: [] }
+      //     }
+      //   ]
+      // }) as any;
+
+      const detailEvent = await calendar.events.get({
+        calendarId: 'primary',
+        eventId: id
+      });
 
       if (!detailEvent) {
         return res.status(400).json({
@@ -146,13 +254,18 @@ class EventService {
         });
       }
 
-      const removeEventData = await EventDbModel.destroy(
-        {
-          where: {
-            id
-          },
-        }
-      );
+      // const removeEventData = await EventDbModel.destroy(
+      //   {
+      //     where: {
+      //       id
+      //     },
+      //   }
+      // );
+
+      const removeEventData = await calendar.events.delete({
+        calendarId: 'primary',
+        eventId: id
+      });
 
       return res.json({
         success: true,
@@ -173,41 +286,59 @@ class EventService {
    * @param event_id 
    * @returns 
    */
-  async getEventById(event_id: number, res: any): Promise<any> {
+  async getEventById(event_id: any, res: any): Promise<any> {
     try {
-      const eventData = await EventDbModel.findOne({
-        where: {
-          id: event_id
-        },
-        include: [
-          {
-            model: UserDbModel,
-            through: { attributes: [] }
-          }
-        ]
-      }) as any;
-      console.log('Event Data', eventData);
-      if (!eventData) {
-        return res.status(404).json({
-          message: "Event data is not found by this id"
-        });
-      }
-      eventData.dataValues.participants = eventData.dataValues.users;
-      delete eventData.dataValues.users;
+      // const eventData = await EventDbModel.findOne({
+      //   where: {
+      //     id: event_id
+      //   },
+      //   include: [
+      //     {
+      //       model: UserDbModel,
+      //       through: { attributes: [] }
+      //     }
+      //   ]
+      // }) as any;
+      // console.log('Event Data', eventData);
+      // if (!eventData) {
+      //   return res.status(404).json({
+      //     message: "Event data is not found by this id"
+      //   });
+      // }
+      // eventData.dataValues.participants = eventData.dataValues.users;
+      // delete eventData.dataValues.users;
 
-      let artists = eventData.dataValues?.artists;
-      if (artists) {
-        const artistList = await UserDbModel.findAll({
-          where: {
-            id: artists
-          }
-        });
-        eventData.dataValues.artists = artistList;
+      // let artists = eventData.dataValues?.artists;
+      // if (artists) {
+      //   const artistList = await UserDbModel.findAll({
+      //     where: {
+      //       id: artists
+      //     }
+      //   });
+      //   eventData.dataValues.artists = artistList;
+      // }
+
+      const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
+      const detailEvent: any = await calendar.events.get({
+        calendarId: 'primary',
+        eventId: event_id
+      });
+      const event: any = detailEvent.data;
+      const start = event?.start?.dateTime || event?.start.date;
+      const end = event?.end?.dateTime || event?.end.date;
+      const data = {
+        id: event.id,
+        start,
+        end,
+        summary: event?.summary,
+        status: event?.status
       }
-      return res.json({
-        success: true,
-        data: eventData
-      })
+      console.log('---------data', data);
+      // return res.json({
+      //   success: true,
+      //   data
+      // })
+      return data;
     } catch (e: any) {
       console.log("--Get Event By Id API Error---", e);
       return res.status(400).json({

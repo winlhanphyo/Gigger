@@ -21,6 +21,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const autobind_decorator_1 = __importDefault(require("autobind-decorator"));
 const user_1 = require("../../services/user");
+const constant_1 = require("../../utils/constant");
+const sequelize_1 = require("sequelize");
 let UserController = class UserController {
     /**
      * get all user data.
@@ -30,7 +32,42 @@ let UserController = class UserController {
      */
     getAllUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield user_1.userService.getUserList(req, res);
+            let offset = Number(req.query.page) - 1 || 0;
+            const size = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
+            let page = offset * size;
+            let otherFindOptions = undefined;
+            let condition = {};
+            const username = req.query.username;
+            const email = req.query.email;
+            const genre = req.query.genre;
+            const highlight = req.query.highlight; // for role in UI
+            const instrument = req.query.instrument;
+            const role = req.query.role;
+            const status = req.query.status; // for available
+            username ? condition.username = username : null;
+            email ? condition.username = username : null;
+            username ? condition.username = {
+                [sequelize_1.Op.like]: `%${username}%`,
+            } : null;
+            email ? condition.email = {
+                [sequelize_1.Op.like]: `%${email}%`,
+            }
+                : null;
+            genre ? condition.genre = genre : null;
+            highlight ? condition.highlight = {
+                [sequelize_1.Op.like]: `%${highlight}%`,
+            }
+                : null;
+            instrument ? condition.instrument = instrument : null;
+            role ? condition.role = role : null;
+            status ? condition.status = status : null;
+            // when date and time
+            // place
+            // radius eg. 25km
+            otherFindOptions = {
+                where: condition
+            };
+            const user = yield user_1.userService.getUserList(undefined, otherFindOptions, page, size, res);
             return user;
         });
     }

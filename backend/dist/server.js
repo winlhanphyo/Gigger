@@ -20,6 +20,8 @@ const helmet_1 = __importDefault(require("helmet"));
 const multer_1 = __importDefault(require("multer"));
 const uuid_1 = require("uuid");
 const passport_1 = __importDefault(require("passport"));
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
 const config_1 = require("./config");
 const routes_1 = require("./routes");
 const auth_router_1 = __importDefault(require("./routes/auth/auth.router"));
@@ -27,8 +29,6 @@ const genre_router_1 = __importDefault(require("./routes/genre/genre.router"));
 const videoStream_router_1 = __importDefault(require("./routes/videoStream/videoStream.router"));
 const constant_1 = require("./utils/constant");
 const user_1 = require("./services/user");
-const swaggerUI = require('swagger-ui-express');
-const YAML = require('yamljs');
 require('./config/passport');
 const swaggerDocument = YAML.load('./api.yaml');
 const fileStorage = multer_1.default.diskStorage({

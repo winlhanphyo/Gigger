@@ -10,7 +10,7 @@ class VideoStreamService {
   /**
    * stream video.
    * @param filename
-   * @returns 
+   * @returns
    */
   streamVideo(req: any, res: any) {
     try {

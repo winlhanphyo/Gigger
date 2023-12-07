@@ -17,6 +17,10 @@ const modelAttributes = {
         primaryKey: true,
         autoIncrement: true
     },
+    description: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true
+    },
     eventName: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false,
@@ -25,23 +29,7 @@ const modelAttributes = {
             notEmpty: true
         }
     },
-    address: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notNull: true,
-            notEmpty: true
-        }
-    },
-    date: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notNull: true,
-            notEmpty: true
-        }
-    },
-    fromTime: {
+    fromDateTime: {
         type: sequelize_1.DataTypes.STRING(50),
         allowNull: false,
         validate: {
@@ -49,17 +37,13 @@ const modelAttributes = {
             notEmpty: true
         }
     },
-    toTime: {
+    toDateTime: {
         type: sequelize_1.DataTypes.STRING(50),
         allowNull: false,
         validate: {
             notNull: true,
             notEmpty: true
         }
-    },
-    description: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: true
     },
     beforeReminder: {
         type: sequelize_1.DataTypes.STRING(50),
@@ -76,6 +60,10 @@ const modelAttributes = {
             notNull: true,
             notEmpty: true
         }
+    },
+    participants: {
+        type: sequelize_1.DataTypes.JSON,
+        allowNull: true
     },
     color: {
         type: sequelize_1.DataTypes.STRING(50)
