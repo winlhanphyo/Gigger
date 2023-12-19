@@ -321,7 +321,7 @@ class UserService {
     try {
       const id = +req.params.id;
       const userId = req.headers["userid"];
-      const googleToken = req.headers["googleToken"];
+      // const googleToken = req.headers["googleToken"];
       const userData = await this.getUserDataWithId(id, res);
 
       const getCountData = async (id: any, status: any) => {
@@ -362,34 +362,34 @@ class UserService {
           userData.dataValues.follow = false;
         }
 
-        const list: any = [];
-        oauth2Client.setCredentials(googleToken);
-        const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
-        const response = await calendar.events.list({
-          calendarId: 'primary',
-          timeMin: moment().toISOString(),
-          maxResults: 30,
-          singleEvents: true,
-          orderBy: 'startTime',
-        });
+        // const list: any = [];
+        // oauth2Client.setCredentials(googleToken);
+        // const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
+        // const response = await calendar.events.list({
+        //   calendarId: 'primary',
+        //   timeMin: moment().toISOString(),
+        //   maxResults: 30,
+        //   singleEvents: true,
+        //   orderBy: 'startTime',
+        // });
 
-        const events: any = response.data.items;
-        if (events?.length) {
-          for (let i = 0; i < events?.length; i++) {
-            const start = events[i]?.start?.dateTime || events[i]?.start.date;
-            const end = events[i]?.end?.dateTime || events[i]?.end.date;
-            list.push({
-              id: events[i].id,
-              start,
-              end,
-              summary: events[i]?.summary,
-              status: events[i]?.status
-            });
-          }
-        } else {
-          console.log('No upcoming events found.');
-        }
-        userData.dataValues.upcomingEvents = list;
+        // const events: any = response.data.items;
+        // if (events?.length) {
+        //   for (let i = 0; i < events?.length; i++) {
+        //     const start = events[i]?.start?.dateTime || events[i]?.start.date;
+        //     const end = events[i]?.end?.dateTime || events[i]?.end.date;
+        //     list.push({
+        //       id: events[i].id,
+        //       start,
+        //       end,
+        //       summary: events[i]?.summary,
+        //       status: events[i]?.status
+        //     });
+        //   }
+        // } else {
+        //   console.log('No upcoming events found.');
+        // }
+        // userData.dataValues.upcomingEvents = list;
 
       }
 

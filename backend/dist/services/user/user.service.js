@@ -16,10 +16,8 @@ exports.userService = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const moment_1 = __importDefault(require("moment"));
 const path_1 = __importDefault(require("path"));
-const googleapis_1 = require("googleapis");
 const database_1 = require("../../database");
 const userLikeViewProfile_model_1 = require("../../database/models/userLikeViewProfile.model");
-const passport_1 = require("../../config/passport");
 const constant_1 = require("../../utils/constant");
 const utils_1 = require("../../utils/utils");
 class UserService {
@@ -317,12 +315,11 @@ class UserService {
      * @returns
      */
     getUserProfile(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
                 const userId = req.headers["userid"];
-                const googleToken = req.headers["googleToken"];
+                // const googleToken = req.headers["googleToken"];
                 const userData = yield this.getUserDataWithId(id, res);
                 const getCountData = (id, status) => __awaiter(this, void 0, void 0, function* () {
                     const count = yield userLikeViewProfile_model_1.UserLikeViewProfileDbModel.count({
@@ -357,34 +354,33 @@ class UserService {
                         userData.dataValues.view = false;
                         userData.dataValues.follow = false;
                     }
-                    const list = [];
-                    passport_1.oauth2Client.setCredentials(googleToken);
-                    const calendar = yield googleapis_1.google.calendar({ version: 'v3', auth: passport_1.oauth2Client });
-                    const response = yield calendar.events.list({
-                        calendarId: 'primary',
-                        timeMin: (0, moment_1.default)().toISOString(),
-                        maxResults: 30,
-                        singleEvents: true,
-                        orderBy: 'startTime',
-                    });
-                    const events = response.data.items;
-                    if (events === null || events === void 0 ? void 0 : events.length) {
-                        for (let i = 0; i < (events === null || events === void 0 ? void 0 : events.length); i++) {
-                            const start = ((_b = (_a = events[i]) === null || _a === void 0 ? void 0 : _a.start) === null || _b === void 0 ? void 0 : _b.dateTime) || ((_c = events[i]) === null || _c === void 0 ? void 0 : _c.start.date);
-                            const end = ((_e = (_d = events[i]) === null || _d === void 0 ? void 0 : _d.end) === null || _e === void 0 ? void 0 : _e.dateTime) || ((_f = events[i]) === null || _f === void 0 ? void 0 : _f.end.date);
-                            list.push({
-                                id: events[i].id,
-                                start,
-                                end,
-                                summary: (_g = events[i]) === null || _g === void 0 ? void 0 : _g.summary,
-                                status: (_h = events[i]) === null || _h === void 0 ? void 0 : _h.status
-                            });
-                        }
-                    }
-                    else {
-                        console.log('No upcoming events found.');
-                    }
-                    userData.dataValues.upcomingEvents = list;
+                    // const list: any = [];
+                    // oauth2Client.setCredentials(googleToken);
+                    // const calendar = await google.calendar({ version: 'v3', auth: oauth2Client });
+                    // const response = await calendar.events.list({
+                    //   calendarId: 'primary',
+                    //   timeMin: moment().toISOString(),
+                    //   maxResults: 30,
+                    //   singleEvents: true,
+                    //   orderBy: 'startTime',
+                    // });
+                    // const events: any = response.data.items;
+                    // if (events?.length) {
+                    //   for (let i = 0; i < events?.length; i++) {
+                    //     const start = events[i]?.start?.dateTime || events[i]?.start.date;
+                    //     const end = events[i]?.end?.dateTime || events[i]?.end.date;
+                    //     list.push({
+                    //       id: events[i].id,
+                    //       start,
+                    //       end,
+                    //       summary: events[i]?.summary,
+                    //       status: events[i]?.status
+                    //     });
+                    //   }
+                    // } else {
+                    //   console.log('No upcoming events found.');
+                    // }
+                    // userData.dataValues.upcomingEvents = list;
                 }
                 return res.json({
                     data: userData

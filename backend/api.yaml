@@ -1,6 +1,6 @@
 openapi: 3.0.2
 servers:
-  - url: http://gigger-api.orionmmtecheng.com
+  - url: https://gigger-api.orionmmtecheng.com
 info:
   description: This is API Doc for Gigger
   title: Swagger API Doc for Gigger
@@ -991,12 +991,12 @@ paths:
           required: true
           schema:
             type: string
-        - name: googleToken
-          in: header
-          description: googleToken
-          required: true
-          schema:
-            type: string
+        # - name: googleToken
+        #   in: header
+        #   description: googleToken
+        #   required: true
+        #   schema:
+        #     type: string
       responses:
           "200":
             description: Returns User By Id
