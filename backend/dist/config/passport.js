@@ -26,7 +26,7 @@ const calendar = googleapis_1.google.calendar({
     version: "v3",
     auth: "AIzaSyB3HHe7xCBUyN0yt0xnMcbozvr8N0iXe9Y"
 });
-exports.oauth2Client = new googleapis_1.google.auth.OAuth2("648492758078-57jgi987oia7e46mprdsg4umnaee8kkp.apps.googleusercontent.com", "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", "http://localhost:3000/api/auth/google/callback");
+exports.oauth2Client = new googleapis_1.google.auth.OAuth2("648492758078-57jgi987oia7e46mprdsg4umnaee8kkp.apps.googleusercontent.com", "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", "https://gigger-api.orionmmtecheng.com/api/auth/google/callback");
 /**
  * JWT Authentication
  */

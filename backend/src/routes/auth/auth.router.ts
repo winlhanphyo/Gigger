@@ -13,6 +13,6 @@ router.post('/login', authController.login);
 router.get('/auth/google/callback', authController.googleCallBack);
 router.post('/auth/google/success', passport.authenticate('google'), authController.loginWithGoogleSuccess);
 router.get('/auth/google/failure', passport.authenticate('google'), authController.loginWithGoogleError);
-router.get('/auth/google', passport.authenticate('google'), authController.loginWithGoogle);
+router.get('/auth/google', authController.loginWithGoogle);
 router.get('/logout', authController.logout);
 export default router;

@@ -15,6 +15,14 @@ module.exports = {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      artist: {
+        type: DataTypes.JSON,
+        allowNull: false,
+      },
       caption: {
         type: DataTypes.STRING,
         allowNull: false,

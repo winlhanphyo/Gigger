@@ -15,6 +15,6 @@ router.post('/login', auth_controller_1.authController.login);
 router.get('/auth/google/callback', auth_controller_1.authController.googleCallBack);
 router.post('/auth/google/success', passport_1.default.authenticate('google'), auth_controller_1.authController.loginWithGoogleSuccess);
 router.get('/auth/google/failure', passport_1.default.authenticate('google'), auth_controller_1.authController.loginWithGoogleError);
-router.get('/auth/google', passport_1.default.authenticate('google'), auth_controller_1.authController.loginWithGoogle);
+router.get('/auth/google', auth_controller_1.authController.loginWithGoogle);
 router.get('/logout', auth_controller_1.authController.logout);
 exports.default = router;

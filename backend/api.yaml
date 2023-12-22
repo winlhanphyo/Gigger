@@ -1936,6 +1936,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -1982,6 +1988,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2028,6 +2040,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2223,6 +2241,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2269,6 +2293,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2315,6 +2345,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2600,6 +2636,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2646,6 +2688,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2692,6 +2740,12 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  example: "Floyd Live"
+                artist:
+                  type: string
+                  example: "1"
                 caption:
                   type: string
                   example: "Pink Floyd Live"

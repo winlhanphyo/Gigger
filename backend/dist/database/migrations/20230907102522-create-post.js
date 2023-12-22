@@ -22,6 +22,14 @@ module.exports = {
                 primaryKey: true,
                 type: sequelize_1.DataTypes.INTEGER
             },
+            title: {
+                type: sequelize_1.DataTypes.STRING,
+                allowNull: false,
+            },
+            artist: {
+                type: sequelize_1.DataTypes.JSON,
+                allowNull: false,
+            },
             caption: {
                 type: sequelize_1.DataTypes.STRING,
                 allowNull: false,

@@ -7,6 +7,8 @@ import { SupportPaymentDbModel } from "./supportPayment.model";
 
 export interface IPostModel {
   id: number;
+  title: string;
+  artist: JSON;
   caption: string;
   music: JSON;
   latitude: string;
@@ -30,6 +32,8 @@ export interface IPostModel {
 
 export interface PostInputModel {
   id: number;
+  title: string;
+  artist: string;
   caption: string;
   music: string;
   address: string;
@@ -50,6 +54,14 @@ const modelAttributes: DbModelFieldInit<Partial<IPostModel>> = {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  artist: {
+    type: DataTypes.JSON,
+    allowNull: false,
   },
   caption: {
     type: DataTypes.STRING,

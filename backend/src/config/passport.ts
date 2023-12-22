@@ -21,7 +21,7 @@ const calendar = google.calendar({
 export const oauth2Client = new google.auth.OAuth2(
   "648492758078-57jgi987oia7e46mprdsg4umnaee8kkp.apps.googleusercontent.com",
   "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",
-  "http://localhost:3000/api/auth/google/callback"
+  "https://gigger-api.orionmmtecheng.com/api/auth/google/callback"
 )
 
 /**
