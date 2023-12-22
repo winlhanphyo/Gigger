@@ -127,6 +127,13 @@ class PostService {
         createdUser: req.headers['userid']
       } as any;
 
+      if (req?.body?.title) {
+        postObj['title'] = req.body.title;
+      }
+      if (req?.body?.artist) {
+        postObj['artist'] = JSON.parse(req.body.artist);
+      }
+
       if (req.files?.video?.length > 0) {
         console.log('video', req.files.video[0]?.path);
         video = req.files.video[0]?.path?.split("\\").join("/");
@@ -204,6 +211,13 @@ class PostService {
         updatedUser: req.headers['userid'],
         updatedAt: new Date().toISOString()
       } as any;
+
+      if (req?.body?.title) {
+        postObj['title'] = req.body.title;
+      }
+      if (req?.body?.artist) {
+        postObj['artist'] = JSON.parse(req.body.artist);
+      }
 
       postObj.id = +req.params.id;
 

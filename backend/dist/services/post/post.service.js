@@ -111,7 +111,7 @@ class PostService {
      * @returns
      */
     createPost(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let video = "";
@@ -147,9 +147,15 @@ class PostService {
                     hashTag: req.body.hashTag,
                     createdUser: req.headers['userid']
                 };
-                if (((_t = (_s = req.files) === null || _s === void 0 ? void 0 : _s.video) === null || _t === void 0 ? void 0 : _t.length) > 0) {
-                    console.log('video', (_u = req.files.video[0]) === null || _u === void 0 ? void 0 : _u.path);
-                    video = (_w = (_v = req.files.video[0]) === null || _v === void 0 ? void 0 : _v.path) === null || _w === void 0 ? void 0 : _w.split("\\").join("/");
+                if ((_s = req === null || req === void 0 ? void 0 : req.body) === null || _s === void 0 ? void 0 : _s.title) {
+                    postObj['title'] = req.body.title;
+                }
+                if ((_t = req === null || req === void 0 ? void 0 : req.body) === null || _t === void 0 ? void 0 : _t.artist) {
+                    postObj['artist'] = JSON.parse(req.body.artist);
+                }
+                if (((_v = (_u = req.files) === null || _u === void 0 ? void 0 : _u.video) === null || _v === void 0 ? void 0 : _v.length) > 0) {
+                    console.log('video', (_w = req.files.video[0]) === null || _w === void 0 ? void 0 : _w.path);
+                    video = (_y = (_x = req.files.video[0]) === null || _x === void 0 ? void 0 : _x.path) === null || _y === void 0 ? void 0 : _y.split("\\").join("/");
                     const splitFileName = video.split("/");
                     console.log('split file name', splitFileName);
                     filename = splitFileName[splitFileName.length - 1];
@@ -157,8 +163,8 @@ class PostService {
                     postObj.video = filename;
                 }
                 let thumbnail = req.body.thumbnail;
-                if (((_y = (_x = req.files) === null || _x === void 0 ? void 0 : _x.thumbnail) === null || _y === void 0 ? void 0 : _y.length) > 0) {
-                    thumbnail = (_z = req.files.thumbnail[0].path) === null || _z === void 0 ? void 0 : _z.split("\\").join("/");
+                if (((_0 = (_z = req.files) === null || _z === void 0 ? void 0 : _z.thumbnail) === null || _0 === void 0 ? void 0 : _0.length) > 0) {
+                    thumbnail = (_1 = req.files.thumbnail[0].path) === null || _1 === void 0 ? void 0 : _1.split("\\").join("/");
                     postObj.thumbnail = thumbnail;
                 }
                 const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
@@ -181,7 +187,7 @@ class PostService {
      * @param res
      */
     updatePost(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -209,19 +215,25 @@ class PostService {
                     updatedUser: req.headers['userid'],
                     updatedAt: new Date().toISOString()
                 };
+                if ((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.title) {
+                    postObj['title'] = req.body.title;
+                }
+                if ((_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.artist) {
+                    postObj['artist'] = JSON.parse(req.body.artist);
+                }
                 postObj.id = +req.params.id;
-                if (((_b = (_a = req.files) === null || _a === void 0 ? void 0 : _a.video) === null || _b === void 0 ? void 0 : _b.length) > 0) {
-                    if ((_c = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _c === void 0 ? void 0 : _c.video) {
+                if (((_d = (_c = req.files) === null || _c === void 0 ? void 0 : _c.video) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+                    if ((_e = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _e === void 0 ? void 0 : _e.video) {
                         this.deleteFileData(detailPost.dataValues.video, constant_1.USER_VIDEO_PATH);
                     }
-                    video = (_d = req.files.video[0].path) === null || _d === void 0 ? void 0 : _d.split("\\").join("/");
+                    video = (_f = req.files.video[0].path) === null || _f === void 0 ? void 0 : _f.split("\\").join("/");
                     const splitFileName = video.split("/");
                     filename = splitFileName[splitFileName.length - 1];
                     postObj.video = filename;
                 }
                 let thumbnail = req.body.thumbnail;
-                if (((_f = (_e = req.files) === null || _e === void 0 ? void 0 : _e.thumbnail) === null || _f === void 0 ? void 0 : _f.length) > 0) {
-                    thumbnail = (_g = req.files.thumbnail[0].path) === null || _g === void 0 ? void 0 : _g.split("\\").join("/");
+                if (((_h = (_g = req.files) === null || _g === void 0 ? void 0 : _g.thumbnail) === null || _h === void 0 ? void 0 : _h.length) > 0) {
+                    thumbnail = (_j = req.files.thumbnail[0].path) === null || _j === void 0 ? void 0 : _j.split("\\").join("/");
                     if (detailPost.thumbnail) {
                         this.deleteFileData(detailPost.dataValues.thumbnail, constant_1.USER_THUMBNAIL_PATH);
                     }
