@@ -1940,8 +1940,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -1992,8 +1992,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2044,8 +2044,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2245,8 +2245,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2297,8 +2297,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2349,8 +2349,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2640,8 +2640,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2692,8 +2692,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
@@ -2744,8 +2744,8 @@ paths:
                   type: string
                   example: "Floyd Live"
                 artist:
-                  type: string
-                  example: "1"
+                  type: json
+                  example: [1, 2]
                 caption:
                   type: string
                   example: "Pink Floyd Live"
