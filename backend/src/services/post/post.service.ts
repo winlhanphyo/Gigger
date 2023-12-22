@@ -70,6 +70,16 @@ class PostService {
         });
 
         postList[i].dataValues.follow = dist.length > 0 ? true : false;
+
+        let artist = postList[i].dataValues?.artist;
+        if (artist) {
+          const artistList = await UserDbModel.findAll({
+            where: {
+              id: artist
+            }
+          });
+          postList[i].dataValues.artist = artistList;
+        }
       }
 
       return res.json({
@@ -151,6 +161,15 @@ class PostService {
       }
 
       const createPost = await PostDbModel.create({ ...postObj, createdAt: new Date().toISOString() });
+
+      if (createPost?.dataValues?.artist) {
+        const artist = await UserDbModel.findAll({
+          where: {
+            id: createPost.dataValues.genre
+          }
+        });
+        createPost.dataValues.artist = artist;
+      }
 
       return res.json({
         message: 'Post is created successfully',
@@ -243,9 +262,18 @@ class PostService {
         }
       }
 
-      const updatePostData = await PostDbModel.update(postObj, {
+      const updatePostData: any = await PostDbModel.update(postObj, {
         where: { id: postObj.id as number }
       });
+
+      if (updatePostData?.dataValues?.artist) {
+        const artist = await UserDbModel.findAll({
+          where: {
+            id: updatePostData.dataValues.artist
+          }
+        });
+        updatePostData.dataValues.artist = artist;
+      }
 
       return res.json({
         message: 'Post is updated successfully',
@@ -290,6 +318,16 @@ class PostService {
           }
         });
         postData.dataValues.music = interestList;
+      }
+
+      let artist = postData.dataValues?.artist;
+      if (artist) {
+        const artistList = await UserDbModel.findAll({
+          where: {
+            id: artist
+          }
+        });
+        postData.dataValues.artist = artistList;
       }
 
       if (!postData) {

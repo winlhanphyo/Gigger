@@ -43,7 +43,7 @@ class PostService {
      * @returns
      */
     getPostList(postAttributes, otherFindOptions, offset, limit, userId, res) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 limit = limit && limit > 0 ? limit : undefined;
@@ -91,6 +91,15 @@ class PostService {
                         }
                     });
                     postList[i].dataValues.follow = dist.length > 0 ? true : false;
+                    let artist = (_b = postList[i].dataValues) === null || _b === void 0 ? void 0 : _b.artist;
+                    if (artist) {
+                        const artistList = yield database_1.UserDbModel.findAll({
+                            where: {
+                                id: artist
+                            }
+                        });
+                        postList[i].dataValues.artist = artistList;
+                    }
                 }
                 return res.json({
                     count: postList.length,
@@ -111,7 +120,7 @@ class PostService {
      * @returns
      */
     createPost(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let video = "";
@@ -168,6 +177,14 @@ class PostService {
                     postObj.thumbnail = thumbnail;
                 }
                 const createPost = yield database_1.PostDbModel.create(Object.assign(Object.assign({}, postObj), { createdAt: new Date().toISOString() }));
+                if ((_2 = createPost === null || createPost === void 0 ? void 0 : createPost.dataValues) === null || _2 === void 0 ? void 0 : _2.artist) {
+                    const artist = yield database_1.UserDbModel.findAll({
+                        where: {
+                            id: createPost.dataValues.genre
+                        }
+                    });
+                    createPost.dataValues.artist = artist;
+                }
                 return res.json({
                     message: 'Post is created successfully',
                     data: createPost
@@ -187,7 +204,7 @@ class PostService {
      * @param res
      */
     updatePost(req, res) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = +req.params.id;
@@ -244,6 +261,14 @@ class PostService {
                 const updatePostData = yield database_1.PostDbModel.update(postObj, {
                     where: { id: postObj.id }
                 });
+                if ((_k = updatePostData === null || updatePostData === void 0 ? void 0 : updatePostData.dataValues) === null || _k === void 0 ? void 0 : _k.artist) {
+                    const artist = yield database_1.UserDbModel.findAll({
+                        where: {
+                            id: updatePostData.dataValues.artist
+                        }
+                    });
+                    updatePostData.dataValues.artist = artist;
+                }
                 return res.json({
                     message: 'Post is updated successfully',
                     data: updatePostData
@@ -263,7 +288,7 @@ class PostService {
      * @returns
      */
     getPostById(post_id, res = null, userId = null) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const postData = yield database_1.PostDbModel.findOne({
@@ -289,6 +314,15 @@ class PostService {
                         }
                     });
                     postData.dataValues.music = interestList;
+                }
+                let artist = (_b = postData.dataValues) === null || _b === void 0 ? void 0 : _b.artist;
+                if (artist) {
+                    const artistList = yield database_1.UserDbModel.findAll({
+                        where: {
+                            id: artist
+                        }
+                    });
+                    postData.dataValues.artist = artistList;
                 }
                 if (!postData) {
                     return res.status(404).json({

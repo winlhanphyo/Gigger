@@ -45,7 +45,6 @@ class UserService {
             }
           });
           userList[i].dataValues.interest = interestList;
-
         }
         return res.json({
           count: userList.length,
