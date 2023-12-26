@@ -714,8 +714,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -794,8 +794,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -874,8 +874,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1241,8 +1241,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1321,8 +1321,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1396,8 +1396,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1499,8 +1499,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1574,8 +1574,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1646,8 +1646,8 @@ paths:
                   type: string
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
-                  type: string
-                  example: "Custom Text- Lorem ipsum dolor sit met, conshctetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt"
+                  type: json
+                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"

@@ -17,11 +17,11 @@ module.exports = {
       },
       title: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       artist: {
         type: DataTypes.JSON,
-        allowNull: false,
+        allowNull: true,
       },
       caption: {
         type: DataTypes.STRING,

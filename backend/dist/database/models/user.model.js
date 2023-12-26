@@ -105,7 +105,7 @@ const modelAttributes = {
         defaultValue: "I wanna Rock on the Stairways to Heaven!!"
     },
     customTitle: {
-        type: sequelize_1.DataTypes.STRING,
+        type: sequelize_1.DataTypes.JSON,
         allowNull: true
     },
     instagram: {

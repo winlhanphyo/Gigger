@@ -133,7 +133,7 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
     defaultValue: "I wanna Rock on the Stairways to Heaven!!"
   },
   customTitle: {
-    type: DataTypes.STRING,
+    type: DataTypes.JSON,
     allowNull: true
   },
   instagram: {

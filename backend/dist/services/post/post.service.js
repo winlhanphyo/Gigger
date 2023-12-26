@@ -57,6 +57,8 @@ class PostService {
                             model: database_1.UserDbModel,
                             as: "updatedByUser"
                         }
+                    ], order: [
+                        ['createdAt', 'ASC'] // Sort by createdAt in ascending order
                     ] }));
                 for (let i = 0; i < postList.length; i++) {
                     let music = JSON.parse((_a = postList[i].dataValues) === null || _a === void 0 ? void 0 : _a.music);
@@ -180,7 +182,7 @@ class PostService {
                 if ((_2 = createPost === null || createPost === void 0 ? void 0 : createPost.dataValues) === null || _2 === void 0 ? void 0 : _2.artist) {
                     const artist = yield database_1.UserDbModel.findAll({
                         where: {
-                            id: createPost.dataValues.genre
+                            id: createPost.dataValues.artist
                         }
                     });
                     createPost.dataValues.artist = artist;
@@ -433,6 +435,9 @@ class PostService {
                             }
                         ]
                     }
+                ],
+                order: [
+                    ['createdAt', 'ASC'] // Sort by createdAt in ascending order
                 ]
             });
             // like and view count for video.

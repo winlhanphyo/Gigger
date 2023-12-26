@@ -95,7 +95,7 @@ class UserService {
               // Parse the date string using Moment.js
               const date = moment(obj[propName], "YYYY-MM-DD");
               dist[propName] = date;
-            } else if (propName === "interest") {
+            } else if (propName === "interest" || propName === "customTitle") {
               dist[propName] = JSON.parse(obj[propName]);
             }
           }
@@ -187,7 +187,7 @@ class UserService {
               // Parse the date string using Moment.js
               const date = moment(obj[propName], "YYYY-MM-DD");
               dist[propName] = date;
-            } else if (propName === "interest") {
+            } else if (propName === "interest" || propName === "customTitle") {
               dist[propName] = JSON.parse(obj[propName]);
             }
           }

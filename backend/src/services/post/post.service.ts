@@ -31,6 +31,9 @@ class PostService {
             model: UserDbModel,
             as: "updatedByUser"
           }
+        ],
+        order: [
+          ['createdAt', 'ASC'] // Sort by createdAt in ascending order
         ]
       });
 
@@ -165,7 +168,7 @@ class PostService {
       if (createPost?.dataValues?.artist) {
         const artist = await UserDbModel.findAll({
           where: {
-            id: createPost.dataValues.genre
+            id: createPost.dataValues.artist
           }
         });
         createPost.dataValues.artist = artist;
@@ -440,6 +443,9 @@ class PostService {
             }
           ]
         }
+      ],
+      order: [
+        ['createdAt', 'ASC'] // Sort by createdAt in ascending order
       ]
     }) as any;
 

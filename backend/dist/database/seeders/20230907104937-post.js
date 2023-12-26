@@ -16,7 +16,9 @@ module.exports = {
         return __awaiter(this, void 0, void 0, function* () {
             return queryInterface.bulkInsert(constants_1.DataBaseTableNames.POST, [
                 {
+                    title: "Post1 Title",
                     caption: "Post1",
+                    artist: JSON.stringify([1, 2]),
                     music: JSON.stringify([1, 2]),
                     // address: "Singapore",
                     latitude: "1.3505696580073028",
@@ -36,7 +38,9 @@ module.exports = {
                     updatedAt: '2023-08-07'
                 },
                 {
+                    title: "Post2 Title",
                     caption: "Post2",
+                    artist: JSON.stringify([1, 2]),
                     music: JSON.stringify([2]),
                     // address: "Singapore",
                     latitude: "1.3423268491121407",
@@ -56,7 +60,9 @@ module.exports = {
                     updatedAt: '2023-08-07'
                 },
                 {
+                    title: "Post3 Title",
                     caption: "Post3",
+                    artist: JSON.stringify([1, 2]),
                     music: JSON.stringify([3, 4]),
                     // address: "Singapore",
                     latitude: "1.3796342587179522",

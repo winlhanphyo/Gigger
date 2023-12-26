@@ -102,7 +102,7 @@ export default {
             allowNull: true
           },
           customTitle: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: true
           },
           instagram: {

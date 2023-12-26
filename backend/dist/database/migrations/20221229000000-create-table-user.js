@@ -108,7 +108,7 @@ exports.default = {
                     allowNull: true
                 },
                 customTitle: {
-                    type: sequelize_1.DataTypes.STRING,
+                    type: sequelize_1.DataTypes.JSON,
                     allowNull: true
                 },
                 instagram: {
