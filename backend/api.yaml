@@ -715,7 +715,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -795,7 +795,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -875,7 +875,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1242,7 +1242,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1322,7 +1322,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1397,7 +1397,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1500,7 +1500,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1575,7 +1575,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"
@@ -1647,7 +1647,7 @@ paths:
                   example: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt"
                 customTitle:
                   type: json
-                  example: [{"songTitle": "Shape of you"}, {"rating": "5"}]
+                  example: [{"songTitle": "Shape of you"}]
                 instagram:
                   type: string
                   example: "Via Giolitti"

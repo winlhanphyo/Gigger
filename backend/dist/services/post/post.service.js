@@ -58,7 +58,7 @@ class PostService {
                             as: "updatedByUser"
                         }
                     ], order: [
-                        ['createdAt', 'ASC'] // Sort by createdAt in ascending order
+                        ['createdAt', 'DESC'] // Sort by createdAt in decending order
                     ] }));
                 for (let i = 0; i < postList.length; i++) {
                     let music = JSON.parse((_a = postList[i].dataValues) === null || _a === void 0 ? void 0 : _a.music);
@@ -437,7 +437,7 @@ class PostService {
                     }
                 ],
                 order: [
-                    ['createdAt', 'ASC'] // Sort by createdAt in ascending order
+                    ['createdAt', 'DESC'] // Sort by createdAt in decending order
                 ]
             });
             // like and view count for video.
@@ -605,7 +605,10 @@ class PostService {
                 const userData = yield database_1.UserDbModel.findOne({
                     where: {
                         id: userId
-                    }
+                    },
+                    order: [
+                        ['createdAt', 'DESC'] // Sort by createdAt in decending order
+                    ]
                 });
                 let limit = Number(req.query.size) || constant_1.PAGINATION_LIMIT;
                 let offset = Number(req.query.page) - 1 || 0;
@@ -622,7 +625,7 @@ class PostService {
                             model: database_1.UserDbModel,
                             as: "createdByUser",
                             where: condition
-                        }
+                        },
                     ]
                 });
                 const count = allVideoCount - (limit * (offset + 1));
@@ -727,7 +730,6 @@ class PostService {
                     ]
                 });
                 const count = allVideoCount - (limit * (offset + 1));
-                console.log('all Video count', allVideoCount);
                 let postList = yield this.getVideoForTop(limit, page, condition);
                 if (allVideoCount < count) {
                     limit = limit - postList.length;
@@ -817,6 +819,8 @@ class PostService {
                                 }
                             ]
                         }
+                    ], order: [
+                        ['createdAt', 'DESC'] // Sort by createdAt in decending order
                     ] }));
                 return postList;
             }
@@ -847,6 +851,9 @@ class PostService {
                             model: database_1.UserDbModel,
                             as: "createdByUser"
                         }
+                    ],
+                    order: [
+                        ['createdAt', 'DESC'] // Sort by createdAt in decending order
                     ]
                 });
                 // like and view count for video.

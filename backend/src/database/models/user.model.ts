@@ -134,7 +134,8 @@ const modelAttributes: DbModelFieldInit<Partial<IUserModel>> = {
   },
   customTitle: {
     type: DataTypes.JSON,
-    allowNull: true
+    allowNull: true,
+    defaultValue: "[{'songTitle': 'Shape of you'}]"
   },
   instagram: {
     type: DataTypes.STRING,

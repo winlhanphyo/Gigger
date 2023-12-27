@@ -106,7 +106,8 @@ const modelAttributes = {
     },
     customTitle: {
         type: sequelize_1.DataTypes.JSON,
-        allowNull: true
+        allowNull: true,
+        defaultValue: "[{'songTitle': 'Shape of you'}]"
     },
     instagram: {
         type: sequelize_1.DataTypes.STRING,

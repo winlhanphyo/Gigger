@@ -33,7 +33,7 @@ class PostService {
           }
         ],
         order: [
-          ['createdAt', 'ASC'] // Sort by createdAt in ascending order
+          ['createdAt', 'DESC'] // Sort by createdAt in decending order
         ]
       });
 
@@ -445,7 +445,7 @@ class PostService {
         }
       ],
       order: [
-        ['createdAt', 'ASC'] // Sort by createdAt in ascending order
+        ['createdAt', 'DESC'] // Sort by createdAt in decending order
       ]
     }) as any;
 
@@ -618,7 +618,10 @@ class PostService {
       const userData = await UserDbModel.findOne({
         where: {
           id: userId
-        }
+        },
+        order: [
+          ['createdAt', 'DESC'] // Sort by createdAt in decending order
+        ]
       }) as any;
 
       let limit = Number(req.query.size) || PAGINATION_LIMIT;
@@ -636,7 +639,7 @@ class PostService {
             model: UserDbModel,
             as: "createdByUser",
             where: condition
-          }
+          },
         ]
       }) as any;
 
@@ -749,8 +752,6 @@ class PostService {
 
       const count = allVideoCount - (limit * (offset + 1));
 
-      console.log('all Video count', allVideoCount);
-
       let postList = await this.getVideoForTop(limit, page, condition);
       if (allVideoCount < count) {
         limit = limit - postList.length;
@@ -847,6 +848,9 @@ class PostService {
               }
             ]
           }
+        ],
+        order: [
+          ['createdAt', 'DESC'] // Sort by createdAt in decending order
         ]
       }) as any;
       return postList;
@@ -877,6 +881,9 @@ class PostService {
             model: UserDbModel,
             as: "createdByUser"
           }
+        ],
+        order: [
+          ['createdAt', 'DESC'] // Sort by createdAt in decending order
         ]
       }) as any;
 
