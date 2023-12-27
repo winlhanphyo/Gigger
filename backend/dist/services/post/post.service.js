@@ -243,7 +243,7 @@ class PostService {
                 postObj.id = +req.params.id;
                 if (((_d = (_c = req.files) === null || _c === void 0 ? void 0 : _c.video) === null || _d === void 0 ? void 0 : _d.length) > 0) {
                     if ((_e = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _e === void 0 ? void 0 : _e.video) {
-                        this.deleteFileData(detailPost.dataValues.video, constant_1.USER_VIDEO_PATH);
+                        this.deleteFileData(detailPost.dataValues.video, "../" + constant_1.USER_VIDEO_PATH);
                     }
                     video = (_f = req.files.video[0].path) === null || _f === void 0 ? void 0 : _f.split("\\").join("/");
                     const splitFileName = video.split("/");
@@ -254,7 +254,7 @@ class PostService {
                 if (((_h = (_g = req.files) === null || _g === void 0 ? void 0 : _g.thumbnail) === null || _h === void 0 ? void 0 : _h.length) > 0) {
                     thumbnail = (_j = req.files.thumbnail[0].path) === null || _j === void 0 ? void 0 : _j.split("\\").join("/");
                     if (detailPost.thumbnail) {
-                        this.deleteFileData(detailPost.dataValues.thumbnail, constant_1.USER_THUMBNAIL_PATH);
+                        this.deleteFileData(detailPost.dataValues.thumbnail, "../");
                     }
                     if (detailPost) {
                         detailPost.thumbnail = thumbnail;
@@ -481,7 +481,10 @@ class PostService {
                     });
                 }
                 if ((_a = detailPost === null || detailPost === void 0 ? void 0 : detailPost.dataValues) === null || _a === void 0 ? void 0 : _a.video) {
-                    this.deleteFileData(detailPost.dataValues.video, constant_1.USER_VIDEO_PATH);
+                    this.deleteFileData(detailPost.dataValues.video, "../" + constant_1.USER_VIDEO_PATH);
+                }
+                if (detailPost === null || detailPost === void 0 ? void 0 : detailPost.thumbnail) {
+                    this.deleteFileData(detailPost.dataValues.thumbnail, "../");
                 }
                 const removePostData = yield database_1.PostDbModel.destroy({
                     where: {

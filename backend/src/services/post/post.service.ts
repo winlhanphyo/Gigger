@@ -245,7 +245,7 @@ class PostService {
 
       if (req.files?.video?.length > 0) {
         if (detailPost?.dataValues?.video) {
-          this.deleteFileData(detailPost.dataValues.video, USER_VIDEO_PATH);
+          this.deleteFileData(detailPost.dataValues.video, "../" + USER_VIDEO_PATH);
         }
 
         video = req.files.video[0].path?.split("\\").join("/");
@@ -258,7 +258,7 @@ class PostService {
       if (req.files?.thumbnail?.length > 0) {
         thumbnail = req.files.thumbnail[0].path?.split("\\").join("/");
         if (detailPost.thumbnail) {
-          this.deleteFileData(detailPost.dataValues.thumbnail, USER_THUMBNAIL_PATH);
+          this.deleteFileData(detailPost.dataValues.thumbnail, "../");
         }
         if (detailPost) {
           detailPost.thumbnail = thumbnail;
@@ -491,7 +491,11 @@ class PostService {
       }
 
       if (detailPost?.dataValues?.video) {
-        this.deleteFileData(detailPost.dataValues.video, USER_VIDEO_PATH);
+        this.deleteFileData(detailPost.dataValues.video, "../" + USER_VIDEO_PATH);
+      }
+
+      if (detailPost?.thumbnail) {
+        this.deleteFileData(detailPost.dataValues.thumbnail, "../");
       }
 
       const removePostData = await PostDbModel.destroy(
