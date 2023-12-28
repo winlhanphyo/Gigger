@@ -45,7 +45,7 @@ let UserController = class UserController {
             const role = req.query.role;
             const status = req.query.status; // for available
             username ? condition.username = username : null;
-            email ? condition.username = username : null;
+            email ? condition.email = email : null;
             username ? condition.username = {
                 [sequelize_1.Op.like]: `%${username}%`,
             } : null;
@@ -67,6 +67,7 @@ let UserController = class UserController {
             otherFindOptions = {
                 where: condition
             };
+            console.log('-------before user service------------');
             const user = yield user_1.userService.getUserList(undefined, otherFindOptions, page, size, res);
             return user;
         });

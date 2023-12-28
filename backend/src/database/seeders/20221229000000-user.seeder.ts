@@ -25,7 +25,7 @@ export default {
           experiences: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla",
           studies: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla",
           achievements: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt",
-          customTitle: JSON.stringify([{"songTitle": "Shape of you"}, {"rating": "5"}]),
+          customTitle: JSON.stringify([{"label": "custom Title", "value": null}]),
           youtube: "https://www.youtube.com/@planetgt495",
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
@@ -49,7 +49,7 @@ export default {
           experiences: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla",
           studies: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla",
           achievements: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt",
-          customTitle: JSON.stringify([{"songTitle": "Shape of you"}, {"rating": "5"}]),
+          customTitle: JSON.stringify([{"label": "custom Title", "value": null}]),
           youtube: "https://www.youtube.com/@planetgt495",
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
@@ -73,7 +73,7 @@ export default {
           experiences: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla",
           studies: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla",
           achievements: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt",
-          customTitle: JSON.stringify([{"songTitle": "Shape of you"}, {"rating": "5"}]),
+          customTitle: JSON.stringify([{"label": "custom Title", "value": null}]),
           youtube: "https://www.youtube.com/@planetgt495",
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
@@ -96,7 +96,7 @@ export default {
           experiences: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla",
           studies: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla",
           achievements: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt",
-          customTitle: JSON.stringify([{"songTitle": "Shape of you"}, {"rating": "5"}]),
+          customTitle: JSON.stringify([{"label": "custom Title", "value": null}]),
           youtube: "https://www.youtube.com/@planetgt495",
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
@@ -119,7 +119,7 @@ export default {
           experiences: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla",
           studies: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla",
           achievements: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt",
-          customTitle: JSON.stringify([{"songTitle": "Shape of you"}, {"rating": "5"}]),
+          customTitle: JSON.stringify([{"label": "custom Title", "value": null}]),
           youtube: "https://www.youtube.com/@planetgt495",
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
@@ -142,7 +142,7 @@ export default {
           experiences: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla",
           studies: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla",
           achievements: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt",
-          customTitle: JSON.stringify([{"songTitle": "Shape of you"}, {"rating": "5"}]),
+          customTitle: JSON.stringify([{"label": "custom Title", "value": null}]),
           youtube: "https://www.youtube.com/@planetgt495",
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'
@@ -165,7 +165,7 @@ export default {
           experiences: "Lorem ipsum dolor ist samet, Consectetuer aqipiscing elit, sed Diam nonummy nibh euismod tincidunt ut laoreet bla bla bla",
           studies: "School of Rock Ectetuer adipiscing elit, sed dial nonummy nibs euismod incident bla bla bla",
           achievements: "Lorem ipsum dollar sit amen, Consectetuer aqipiscing elit, Sed diam nonummy nibh euismod tincidunt",
-          customTitle: JSON.stringify([{"songTitle": "Shape of you"}, {"rating": "5"}]),
+          customTitle: JSON.stringify([{"label": "custom Title", "value": null}]),
           youtube: "https://www.youtube.com/@planetgt495",
           createdAt: '2023-07-11',
           updatedAt: '2023-07-11'

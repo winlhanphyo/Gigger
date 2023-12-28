@@ -42,14 +42,17 @@ class UserService {
      * @returns
      */
     getUserList(userAttributes, otherFindOptions, offset, limit, res) {
-        var _a, _b;
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 limit = limit && limit > 0 ? limit : constant_1.PAGINATION_LIMIT;
+                console.log('----------user service-------');
                 const userList = yield database_1.UserDbModel.findAll(Object.assign({ limit,
                     offset }, otherFindOptions));
+                console.log('-------user list--------', userList);
                 for (let i = 0; i < userList.length; i++) {
-                    let genre = (_a = userList[i].dataValues) === null || _a === void 0 ? void 0 : _a.genre;
+                    console.log('user list', (_b = (_a = userList[i]) === null || _a === void 0 ? void 0 : _a.dataValues) === null || _b === void 0 ? void 0 : _b.genre);
+                    let genre = (_c = userList[i].dataValues) === null || _c === void 0 ? void 0 : _c.genre;
                     if (genre) {
                         const genreList = yield database_1.GenreDbModel.findAll({
                             where: {
@@ -58,7 +61,7 @@ class UserService {
                         });
                         userList[i].dataValues.genre = genreList;
                     }
-                    let interest = (_b = userList[i].dataValues) === null || _b === void 0 ? void 0 : _b.interest;
+                    let interest = (_d = userList[i].dataValues) === null || _d === void 0 ? void 0 : _d.interest;
                     if (interest) {
                         const interestList = yield database_1.GenreDbModel.findAll({
                             where: {
@@ -67,11 +70,11 @@ class UserService {
                         });
                         userList[i].dataValues.interest = interestList;
                     }
-                    return res.json({
-                        count: userList.length,
-                        data: userList
-                    });
                 }
+                return res.json({
+                    count: userList.length,
+                    data: userList
+                });
             }
             catch (e) {
                 console.log('------get Artist API Error----', e);

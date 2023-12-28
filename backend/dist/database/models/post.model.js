@@ -19,11 +19,11 @@ const modelAttributes = {
     },
     title: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     artist: {
         type: sequelize_1.DataTypes.JSON,
-        allowNull: false,
+        allowNull: true,
     },
     caption: {
         type: sequelize_1.DataTypes.STRING,

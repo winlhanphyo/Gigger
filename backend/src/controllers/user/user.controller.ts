@@ -28,7 +28,7 @@ class UserController {
     const status = req.query.status; // for available
 
     username ? condition.username = username : null;
-    email ? condition.username = username : null;
+    email ? condition.email = email : null;
 
     username ? condition.username = {
       [Op.like]: `%${username}%`,
@@ -53,6 +53,7 @@ class UserController {
     otherFindOptions = {
       where: condition
     };
+    console.log('-------before user service------------');
     const user = await userService.getUserList(undefined, otherFindOptions, page, size, res);
     return user;
   }
