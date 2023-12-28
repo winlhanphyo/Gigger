@@ -211,7 +211,7 @@ class UserService {
                 if (((_c = (_b = req.files) === null || _b === void 0 ? void 0 : _b.profile) === null || _c === void 0 ? void 0 : _c.length) > 0) {
                     profile = (_d = req.files.profile[0].path) === null || _d === void 0 ? void 0 : _d.split("\\").join("/");
                     if (checkUser.profile) {
-                        this.deleteFileData(checkUser.profile, constant_1.USER_THUMBNAIL_PATH);
+                        this.deleteFileData(checkUser.profile, "../");
                     }
                     if (checkUser) {
                         userData.profile = profile;
@@ -220,7 +220,7 @@ class UserService {
                 if (((_f = (_e = req.files) === null || _e === void 0 ? void 0 : _e.coverPhoto) === null || _f === void 0 ? void 0 : _f.length) > 0) {
                     coverPhoto = (_g = req.files.coverPhoto[0].path) === null || _g === void 0 ? void 0 : _g.split("\\").join("/");
                     if (checkUser.coverPhoto) {
-                        this.deleteFileData(checkUser.coverPhoto, constant_1.USER_COVER_PHOTO_PATH);
+                        this.deleteFileData(checkUser.coverPhoto, "../");
                     }
                     if (checkUser) {
                         userData.coverPhoto = coverPhoto;
@@ -251,7 +251,7 @@ class UserService {
      * @returns
      */
     deleteUser(req, res) {
-        var _a;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const id = req.params.id;
@@ -265,8 +265,11 @@ class UserService {
                         message: "User is not found by this id"
                     });
                 }
-                if ((_a = detailUser === null || detailUser === void 0 ? void 0 : detailUser.dataValues) === null || _a === void 0 ? void 0 : _a.video) {
-                    this.deleteFileData(detailUser.dataValues.video, constant_1.USER_VIDEO_PATH);
+                if ((_a = detailUser === null || detailUser === void 0 ? void 0 : detailUser.dataValues) === null || _a === void 0 ? void 0 : _a.profile) {
+                    this.deleteFileData(detailUser.dataValues.profile, "../");
+                }
+                if ((_b = detailUser === null || detailUser === void 0 ? void 0 : detailUser.dataValues) === null || _b === void 0 ? void 0 : _b.coverPhoto) {
+                    this.deleteFileData(detailUser.dataValues.coverPhoto, "../");
                 }
                 const removeUserData = yield database_1.UserDbModel.destroy({
                     where: {

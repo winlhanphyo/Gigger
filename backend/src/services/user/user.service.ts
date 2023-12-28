@@ -209,7 +209,7 @@ class UserService {
       if (req.files?.profile?.length > 0) {
         profile = req.files.profile[0].path?.split("\\").join("/");
         if (checkUser.profile) {
-          this.deleteFileData(checkUser.profile, USER_THUMBNAIL_PATH);
+          this.deleteFileData(checkUser.profile, "../");
         }
         if (checkUser) {
           userData.profile = profile;
@@ -219,7 +219,7 @@ class UserService {
       if (req.files?.coverPhoto?.length > 0) {
         coverPhoto = req.files.coverPhoto[0].path?.split("\\").join("/");
         if (checkUser.coverPhoto) {
-          this.deleteFileData(checkUser.coverPhoto, USER_COVER_PHOTO_PATH);
+          this.deleteFileData(checkUser.coverPhoto, "../");
         }
         if (checkUser) {
           userData.coverPhoto = coverPhoto;
@@ -266,8 +266,12 @@ class UserService {
         });
       }
 
-      if (detailUser?.dataValues?.video) {
-        this.deleteFileData(detailUser.dataValues.video, USER_VIDEO_PATH);
+      if (detailUser?.dataValues?.profile) {
+        this.deleteFileData(detailUser.dataValues.profile, "../");
+      }
+
+      if (detailUser?.dataValues?.coverPhoto) {
+        this.deleteFileData(detailUser.dataValues.coverPhoto, "../");
       }
 
       const removeUserData = await UserDbModel.destroy(
