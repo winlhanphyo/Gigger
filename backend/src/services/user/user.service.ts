@@ -21,13 +21,11 @@ class UserService {
   async getUserList(userAttributes?: Array<any>, otherFindOptions?: FindOptions, offset?: number, limit?: number, res?: any): Promise<any> {
     try {
       limit = limit && limit > 0 ? limit : PAGINATION_LIMIT;
-      console.log('----------user service-------');
       const userList = await UserDbModel.findAll({
         limit,
         offset,
         ...otherFindOptions
       }) as any;
-      console.log('-------user list--------', userList);
       for (let i = 0; i < userList.length; i++) {
         console.log('user list', userList[i]?.dataValues?.genre);
         let genre = userList[i].dataValues?.genre;

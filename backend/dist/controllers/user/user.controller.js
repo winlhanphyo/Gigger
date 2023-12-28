@@ -67,7 +67,6 @@ let UserController = class UserController {
             otherFindOptions = {
                 where: condition
             };
-            console.log('-------before user service------------');
             const user = yield user_1.userService.getUserList(undefined, otherFindOptions, page, size, res);
             return user;
         });

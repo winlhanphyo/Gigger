@@ -46,10 +46,8 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 limit = limit && limit > 0 ? limit : constant_1.PAGINATION_LIMIT;
-                console.log('----------user service-------');
                 const userList = yield database_1.UserDbModel.findAll(Object.assign({ limit,
                     offset }, otherFindOptions));
-                console.log('-------user list--------', userList);
                 for (let i = 0; i < userList.length; i++) {
                     console.log('user list', (_b = (_a = userList[i]) === null || _a === void 0 ? void 0 : _a.dataValues) === null || _b === void 0 ? void 0 : _b.genre);
                     let genre = (_c = userList[i].dataValues) === null || _c === void 0 ? void 0 : _c.genre;

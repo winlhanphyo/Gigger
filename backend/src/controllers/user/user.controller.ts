@@ -53,7 +53,6 @@ class UserController {
     otherFindOptions = {
       where: condition
     };
-    console.log('-------before user service------------');
     const user = await userService.getUserList(undefined, otherFindOptions, page, size, res);
     return user;
   }
